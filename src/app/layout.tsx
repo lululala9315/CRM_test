@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Header } from "@/components/header";
+import "./globals.css";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const pretendard = localFont({
+  src: "../../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
+  display: "swap",
+  weight: "45 920",
+  variable: "--font-pretendard",
 });
 
 export const metadata: Metadata = {
@@ -25,9 +31,21 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", pretendard.variable, "font-sans", geist.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        <TooltipProvider delayDuration={0}>
+          <SidebarProvider>
+            <AppSidebar />
+            <div className="flex flex-col flex-1 w-full min-w-0">
+              <Header />
+              <main className="flex-1 overflow-auto bg-slate-50 dark:bg-slate-900/50">
+                {children}
+              </main>
+            </div>
+          </SidebarProvider>
+        </TooltipProvider>
+      </body>
     </html>
   );
 }
