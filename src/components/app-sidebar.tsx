@@ -9,10 +9,12 @@ import {
   UserCog,
   Network,
   Settings,
-  ChevronRight,
-  PanelLeftClose,
-  PanelLeftOpen
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react"
+
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 import {
   Collapsible,
@@ -24,7 +26,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -32,121 +33,161 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-  useSidebar,
-  SidebarFooter
 } from "@/components/ui/sidebar"
-import { Button } from "@/components/ui/button"
 
 const menuItems = [
   {
     title: "배정 고객 관리",
     icon: Users,
-    items: ["상담 진행 고객", "계약 예정 고객", "상담 종료 고객"]
+    items: [
+      { name: "상담 진행 고객", url: "/" },
+      { name: "계약 예정 고객", url: "/pending" },
+      { name: "상담 종료 고객", url: "/completed" }
+    ]
   },
   {
     title: "DB 배정 관리",
     icon: Database,
-    items: ["배정 완료 DB", "미배정 DB", "DB 분배 현황"]
+    items: [
+      { name: "배정 완료 DB", url: "/db/assigned" },
+      { name: "미배정 DB", url: "/db/unassigned" },
+      { name: "DB 분배 현황", url: "/db/status" }
+    ]
   },
   {
     title: "배정 설정 관리",
     icon: Settings2,
-    items: ["재배정 타입 설정", "자동 회수 설정", "자동 배정 설정"]
+    items: [
+      { name: "재배정 타입 설정", url: "/settings/reassign" },
+      { name: "자동 회수 설정", url: "/settings/recall" },
+      { name: "자동 배정 설정", url: "/settings/auto" }
+    ]
   },
   {
     title: "직원/설계사 관리",
     icon: UserCog,
-    items: ["운영/관리자", "설계사"]
+    items: [
+      { name: "운영/관리자", url: "/management/admin" },
+      { name: "설계사", url: "/management/planner" }
+    ]
   },
   {
     title: "조직 및 관리 체계",
     icon: Network,
-    items: ["직책·권한 설정", "조직 구조 설정"]
+    items: [
+      { name: "직책·권한 설정", url: "/organization/roles" },
+      { name: "조직 구조 설정", url: "/organization/structure" }
+    ]
   },
   {
     title: "환경 설정",
     icon: Settings,
-    items: ["마이 GA 사용 설정"]
+    items: [
+      { name: "마이 GA 사용 설정", url: "/settings/myga" }
+    ]
   }
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { toggleSidebar, state } = useSidebar()
+  const pathname = usePathname()
 
   return (
     <>
-      {/* 무조건 흰색 배경 적용을 위해 bg-white 추가 (다크모드 제외 시) */}
-      <Sidebar collapsible="icon" className="bg-white [&>div[data-sidebar=sidebar]]:bg-white border-r" {...props}>
-        <SidebarHeader className="h-14 flex items-center justify-between px-4 pb-0 pt-4 flex-row border-b-0">
-         <div className="flex items-center gap-2 font-bold text-lg tracking-tight truncate w-full">
-          {state === "expanded" && <span>메뉴</span>}
-          {state === "collapsed" && <span className="text-primary font-black">M</span>}
-        </div>
-      </SidebarHeader>
-      
-      <SidebarContent>
+      <Sidebar collapsible="icon" className="bg-white [&>div[data-sidebar=sidebar]]:bg-white border-r border-border/60 shadow-none" {...props}>
+
+        <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1">
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="홈 대시보드" className="font-semibold">
-                  <Home />
-                  <span>홈 대시보드</span>
-                  <ChevronRight className="ml-auto h-4 w-4" />
+                <SidebarMenuButton
+                  tooltip="홈 대시보드"
+                  isActive={pathname === "/dashboard"}
+                  className="h-10 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                >
+                  <Home className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+                  <span className="font-medium whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0 tracking-tight">홈 대시보드</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((menu) => (
-                <Collapsible key={menu.title} defaultOpen={false} className="group/collapsible">
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton tooltip={menu.title}>
-                        <menu.icon />
-                        <span className="font-medium">{menu.title}</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {menu.items.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem}>
-                            <SidebarMenuSubButton asChild>
-                              <a href="#">
-                                <span className="text-muted-foreground before:content-['└'] before:mr-2 before:text-muted-foreground/50">{subItem}</span>
-                              </a>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              ))}
+              {menuItems.map((menu) => {
+                const hasActiveChild = menu.items?.some(item => pathname === item.url);
+                
+                return (
+                  <Collapsible 
+                    key={menu.title} 
+                    defaultOpen={hasActiveChild || menu.title === "배정 고객 관리"} 
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton 
+                          tooltip={menu.title} 
+                          className="h-10 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        >
+                          <menu.icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+                          <span className="font-medium whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0 tracking-tight">{menu.title}</span>
+                          {menu.items && menu.items.length > 0 && (
+                            <div className="ml-auto opacity-70 transition-all duration-200 group-data-[collapsible=icon]:opacity-0">
+                              <ChevronDown className="h-3 w-3 shrink-0 block group-data-[state=open]/collapsible:hidden" strokeWidth={1.75} />
+                              <ChevronUp className="h-3 w-3 shrink-0 hidden group-data-[state=open]/collapsible:block" strokeWidth={1.75} />
+                            </div>
+                          )}
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      {menu.items && menu.items.length > 0 && (
+                        <CollapsibleContent>
+                          <SidebarMenuSub className="border-none pl-0 mr-0 bg-transparent flex flex-col gap-1 mt-1">
+                            {menu.items.map((subItem) => {
+                              const isActive = pathname === subItem.url;
+                              return (
+                                <SidebarMenuSubItem key={subItem.name}>
+                                  <SidebarMenuSubButton
+                                    asChild
+                                    isActive={isActive}
+                                    className={cn(
+                                      "h-9 pl-3 gap-2.5",
+                                      isActive
+                                        ? "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary data-active:bg-primary/10 data-active:text-primary"
+                                        : "hover:bg-muted/50"
+                                    )}
+                                  >
+                                    <a href={subItem.url}>
+                                      <span className={cn(
+                                        "tracking-tight transition-colors text-[13px]",
+                                        isActive ? "font-semibold text-primary" : "font-medium text-sidebar-foreground/90"
+                                      )}>
+                                        {subItem.name}
+                                      </span>
+                                    </a>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+
+
+
+
+
+                              );
+                            })}
+                          </SidebarMenuSub>
+
+
+
+
+                        </CollapsibleContent>
+                      )}
+                    </SidebarMenuItem>
+
+                  </Collapsible>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t p-2">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={toggleSidebar}
-          className="w-full flex justify-start gap-2"
-        >
-          {state === "expanded" ? (
-             <><PanelLeftClose className="h-4 w-4" /> <span>사이드바 접기</span></>
-          ) : (
-             <PanelLeftOpen className="h-4 w-4 ml-1" />
-          )}
-        </Button>
-      </SidebarFooter>
+
+        <SidebarRail />
       </Sidebar>
     </>
   )

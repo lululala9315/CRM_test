@@ -1,27 +1,38 @@
-import { Button } from "@/components/ui/button";
+/**
+ * 역할: 상담 진행 고객 페이지 — 보험설계사 CRM 메인 뷰
+ * 주요 기능: 통계 요약, 고객 필터링, 조직도 탐색, 칸반 보드
+ */
+
+import { BusinessTree } from "@/components/dashboard/business-tree"
+import { ConsultingSection } from "@/components/dashboard/consulting-section"
+
+const SHOW_ORG_TREE = true
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <h1 className="text-4xl font-bold mb-8 font-sans">
-          Amplitude 스타일 컴포넌트 테스트
-        </h1>
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-muted/40 scrollbar-hide">
+
+      {/* 페이지 타이틀 */}
+      <div className="px-6 pt-10 pb-6">
+        <h1 className="text-[28px] font-semibold text-foreground tracking-tight leading-tight">상담 진행 고객</h1>
+        <p className="text-[12px] text-muted-foreground mt-0.5">
+          배정된 고객의 상담 상태를 관리합니다
+        </p>
       </div>
 
-      <div className="flex gap-4 p-8 bg-card rounded-lg border shadow-sm">
-        <Button variant="default">기본 (Default)</Button>
-        <Button variant="secondary">보조 (Secondary)</Button>
-        <Button variant="outline">아웃라인 (Outline)</Button>
-        <Button variant="ghost">고스트 (Ghost)</Button>
-        <Button variant="destructive">파괴 (Destructive)</Button>
+      {/* 조직도 + 콘텐츠 */}
+      <div className="flex gap-2 px-6 pb-5 items-start">
+
+        <BusinessTree visible={SHOW_ORG_TREE} />
+
+        <div className="flex-1 min-w-0 flex flex-col gap-3">
+
+          {/* 통합 카드 — 필터 + 통화현황 + 칸반 */}
+          <ConsultingSection />
+
+        </div>
       </div>
 
-      <p className="mt-8 text-muted-foreground text-center">
-        이 텍스트와 위의 버튼들은 모두 사용자가 제공한 
-        <br/>
-        preset(b2BoWWqUl) 스타일과 Pretendard 폰트가 적용된 상태입니다.
-      </p>
-    </main>
-  );
+    </div>
+  )
 }
