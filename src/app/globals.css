@@ -2,54 +2,137 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-pretendard);
-  --font-heading: var(--font-pretendard);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+/* ─────────────────────────────────────────────────────────────────────
+   Design Token System — Reference 100% (Path B)
 
-  /* ── Toss Invest 그림자 — 파란 tint + 극저 불투명도 ── */
-  /* 기준색: 다크 블루 oklch(0.18 0.025 254) ≈ Toss 어두운 배경 계열 */
+   3-Layer 구조:
+   - Layer 1 Atomic:   --blue-500, --cool-neutral-990 ...  (직접 참조 금지)
+   - Layer 2 Semantic: --bg-primary, --text-primary, --border-subtle ...
+   - Layer 3 Bridge:   @theme inline + @utility 로 Tailwind 클래스 노출
+
+   Semantic Sync — Figma 1:1 + shadcn 표준 호환:
+   - bg-primary / text-primary = 브랜드 블루 (shadcn 표준)
+   - bg-canvas-* / text-content-* / border-line-* = Figma 1:1 토큰
+   - bg-accent / text-accent = shadcn subtle hover bg (표준)
+   - bg-secondary / bg-tertiary / bg-quaternary = Layer 2 배경
+   - text-secondary / text-assistive / text-disabled = Layer 2 글자
+   - border-subtle / border-primary / border-strong = Layer 2 보더
+   - bg-fill-* / bg-divider-* / *-tint = 보조 유틸리티
+   ───────────────────────────────────────────────────────────────────── */
+
+@theme inline {
+  /* ═════════════════════════════════════════════════════════════════════
+     Reference Token Bridge — Figma 디자인시스템 1:1 노출
+     ═════════════════════════════════════════════════════════════════════ */
+
+  /* ── Border Width (border05, border10) ── */
+  --border-width-border05: 0.5px;
+  --border-width-border10: 1px;
+
+  /* ── Radius (r4 ~ r9999) ── */
+  --radius-r4:    4px;
+  --radius-r6:    6px;
+  --radius-r8:    8px;
+  --radius-r10:   10px;
+  --radius-r12:   12px;
+  --radius-r16:   16px;
+  --radius-r20:   20px;
+  --radius-r24:   24px;
+  --radius-r9999: 9999px;
+
+  /* ── Spacing (s2 ~ s64) ── */
+  --spacing-s2:  2px;
+  --spacing-s4:  4px;
+  --spacing-s6:  6px;
+  --spacing-s8:  8px;
+  --spacing-s10: 10px;
+  --spacing-s12: 12px;
+  --spacing-s16: 16px;
+  --spacing-s20: 20px;
+  --spacing-s24: 24px;
+  --spacing-s28: 28px;
+  --spacing-s30: 30px;
+  --spacing-s32: 32px;
+  --spacing-s38: 38px;
+  --spacing-s40: 40px;
+  --spacing-s44: 44px;
+  --spacing-s48: 48px;
+  --spacing-s52: 52px;
+  --spacing-s56: 56px;
+  --spacing-s58: 58px;
+  --spacing-s64: 64px;
+
+  /* ── Shadow (sd03, sd25) ── */
+  --shadow-sd03: 0px 2px 20px 0px rgba(0, 0, 0, 0.3);
+  --shadow-sd25: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+
+  /* ── Font Size sub-tokens (font_size_*) ── */
+  --text-fs10: 10px;
+  --text-fs12: 12px;
+  --text-fs13: 13px;
+  --text-fs14: 14px;
+  --text-fs16: 16px;
+  --text-fs18: 18px;
+  --text-fs20: 20px;
+  --text-fs22: 22px;
+  --text-fs24: 24px;
+  --text-fs34: 34px;
+  --text-fs36: 36px;
+
+  /* ── shadcn Tailwind 유틸리티 브리지 ── */
+  --color-background:               var(--background);
+  --color-foreground:               var(--foreground);
+  --font-sans:                      var(--font-pretendard);
+  --font-heading:                   var(--font-pretendard);
+  --color-sidebar-ring:             var(--sidebar-ring);
+  --color-sidebar-border:           var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent:           var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary:          var(--sidebar-primary);
+  --color-sidebar-foreground:       var(--sidebar-foreground);
+  --color-sidebar:                  var(--sidebar);
+  --color-chart-5:                  var(--chart-5);
+  --color-chart-4:                  var(--chart-4);
+  --color-chart-3:                  var(--chart-3);
+  --color-chart-2:                  var(--chart-2);
+  --color-chart-1:                  var(--chart-1);
+  --color-ring:                     var(--ring);
+  --color-success:                  var(--success);
+  --color-success-foreground:       var(--success-foreground);
+  --color-warning:                  var(--warning);
+  --color-warning-foreground:       var(--warning-foreground);
+  --color-input:                    var(--input);
+  --color-border:                   var(--border);
+  --color-destructive:              var(--destructive);
+  --color-accent-foreground:        var(--accent-foreground);
+  --color-accent:                   var(--accent);
+  /* primary: alpha modifier 지원 위해 @theme inline 사용 (secondary/muted는 Layer 2와 충돌하여 @utility 유지) */
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground:       var(--popover-foreground);
+  --color-popover:                  var(--popover);
+  --color-card-foreground:          var(--card-foreground);
+  --color-card:                     var(--card);
+
+  /* ── Radius scale ── */
+  --radius-sm:  calc(var(--radius) * 0.5);
+  --radius-md:  calc(var(--radius) * 0.75);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
+  --radius-4xl: calc(var(--radius) * 3);
+
+  /* ── Badge 색상 (기존 유지) ── */
+  --color-badge-gray:             oklch(0.955 0.005 260);
+  --color-badge-gray-foreground:  oklch(0.490 0.015 250);
+  --color-badge-blue:             oklch(0.960 0.025 250);
+  --color-badge-blue-foreground:  oklch(0.420 0.160 250);
+  --color-badge-green:            oklch(0.965 0.030 155);
+  --color-badge-green-foreground: oklch(0.480 0.130 155);
+
+  /* ── 그림자 — 블루 틴트 ── */
   --shadow-xs:  0 1px 2px 0 oklch(0.18 0.025 254 / 0.05);
   --shadow-sm:  0 1px 3px 0 oklch(0.18 0.025 254 / 0.07),
                 0 1px 2px -1px oklch(0.18 0.025 254 / 0.04);
@@ -62,60 +145,293 @@
   --shadow-2xl: 0 16px 48px 0 oklch(0.18 0.025 254 / 0.12),
                 0 8px 16px -8px oklch(0.18 0.025 254 / 0.07);
 
-  /* ── Toss Invest 자간 토큰 → tracking-* 유틸리티로 사용 가능 ── */
-  /* 용도: 대형 수치·주가 표시 */
-  --tracking-toss-display: -0.03em;
-  /* 용도: 페이지 타이틀·섹션 헤딩 */
-  --tracking-toss-title: -0.025em;
-  /* 용도: 카드 타이틀·서브헤딩 */
-  --tracking-toss-heading: -0.02em;
-  /* 용도: 버튼·탭·인터랙티브 레이블 */
-  --tracking-toss-ui: -0.015em;
-  /* 용도: 본문·입력값 (기본 body에 적용) */
-  --tracking-toss-body: -0.011em;
-  /* 용도: 작은 레이블·캡션·보조 텍스트 */
-  --tracking-toss-caption: -0.008em;
+  /* Fill */
+  --color-fill-subtle: var(--fill-subtle);
+  --color-fill-normal: var(--fill-normal);
+  --color-fill-strong: var(--fill-strong);
+  --color-fill-hover:  var(--fill-hover);
+  --color-fill-filter: var(--fill-filter);
+
+  /* Divider */
+  --color-divider-subtle: var(--divider-subtle);
+  --color-divider-normal: var(--divider-normal);
+  --color-divider-strong: var(--divider-strong);
+
+  /* Status */
+  --color-error:                var(--error);
+  --color-error-foreground:     var(--error-foreground);
+
+  /* Accent BG/FG (배지·태그 정적 색상) */
+  --color-accent-bg-blue:    var(--accent-bg-blue);
+  --color-accent-fg-blue:    var(--accent-fg-blue);
+  --color-accent-bg-green:   var(--accent-bg-green);
+  --color-accent-fg-green:   var(--accent-fg-green);
+  --color-accent-bg-red:     var(--accent-bg-red);
+  --color-accent-fg-red:     var(--accent-fg-red);
+  --color-accent-bg-orange:  var(--accent-bg-orange);
+  --color-accent-fg-orange:  var(--accent-fg-orange);
+  --color-accent-bg-neutral: var(--accent-bg-neutral);
+  --color-accent-fg-neutral: var(--accent-fg-neutral);
+
+  /* Badge */
+  --color-badge-tint-success-bg: var(--badge-tint-success-bg);
+  --color-badge-tint-success-fg: var(--badge-tint-success-fg);
+  --color-badge-tint-warning-bg: var(--badge-tint-warning-bg);
+  --color-badge-tint-warning-fg: var(--badge-tint-warning-fg);
+  --color-badge-tint-danger-bg:  var(--badge-tint-danger-bg);
+  --color-badge-tint-danger-fg:  var(--badge-tint-danger-fg);
+  --color-badge-tint-neutral-bg: var(--badge-tint-neutral-bg);
+  --color-badge-tint-neutral-fg: var(--badge-tint-neutral-fg);
+  --color-badge-pill-success-fg: var(--badge-pill-success-fg);
+  --color-badge-pill-warning-fg: var(--badge-pill-warning-fg);
+  --color-badge-pill-danger-fg:  var(--badge-pill-danger-fg);
+  --color-badge-pill-neutral-fg: var(--badge-pill-neutral-fg);
+
+  /* ─── Semantic Sync (canvas/content/line) + 4d/4e ───────────────────────
+     @theme inline 사용 이유: bg/text/border 같은 값 → alpha modifier 자동 지원
+     ─────────────────────────────────────────────────────────────────────── */
+
+  /* Surface — Figma bg_* 1:1 */
+  --color-canvas-primary:    var(--bg-primary);
+  --color-canvas-secondary:  var(--bg-secondary);
+  --color-canvas-tertiary:   var(--bg-tertiary);
+  --color-canvas-quaternary: var(--bg-subtle);
+
+  /* Content — Figma text_* 1:1 */
+  --color-content-primary:    var(--text-primary);
+  --color-content-secondary:  var(--text-secondary);
+  --color-content-tertiary:   var(--text-tertiary);
+  --color-content-quaternary: var(--text-quaternary);
+  --color-content-assistive:  var(--text-assistive);
+  --color-content-disabled:   var(--text-disabled);
+
+  /* Line — Figma border_* 1:1 */
+  --color-line-subtle:  var(--border-subtle);
+  --color-line-primary: var(--border-primary);
+  --color-line-strong:  var(--border-strong);
+
+  /* 4d: Figma Component/Semantic aliases (post-4.5: --primary = 브랜드 블루) */
+  --color-button-accent-primary:   var(--primary);
+  --color-button-accent-secondary: rgb(from var(--primary) r g b / 0.1);
+  --color-button-accent-tertiary:  var(--text-quaternary);
+  --color-button-surface-neutral:  var(--bg-secondary);
+  --color-action:                  var(--primary);
+
+  /* 4e: Inverse text — 흰/반투명 글자 (컬러/다크 배경 위) */
+  --color-inverse-primary:   var(--common-100);
+  --color-inverse-secondary: oklch(1 0 0 / 0.7);
+  --color-inverse-tertiary:  oklch(1 0 0 / 0.5);
 }
 
 :root {
-  /* Toss Invest 라이트 팔레트 */
-  --background: oklch(1 0 0);                        /* #FFFFFF */
-  --foreground: oklch(0.155 0.018 250.0);            /* #191F28 — Toss 기본 텍스트 */
-  --card: oklch(1 0 0);                              /* #FFFFFF */
-  --card-foreground: oklch(0.155 0.018 250.0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.155 0.018 250.0);
-  --primary: oklch(0.588 0.228 254.1);               /* #3182F6 — Toss 시그니처 블루 */
-  --primary-foreground: oklch(1 0 0);                /* white */
-  --secondary: oklch(0.960 0.005 260.0);             /* #F2F4F6 — Toss 연한 배경 */
-  --secondary-foreground: oklch(0.155 0.018 250.0);
-  --muted: oklch(0.960 0.005 260.0);                 /* #F2F4F6 */
-  --muted-foreground: oklch(0.620 0.020 255.0);      /* #8B95A1 — Toss 보조 텍스트 */
-  --accent: oklch(0.960 0.005 260.0);                /* #F2F4F6 */
-  --accent-foreground: oklch(0.155 0.018 250.0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.916 0.006 258.0);                /* #E5E8EB — Toss 보더 */
-  --input: oklch(0.916 0.006 258.0);
-  --ring: oklch(0.588 0.228 254.1);                  /* Toss 블루 포커스 링 */
-  --success: oklch(0.700 0.165 155.0);               /* #00B386 — Toss 그린 */
-  --success-foreground: oklch(0.380 0.120 152.0);
-  --warning: oklch(0.780 0.155 72.0);                /* amber — 주의/지연 */
-  --warning-foreground: oklch(0.450 0.130 68.0);
+  /* ═══════════════════════════════════════════════════════════════════
+     Layer 1 — Value Colors (Atomic Palette)
+     Figma Variables 1:1
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* Common */
+  --common-0:   oklch(0 0 0);
+  --common-100: oklch(1 0 0);
+
+  /* Cool Neutral */
+  --cool-neutral-50:  oklch(0.988 0.002 260);
+  --cool-neutral-100: oklch(0.971 0.004 260);
+  --cool-neutral-150: oklch(0.960 0.005 260);
+  --cool-neutral-200: oklch(0.940 0.006 260);
+  --cool-neutral-250: oklch(0.930 0.005 248);
+  --cool-neutral-270: oklch(0.930 0.012 260);
+  --cool-neutral-300: oklch(0.916 0.006 258);
+  --cool-neutral-400: oklch(0.870 0.008 258);
+  --cool-neutral-500: oklch(0.790 0.012 258);
+  --cool-neutral-600: oklch(0.620 0.020 255);
+  --cool-neutral-700: oklch(0.490 0.018 254);
+  --cool-neutral-800: oklch(0.360 0.015 252);
+  --cool-neutral-900: oklch(0.240 0.012 252);
+  --cool-neutral-990: oklch(0.155 0.018 250);
+
+  /* Blue — 시그니처 #3182F6 = blue-500 */
+  --blue-50:  oklch(0.974 0.015 253);
+  --blue-200: oklch(0.942 0.040 253);
+  --blue-300: oklch(0.875 0.090 253);
+  --blue-400: oklch(0.745 0.165 254);
+  --blue-500: oklch(0.588 0.228 254);
+  --blue-600: oklch(0.490 0.205 254);
+  --blue-700: oklch(0.400 0.165 254);
+  --blue-800: oklch(0.310 0.120 254);
+  --blue-900: oklch(0.220 0.075 254);
+
+  /* Red */
+  --red-50:  oklch(0.975 0.015 22);
+  --red-300: oklch(0.880 0.075 22);
+  --red-500: oklch(0.577 0.245 27);
+  --red-550: oklch(0.637 0.208 25);
+  --red-600: oklch(0.505 0.190 28);
+  --red-700: oklch(0.400 0.185 25);
+
+  /* Green */
+  --green-50:  oklch(0.972 0.025 152);
+  --green-300: oklch(0.870 0.090 152);
+  --green-400: oklch(0.560 0.164 145);
+  --green-450: oklch(0.527 0.137 150);
+  --green-500: oklch(0.700 0.165 155);
+  --green-600: oklch(0.627 0.170 149);
+  --green-700: oklch(0.420 0.130 148);
+
+  /* Orange */
+  --orange-50:  oklch(0.976 0.025 72);
+  --orange-300: oklch(0.880 0.100 72);
+  --orange-390: oklch(0.558 0.153 66);
+  --orange-500: oklch(0.780 0.155 72);
+  --orange-700: oklch(0.520 0.145 60);
+
+  /* Amber */
+  --amber-50:  oklch(0.987 0.021 95);
+  --amber-500: oklch(0.769 0.165 70);
+  --amber-700: oklch(0.555 0.146 49);
+
+  /* Alpha */
+  --alpha-blue-04: oklch(0.18 0.025 254 / 0.04);
+  --alpha-blue-08: oklch(0.18 0.025 254 / 0.08);
+  --alpha-blue-16: oklch(0.18 0.025 254 / 0.16);
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     Layer 2 — Semantic Tokens (Figma 가이드 그대로)
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* Text */
+  --text-primary:    var(--cool-neutral-990);
+  --text-secondary:  var(--cool-neutral-900);
+  --text-tertiary:   var(--cool-neutral-800);
+  --text-quaternary: var(--cool-neutral-700);
+  --text-assistive:  var(--cool-neutral-600);
+  --text-disabled:   var(--cool-neutral-400);
+
+  /* Background */
+  --bg-primary:    var(--common-100);
+  --bg-secondary:  var(--cool-neutral-50);
+  --bg-tertiary:   var(--cool-neutral-100);
+  --bg-subtle:     var(--cool-neutral-150);
+
+  /* Border (불투명) */
+  --border-subtle:  var(--cool-neutral-200);
+  --border-primary: var(--cool-neutral-300);
+  --border-strong:  var(--cool-neutral-400);
+
+  /* Divider (알파) */
+  --divider-subtle: var(--alpha-blue-04);
+  --divider-normal: var(--alpha-blue-08);
+  --divider-strong: var(--alpha-blue-16);
+
+  /* Fill */
+  --fill-subtle: var(--cool-neutral-100);
+  --fill-normal: var(--cool-neutral-150);
+  --fill-strong: var(--cool-neutral-200);
+  --fill-hover:  var(--cool-neutral-250);
+  --fill-filter: var(--common-100);
+
+  /* ── shadcn 표준: accent = subtle hover bg (cool-neutral-150) ──
+     브랜드 블루는 --primary. B2B 다중 브랜드 커스터마이징:
+       [data-brand=g] { --primary: var(--green-500); }
+  */
+  --accent: var(--cool-neutral-150);
+
+  /* Status */
+  --success-color:        var(--green-500);
+  --success-fg-color:     var(--green-400);
+  --warning-color:        var(--orange-500);
+  --warning-fg-color:     var(--orange-390);
+  --error:                var(--red-500);
+  --error-foreground:     var(--red-700);
+
+  /* Badge */
+  --badge-tint-success-bg: var(--green-50);
+  --badge-tint-success-fg: var(--green-450);
+  --badge-tint-warning-bg: var(--amber-50);
+  --badge-tint-warning-fg: var(--amber-700);
+  --badge-tint-danger-bg:  var(--red-50);
+  --badge-tint-danger-fg:  var(--red-600);
+  --badge-tint-neutral-bg: var(--bg-subtle);
+  --badge-tint-neutral-fg: var(--text-assistive);
+
+  --badge-pill-success-fg: var(--green-450);
+  --badge-pill-warning-fg: var(--amber-700);
+  --badge-pill-danger-fg:  var(--red-600);
+  --badge-pill-neutral-fg: var(--text-assistive);
+
+  /* Accent bg/fg (배지·태그) */
+  --accent-bg-blue:    var(--blue-50);
+  --accent-fg-blue:    var(--blue-700);
+  --accent-bg-green:   var(--green-50);
+  --accent-fg-green:   var(--green-400);
+  --accent-bg-red:     var(--red-50);
+  --accent-fg-red:     var(--red-700);
+  --accent-bg-orange:  var(--orange-50);
+  --accent-fg-orange:  var(--orange-390);
+  --accent-bg-neutral: var(--cool-neutral-150);
+  --accent-fg-neutral: var(--cool-neutral-700);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     Layer 3 — shadcn Bridge
+     shadcn 변수명은 유지, 값을 디자이너 토큰으로 매핑
+     ❌ 변수명 변경 금지
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /*
+   * Semantic Sync (Figma 1:1 + shadcn 표준 호환)
+   * - bg-primary / text-primary  = brand blue (shadcn 표준)
+   * - bg-canvas-primary          = 흰 카드 배경 (Figma bg_primary)
+   * - text-content-primary       = 진한 글자 (Figma text_primary)
+   * - bg-action / text-action    = brand blue semantic alias
+   * - bg-button-accent-primary   = Figma 컴포넌트 토큰
+   *
+   * shadcn 표준 매핑:
+   * --primary   = brand blue #3182F6
+   * --accent    = subtle hover bg (cool-neutral-150)
+   * --muted     = subtle bg (= bg-subtle)
+   * --secondary = 살짝 그레이 bg (= bg-secondary)
+   */
+  --background:           var(--bg-tertiary);
+  --foreground:           var(--text-primary);
+  --card:                 var(--bg-primary);
+  --card-foreground:      var(--text-primary);
+  --popover:              var(--bg-primary);
+  --popover-foreground:   var(--text-primary);
+  --primary:              var(--blue-500);             /* 브랜드 블루 (shadcn 표준 복원) */
+  --primary-foreground:   var(--common-100);           /* 흰 글자 on brand */
+  --secondary:            var(--bg-secondary);
+  --secondary-foreground: var(--text-primary);
+  --muted:                var(--bg-subtle);
+  --muted-foreground:     var(--text-assistive);
+  /* --accent 는 위 Layer 2에 정의됨 (subtle hover bg, shadcn 표준) */
+  --accent-foreground:    var(--text-primary);         /* 진한 글자 on subtle bg */
+  --destructive:          var(--error);
+  --border:               var(--border-primary);
+  --input:                var(--border-primary);
+  --ring:                 var(--accent);
+  --success:              var(--success-color);
+  --success-foreground:   var(--success-fg-color);
+  --warning:              var(--warning-color);
+  --warning-foreground:   var(--warning-fg-color);
+
+  --radius: 0.5rem;
+
+  /* Chart */
   --chart-1: oklch(0.845 0.143 164.978);
-  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-2: oklch(0.696 0.170 162.48);
   --chart-3: oklch(0.596 0.145 163.225);
   --chart-4: oklch(0.508 0.118 165.612);
   --chart-5: oklch(0.432 0.095 166.913);
-  --radius: 0.625rem;                            /* shadcn 기본값 유지 */
-  /* 사이드바 — 호버/셀렉 텍스트 색상 유지 */
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);  /* 유지 */
-  --sidebar-primary: oklch(0.588 0.228 254.1);       /* Toss 블루 */
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.980 0.002 260.0);        /* 호버/선택 배경 — 더 연하게 */
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885); /* 유지 — 호버/셀렉 텍스트 */
-  --sidebar-border: oklch(0.916 0.006 258.0);
-  --sidebar-ring: oklch(0.588 0.228 254.1);
+
+  /* Sidebar */
+  --sidebar:                    var(--bg-tertiary);
+  --sidebar-foreground:         oklch(0.450 0.010 260);
+  --sidebar-primary:            var(--accent);
+  --sidebar-primary-foreground: var(--bg-primary);
+  --sidebar-accent:             var(--bg-subtle);
+  --sidebar-accent-foreground:  oklch(0.210 0.006 286);
+  --sidebar-border:             var(--bg-subtle);
+  --sidebar-ring:               var(--accent);
 }
 
 
@@ -124,11 +440,8 @@
     @apply border-border outline-ring/50;
   }
 
-  /* ── 타이포그래피 베이스 — Toss Invest 스타일 + Pretendard ── */
-
   html {
     @apply font-sans;
-    /* Pretendard 커닝·합자 활성화 */
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -137,60 +450,8 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    /* Toss 본문: weight 400, 자간 -0.011em */
     font-weight: 400;
-    letter-spacing: var(--tracking-toss-body);
     line-height: 1.6;
-  }
-
-  /* 대형 헤딩 (h1, h2) — Toss 페이지 타이틀 수준 */
-  h1 {
-    font-weight: 700;
-    letter-spacing: var(--tracking-toss-title);
-    line-height: 1.2;
-  }
-
-  h2 {
-    font-weight: 700;
-    letter-spacing: var(--tracking-toss-title);
-    line-height: 1.25;
-  }
-
-  /* 중형 헤딩 (h3, h4) — Toss 섹션 헤더·카드 타이틀 수준 */
-  h3 {
-    font-weight: 700;
-    letter-spacing: var(--tracking-toss-heading);
-    line-height: 1.3;
-  }
-
-  h4 {
-    font-weight: 600;
-    letter-spacing: var(--tracking-toss-heading);
-    line-height: 1.35;
-  }
-
-  /* 소형 헤딩 (h5, h6) — Toss 레이블·서브타이틀 수준 */
-  h5, h6 {
-    font-weight: 600;
-    letter-spacing: var(--tracking-toss-ui);
-    line-height: 1.4;
-  }
-
-  /* 버튼·탭 등 인터랙티브 요소 — Toss: semibold + UI 자간 */
-  button, [role="button"], [role="tab"] {
-    font-weight: 500;
-    letter-spacing: var(--tracking-toss-ui);
-  }
-
-  /* 인풋·셀렉트 — 본문 자간 */
-  input, textarea, select {
-    letter-spacing: var(--tracking-toss-body);
-  }
-
-  /* 숫자·수치 — Toss: 항상 고정폭 tabular */
-  [class*="tabular"], [data-numeric] {
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
   }
 
   /* 스크롤바 숨김 */
@@ -201,4 +462,242 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* 테이블 숫자 셀 */
+@utility num-cell {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.05em;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Typography Utilities — LEGACY (호환 유지, 기존 코드 사용 중)
+   ───────────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-heading-xl {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  .text-heading-lg {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+  .text-heading-md {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.4;
+  }
+  .text-body-md {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .text-body-sm {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .text-label-md {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .text-label-sm {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+  .text-label-xs {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .text-nav {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+  /* 옛 .text-caption (11px LEGACY) 제거 — reference text-caption(10px) 으로 통일 */
+  .text-kpi {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+  .text-num-md {
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+  .text-num-sm {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    letter-spacing: -0.04em;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Typography Composite Tokens — Figma 1:1 (NEW, reference 100%)
+   레퍼런스: h1-bold ~ caption-underline (Pretendard semibold/medium/regular)
+   - letter_spacing m05 = -0.5px (모든 토큰 기본)
+   - letter_spacing m10 = -1px (reading 토큰)
+   - letter_spacing 0  = 0
+   주의: 위 LEGACY 클래스(text-heading-xl 등)와 별개로 추가됨
+   ───────────────────────────────────────────────────────────────────── */
+@layer utilities {
+
+  /* === Heading === */
+  .text-h1-bold              { font-size: 36px; line-height: 46px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-h2-bold              { font-size: 34px; line-height: 40px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-h2                   { font-size: 34px; line-height: 40px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-h3-bold              { font-size: 24px; line-height: 36px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-h3                   { font-size: 24px; line-height: 36px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-h4                   { font-size: 22px; line-height: 32px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-h5-bold-underline    { font-size: 20px; line-height: 30px; font-weight: 600; letter-spacing: -0.5px; text-decoration: underline; }
+  .text-h5-bold              { font-size: 20px; line-height: 30px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-h5-medium            { font-size: 20px; line-height: 30px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-h5                   { font-size: 20px; line-height: 30px; font-weight: 400; letter-spacing: -0.5px; }
+
+  /* === Body 1 (18px) === */
+  .text-body1-bold           { font-size: 18px; line-height: 28px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body1                { font-size: 18px; line-height: 28px; font-weight: 500; letter-spacing: -0.5px; }
+
+  /* === Body 2 (16px) === */
+  .text-body2-bold           { font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body2-bold-underline { font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.5px; text-decoration: underline; }
+  .text-body2-medium         { font-size: 16px; line-height: 24px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-body2-normal         { font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: -0.5px; }
+  .text-body2-reading        { font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: -1px; }
+
+  /* === Body 3 (14px) === */
+  .text-body3-bold           { font-size: 14px; line-height: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body3-bold-underline { font-size: 14px; line-height: 22px; font-weight: 600; letter-spacing: -0.5px; text-decoration: underline; }
+  .text-body3-medium         { font-size: 14px; line-height: 22px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-body3-underline      { font-size: 14px; line-height: 22px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
+  .text-body3-normal         { font-size: 14px; line-height: 22px; font-weight: 400; letter-spacing: -0.5px; }
+  .text-body3-reading        { font-size: 14px; line-height: 24px; font-weight: 400; letter-spacing: -1px; }
+
+  /* === Body 4 (13px) === */
+  .text-body4-bold           { font-size: 13px; line-height: 20px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body4-medium         { font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-body4-underline      { font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
+  .text-body4-normal         { font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: -0.5px; }
+  .text-body4-reading        { font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: -1px; }
+
+  /* === Body 5 (12px) === */
+  .text-body5-bold           { font-size: 12px; line-height: 20px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body5-medium         { font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-body5-underline      { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
+  .text-body5-normal         { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; }
+  .text-body5-reading        { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: -1px; }
+
+  /* === Caption (10px) === */
+  .text-caption-bold         { font-size: 10px; line-height: 16px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-caption              { font-size: 10px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; }
+  .text-caption-underline    { font-size: 10px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Layer 2 분리 @utility
+   목적: bg-secondary(배경)/text-secondary(글자)/border-primary(보더) 처럼
+        같은 토큰명이 속성별로 다른 Layer 2 값을 가지는 경우 @utility로 명시.
+   bg-primary/text-primary 는 @theme inline --color-primary 로 관리 (alpha 지원).
+   ───────────────────────────────────────────────────────────────────── */
+
+/* === Background (Layer 2 bg_*) === */
+/* bg-primary → @theme inline (brand blue, alpha modifier 지원) */
+@utility bg-secondary    { background-color: var(--bg-secondary); }
+@utility bg-tertiary     { background-color: var(--bg-tertiary); }
+@utility bg-quaternary   { background-color: var(--bg-subtle); }
+@utility bg-muted        { background-color: var(--bg-subtle); }
+
+/* === Foreground (button 위 텍스트 등) === */
+/* text-primary-foreground: @theme inline --color-primary-foreground 로 이동 */
+@utility text-secondary-foreground { color: var(--secondary-foreground); }
+@utility text-muted-foreground     { color: var(--muted-foreground); }
+
+/* === Text colors (reference text_*) === */
+/* text-primary: @theme inline --color-primary 로 이동 (alpha modifier 지원) */
+@utility text-secondary  { color: var(--text-secondary); }
+@utility text-tertiary   { color: var(--text-tertiary); }
+@utility text-quaternary { color: var(--text-quaternary); }
+@utility text-assistive  { color: var(--text-assistive); }
+@utility text-disabled   { color: var(--text-disabled); }
+@utility text-accent     { color: var(--accent); }
+
+/* === Border colors (reference border_*) === */
+@utility border-primary  { border-color: var(--border-primary); }
+@utility border-subtle   { border-color: var(--border-subtle); }
+@utility border-strong   { border-color: var(--border-strong); }
+@utility border-selected { border-color: var(--accent); }
+@utility border-accent   { border-color: var(--accent); }
+
+/* === Divider (reference divider_*) === */
+@utility bg-divider-subtle { background-color: var(--divider-subtle); }
+@utility bg-divider-normal { background-color: var(--divider-normal); }
+@utility bg-divider-strong { background-color: var(--divider-strong); }
+
+/* === Fill (보조 카테고리) === */
+@utility bg-fill-subtle { background-color: var(--fill-subtle); }
+@utility bg-fill-normal { background-color: var(--fill-normal); }
+@utility bg-fill-strong { background-color: var(--fill-strong); }
+@utility bg-fill-hover  { background-color: var(--fill-hover); }
+@utility bg-fill-filter { background-color: var(--fill-filter); }
+
+/* ─────────────────────────────────────────────────────────────────────
+   Tint 색상 — 배지/태그용 (라이트 bg + 다크 fg 페어링)
+   prefix(bg-/text-)가 자동으로 분기:
+     bg-blue-tint  → light blue (50)
+     text-blue-tint → dark blue (700)
+   ───────────────────────────────────────────────────────────────────── */
+@utility bg-blue-tint    { background-color: var(--blue-50); }
+@utility text-blue-tint  { color: var(--blue-700); }
+
+@utility bg-green-tint   { background-color: var(--green-50); }
+@utility text-green-tint { color: var(--green-450); }
+
+@utility bg-red-tint     { background-color: var(--red-50); }
+@utility text-red-tint   { color: var(--red-600); }
+
+@utility bg-orange-tint  { background-color: var(--orange-50); }
+@utility text-orange-tint { color: var(--orange-390); }
+
+@utility bg-amber-tint   { background-color: var(--amber-50); }
+@utility text-amber-tint { color: var(--amber-700); }
+
+@utility bg-neutral-tint  { background-color: var(--bg-subtle); }
+@utility text-neutral-tint { color: var(--text-assistive); }
+
+/* ─────────────────────────────────────────────────────────────────────
+   /design-system 페이지 탭 컨테이너
+   data-active-tab 값과 다른 탭의 섹션은 숨김
+   ───────────────────────────────────────────────────────────────────── */
+.ds-tab-container[data-active-tab="foundations"] section[data-tab]:not([data-tab="foundations"]),
+.ds-tab-container[data-active-tab="components"]  section[data-tab]:not([data-tab="components"]),
+.ds-tab-container[data-active-tab="patterns"]    section[data-tab]:not([data-tab="patterns"]),
+.ds-tab-container[data-active-tab="code"]        section[data-tab]:not([data-tab="code"]) {
+  display: none;
+}
+
+/* 보이는 섹션끼리 구분선 */
+.ds-tab-container > section[data-tab] ~ section[data-tab]:not([style*="display: none"]) {
+  border-top: 1px solid var(--divider-subtle);
+  padding-top: 3rem;
 }
