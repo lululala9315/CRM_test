@@ -126,10 +126,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           tooltip={menu.title}
                           isActive={false}
                           className={cn(
-                            "h-10 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                            hasActiveChild
-                              ? "text-content-secondary group-data-[collapsible=icon]:bg-foreground/8 group-data-[collapsible=icon]:text-content-primary group-data-[collapsible=icon]:hover:bg-foreground/8"
-                              : "text-content-quaternary"
+                            "h-10 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-content-quaternary",
+                            hasActiveChild && "group-data-[collapsible=icon]:bg-primary/10 group-data-[collapsible=icon]:text-primary group-data-[collapsible=icon]:hover:bg-primary/10"
                           )}
                           onClick={() => {
                             // 접힌 상태에서 클릭 시: 사이드바 펼치기 + 첫 번째 서브메뉴로 이동
@@ -162,14 +160,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     className={cn(
                                       "h-9 pl-9 gap-2.5",
                                       isActive
-                                        ? "bg-foreground/8 text-content-primary hover:bg-foreground/8"
+                                        ? "bg-primary/10 text-primary hover:bg-primary/10"
                                         : "hover:bg-sidebar-accent"
                                     )}
                                   >
                                     <Link href={subItem.url}>
                                       <span className={cn(
-                                        "transition-colors duration-75",
-                                        isActive ? "text-nav text-[13px] font-semibold text-content-primary" : "text-nav text-[13px] font-semibold text-content-quaternary"
+                                        "transition-colors duration-75 text-nav text-[13px] font-semibold",
+                                        isActive ? "text-primary" : "text-content-quaternary"
                                       )}>
                                         {subItem.name}
                                       </span>
