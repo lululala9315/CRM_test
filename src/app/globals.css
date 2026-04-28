@@ -124,14 +124,6 @@
   --radius-3xl: calc(var(--radius) * 2.5);
   --radius-4xl: calc(var(--radius) * 3);
 
-  /* ── Badge 색상 (기존 유지) ── */
-  --color-badge-gray:             oklch(0.955 0.005 260);
-  --color-badge-gray-foreground:  oklch(0.490 0.015 250);
-  --color-badge-blue:             oklch(0.960 0.025 250);
-  --color-badge-blue-foreground:  oklch(0.420 0.160 250);
-  --color-badge-green:            oklch(0.965 0.030 155);
-  --color-badge-green-foreground: oklch(0.480 0.130 155);
-
   /* ── 그림자 — 블루 틴트 ── */
   --shadow-xs:  0 1px 2px 0 oklch(0.18 0.025 254 / 0.05);
   --shadow-sm:  0 1px 3px 0 oklch(0.18 0.025 254 / 0.07),
@@ -157,35 +149,6 @@
   --color-divider-normal: var(--divider-normal);
   --color-divider-strong: var(--divider-strong);
 
-  /* Status */
-  --color-error:                var(--error);
-  --color-error-foreground:     var(--error-foreground);
-
-  /* Accent BG/FG (배지·태그 정적 색상) */
-  --color-accent-bg-blue:    var(--accent-bg-blue);
-  --color-accent-fg-blue:    var(--accent-fg-blue);
-  --color-accent-bg-green:   var(--accent-bg-green);
-  --color-accent-fg-green:   var(--accent-fg-green);
-  --color-accent-bg-red:     var(--accent-bg-red);
-  --color-accent-fg-red:     var(--accent-fg-red);
-  --color-accent-bg-orange:  var(--accent-bg-orange);
-  --color-accent-fg-orange:  var(--accent-fg-orange);
-  --color-accent-bg-neutral: var(--accent-bg-neutral);
-  --color-accent-fg-neutral: var(--accent-fg-neutral);
-
-  /* Badge */
-  --color-badge-tint-success-bg: var(--badge-tint-success-bg);
-  --color-badge-tint-success-fg: var(--badge-tint-success-fg);
-  --color-badge-tint-warning-bg: var(--badge-tint-warning-bg);
-  --color-badge-tint-warning-fg: var(--badge-tint-warning-fg);
-  --color-badge-tint-danger-bg:  var(--badge-tint-danger-bg);
-  --color-badge-tint-danger-fg:  var(--badge-tint-danger-fg);
-  --color-badge-tint-neutral-bg: var(--badge-tint-neutral-bg);
-  --color-badge-tint-neutral-fg: var(--badge-tint-neutral-fg);
-  --color-badge-pill-success-fg: var(--badge-pill-success-fg);
-  --color-badge-pill-warning-fg: var(--badge-pill-warning-fg);
-  --color-badge-pill-danger-fg:  var(--badge-pill-danger-fg);
-  --color-badge-pill-neutral-fg: var(--badge-pill-neutral-fg);
 
   /* ─── Semantic Sync (canvas/content/line) + 4d/4e ───────────────────────
      @theme inline 사용 이유: bg/text/border 같은 값 → alpha modifier 자동 지원
@@ -193,7 +156,6 @@
 
   /* Surface — Figma bg_* 1:1 */
   --color-canvas-primary:    var(--bg-primary);
-  --color-canvas-secondary:  var(--bg-secondary);
   --color-canvas-tertiary:   var(--bg-tertiary);
   --color-canvas-quaternary: var(--bg-subtle);
 
@@ -207,20 +169,9 @@
 
   /* Line — Figma border_* 1:1 */
   --color-line-subtle:  var(--border-subtle);
-  --color-line-primary: var(--border-primary);
-  --color-line-strong:  var(--border-strong);
 
-  /* 4d: Figma Component/Semantic aliases (post-4.5: --primary = 브랜드 블루) */
-  --color-button-accent-primary:   var(--primary);
-  --color-button-accent-secondary: rgb(from var(--primary) r g b / 0.1);
-  --color-button-accent-tertiary:  var(--text-quaternary);
-  --color-button-surface-neutral:  var(--bg-secondary);
-  --color-action:                  var(--primary);
-
-  /* 4e: Inverse text — 흰/반투명 글자 (컬러/다크 배경 위) */
+  /* 4e: Inverse text — 흰 글자 (컬러/다크 배경 위) */
   --color-inverse-primary:   var(--common-100);
-  --color-inverse-secondary: oklch(1 0 0 / 0.7);
-  --color-inverse-tertiary:  oklch(1 0 0 / 0.5);
 }
 
 :root {
@@ -624,9 +575,7 @@
 /* === Background (Layer 2 bg_*) === */
 /* bg-primary → @theme inline (brand blue, alpha modifier 지원) */
 @utility bg-secondary    { background-color: var(--bg-secondary); }
-@utility bg-tertiary     { background-color: var(--bg-tertiary); }
 @utility bg-quaternary   { background-color: var(--bg-subtle); }
-@utility bg-muted        { background-color: var(--bg-subtle); }
 
 /* === Foreground (button 위 텍스트 등) === */
 /* text-primary-foreground: @theme inline --color-primary-foreground 로 이동 */
@@ -636,7 +585,6 @@
 /* === Text colors (reference text_*) === */
 /* text-primary: @theme inline --color-primary 로 이동 (alpha modifier 지원) */
 @utility text-secondary  { color: var(--text-secondary); }
-@utility text-tertiary   { color: var(--text-tertiary); }
 @utility text-quaternary { color: var(--text-quaternary); }
 @utility text-assistive  { color: var(--text-assistive); }
 @utility text-disabled   { color: var(--text-disabled); }
@@ -645,19 +593,14 @@
 /* === Border colors (reference border_*) === */
 @utility border-primary  { border-color: var(--border-primary); }
 @utility border-subtle   { border-color: var(--border-subtle); }
-@utility border-strong   { border-color: var(--border-strong); }
-@utility border-selected { border-color: var(--accent); }
-@utility border-accent   { border-color: var(--accent); }
 
 /* === Divider (reference divider_*) === */
 @utility bg-divider-subtle { background-color: var(--divider-subtle); }
 @utility bg-divider-normal { background-color: var(--divider-normal); }
-@utility bg-divider-strong { background-color: var(--divider-strong); }
 
 /* === Fill (보조 카테고리) === */
 @utility bg-fill-subtle { background-color: var(--fill-subtle); }
 @utility bg-fill-normal { background-color: var(--fill-normal); }
-@utility bg-fill-strong { background-color: var(--fill-strong); }
 @utility bg-fill-hover  { background-color: var(--fill-hover); }
 @utility bg-fill-filter { background-color: var(--fill-filter); }
 
@@ -677,7 +620,6 @@
 @utility text-red-tint   { color: var(--red-600); }
 
 @utility bg-orange-tint  { background-color: var(--orange-50); }
-@utility text-orange-tint { color: var(--orange-390); }
 
 @utility bg-amber-tint   { background-color: var(--amber-50); }
 @utility text-amber-tint { color: var(--amber-700); }

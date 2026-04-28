@@ -96,10 +96,8 @@ const BG_GROUP: TokenGroup = {
   group: "Surface — bg-canvas-*",
   tokens: [
     { name: "bg-canvas-primary",    cls: "bg-canvas-primary border border-line-subtle",    hex: "#FFFFFF · 카드/모달 배경" },
-    { name: "bg-canvas-secondary",  cls: "bg-canvas-secondary border border-line-subtle",  hex: "= cool-neutral-50 · 섹션 배경" },
     { name: "bg-canvas-tertiary",   cls: "bg-canvas-tertiary border border-line-subtle",   hex: "= cool-neutral-100 · 페이지 배경" },
     { name: "bg-canvas-quaternary", cls: "bg-canvas-quaternary border border-line-subtle", hex: "= cool-neutral-150 · 구분·홀수행" },
-    { name: "bg-muted",             cls: "bg-muted border border-line-subtle",             hex: "= cool-neutral-150 (shadcn 표준 subtle hover)" },
   ],
 }
 
@@ -108,7 +106,6 @@ const TEXT_GROUP: TokenGroup = {
   tokens: [
     { name: "text-content-primary",    kind: "text", cssVar: "text-primary",    hex: "= cool-neutral-990 · 타이틀",          copyText: "text-content-primary" },
     { name: "text-content-secondary",  kind: "text", cssVar: "text-secondary",  hex: "= cool-neutral-900 · 본문",            copyText: "text-content-secondary" },
-    { name: "text-content-tertiary",   kind: "text", cssVar: "text-tertiary",   hex: "= cool-neutral-800 · 서브텍스트",       copyText: "text-content-tertiary" },
     { name: "text-content-quaternary", kind: "text", cssVar: "text-quaternary", hex: "= cool-neutral-700 · 보조 정보",        copyText: "text-content-quaternary" },
     { name: "text-content-assistive",  kind: "text", cssVar: "text-assistive",  hex: "= cool-neutral-600 · placeholder",     copyText: "text-content-assistive" },
     { name: "text-content-disabled",   kind: "text", cssVar: "text-disabled",   hex: "= cool-neutral-400 · 비활성",          copyText: "text-content-disabled" },
@@ -124,10 +121,8 @@ const BORDER_GROUP: TokenGroup = {
   group: "Line — border-line-*",
   tokens: [
     { name: "border-line-subtle",  kind: "border", cssVar: "border-subtle",  hex: "= cool-neutral-200 · 카드 보더", copyText: "border-line-subtle" },
-    { name: "border-line-primary", kind: "border", cssVar: "border-primary", hex: "= cool-neutral-300 · 기본 보더", copyText: "border-line-primary" },
-    { name: "border-line-strong",  kind: "border", cssVar: "border-strong",  hex: "= cool-neutral-400 · 강조 보더", copyText: "border-line-strong" },
-    { name: "border-border",       kind: "border", hex: "= border-line-primary (shadcn 호환)", cssVar: "border", copyText: "border-border" },
-    { name: "border-input",        kind: "border", hex: "= border-line-primary (shadcn input)", cssVar: "input", copyText: "border-input" },
+    { name: "border-border",       kind: "border", hex: "= cool-neutral-300 (shadcn 호환)", cssVar: "border", copyText: "border-border" },
+    { name: "border-input",        kind: "border", hex: "= cool-neutral-300 (shadcn input)", cssVar: "input", copyText: "border-input" },
     { name: "border-primary",       kind: "border", cssVar: "accent", hex: "= #3182F6 · 선택 상태", copyText: "border-primary" },
   ],
 }
@@ -147,7 +142,6 @@ const FILL_GROUP: TokenGroup = {
   tokens: [
     { name: "fill-subtle", cls: "bg-fill-subtle border border-line-subtle",  hex: "= cool-neutral-100" },
     { name: "fill-normal", cls: "bg-fill-normal border border-line-subtle",  hex: "= cool-neutral-150" },
-    { name: "fill-strong", cls: "bg-fill-strong border border-line-subtle",  hex: "= cool-neutral-200" },
     { name: "fill-hover",  cls: "bg-fill-hover border border-line-subtle",   hex: "= cool-neutral-250" },
     { name: "fill-filter", cls: "bg-fill-filter border border-line-subtle",  hex: "= #FFF · 필터 컨트롤" },
   ],
@@ -158,7 +152,6 @@ const DIVIDER_GROUP: TokenGroup = {
   tokens: [
     { name: "divider-subtle", cls: "bg-divider-subtle", hex: "alpha 4% · 기본 행 구분" },
     { name: "divider-normal", cls: "bg-divider-normal", hex: "alpha 8% · KPI 수직 구분선" },
-    { name: "divider-strong", cls: "bg-divider-strong", hex: "alpha 16%" },
   ],
 }
 
@@ -170,35 +163,23 @@ const STATUS_GROUP: TokenGroup = {
     { name: "warning",             cls: "bg-warning",                             hex: "= amber-500 · bg-warning" },
     { name: "warning-foreground",  cls: "bg-warning-foreground",                  hex: "= orange-390 · text-warning-foreground" },
     { name: "destructive",         cls: "bg-destructive",                         hex: "= red-500 · bg-destructive" },
-    { name: "error-foreground",    cls: "bg-error-foreground",                    hex: "= red-700 · text-destructive" },
   ],
 }
 
 const TINT_GROUP: TokenGroup = {
-  group: "Tint & Badge 색상",
+  group: "Tint — bg-*-tint / text-*-tint",
   tokens: [
-    { name: "accent-bg-blue",        cls: "bg-accent-bg-blue",                         hex: "= blue-50 · bg-accent-bg-blue" },
-    { name: "accent-fg-blue",        kind: "text", cssVar: "accent-fg-blue",           hex: "= blue-700 · text-accent-fg-blue", copyText: "text-accent-fg-blue" },
-    { name: "accent-bg-green",       cls: "bg-accent-bg-green",                        hex: "= green-50" },
-    { name: "accent-fg-green",       kind: "text", cssVar: "accent-fg-green",          hex: "= green-400", copyText: "text-accent-fg-green" },
-    { name: "accent-bg-red",         cls: "bg-accent-bg-red",                          hex: "= red-50" },
-    { name: "accent-fg-red",         kind: "text", cssVar: "accent-fg-red",            hex: "= red-700", copyText: "text-accent-fg-red" },
-    { name: "accent-bg-orange",      cls: "bg-accent-bg-orange",                       hex: "= orange-50" },
-    { name: "accent-fg-orange",      kind: "text", cssVar: "accent-fg-orange",         hex: "= orange-390", copyText: "text-accent-fg-orange" },
-    { name: "accent-bg-neutral",     cls: "bg-accent-bg-neutral border border-line-subtle", hex: "= cool-neutral-150" },
-    { name: "accent-fg-neutral",     kind: "text", cssVar: "accent-fg-neutral",        hex: "= cool-neutral-700", copyText: "text-accent-fg-neutral" },
-    { name: "badge-tint-success-bg", cls: "bg-badge-tint-success-bg",                  hex: "= green-50 · tint-success bg" },
-    { name: "badge-tint-success-fg", kind: "text", cssVar: "badge-tint-success-fg",   hex: "= green-450", copyText: "text-badge-tint-success-fg" },
-    { name: "badge-tint-warning-bg", cls: "bg-badge-tint-warning-bg",                  hex: "= amber-50" },
-    { name: "badge-tint-warning-fg", kind: "text", cssVar: "badge-tint-warning-fg",   hex: "= amber-700", copyText: "text-badge-tint-warning-fg" },
-    { name: "badge-tint-danger-bg",  cls: "bg-badge-tint-danger-bg",                   hex: "= red-50" },
-    { name: "badge-tint-danger-fg",  kind: "text", cssVar: "badge-tint-danger-fg",    hex: "= red-600", copyText: "text-badge-tint-danger-fg" },
-    { name: "badge-tint-neutral-bg", cls: "bg-badge-tint-neutral-bg border border-line-subtle", hex: "= bg-subtle" },
-    { name: "badge-tint-neutral-fg", kind: "text", cssVar: "badge-tint-neutral-fg",   hex: "= text-content-assistive", copyText: "text-badge-tint-neutral-fg" },
-    { name: "badge-pill-success-fg", kind: "text", cssVar: "badge-pill-success-fg",   hex: "pill 테두리 글자 · green-450", copyText: "text-badge-pill-success-fg" },
-    { name: "badge-pill-warning-fg", kind: "text", cssVar: "badge-pill-warning-fg",   hex: "pill 테두리 글자 · amber-700", copyText: "text-badge-pill-warning-fg" },
-    { name: "badge-pill-danger-fg",  kind: "text", cssVar: "badge-pill-danger-fg",    hex: "pill 테두리 글자 · red-600", copyText: "text-badge-pill-danger-fg" },
-    { name: "badge-pill-neutral-fg", kind: "text", cssVar: "badge-pill-neutral-fg",   hex: "pill 테두리 글자 · text-content-assistive", copyText: "text-badge-pill-neutral-fg" },
+    { name: "bg-blue-tint",    cls: "bg-blue-tint",                          hex: "= blue-50" },
+    { name: "text-blue-tint",  kind: "text", cssVar: "blue-700",             hex: "= blue-700", copyText: "text-blue-tint" },
+    { name: "bg-green-tint",   cls: "bg-green-tint",                         hex: "= green-50" },
+    { name: "text-green-tint", kind: "text", cssVar: "green-450",            hex: "= green-450", copyText: "text-green-tint" },
+    { name: "bg-red-tint",     cls: "bg-red-tint",                           hex: "= red-50" },
+    { name: "text-red-tint",   kind: "text", cssVar: "red-600",              hex: "= red-600", copyText: "text-red-tint" },
+    { name: "bg-orange-tint",  cls: "bg-orange-tint",                        hex: "= orange-50" },
+    { name: "bg-amber-tint",   cls: "bg-amber-tint",                         hex: "= amber-50" },
+    { name: "text-amber-tint", kind: "text", cssVar: "amber-700",            hex: "= amber-700", copyText: "text-amber-tint" },
+    { name: "bg-neutral-tint", cls: "bg-neutral-tint border border-line-subtle", hex: "= bg-subtle" },
+    { name: "text-neutral-tint", kind: "text", cssVar: "text-assistive",     hex: "= text-content-assistive", copyText: "text-neutral-tint" },
   ],
 }
 
@@ -686,7 +667,7 @@ export default function DesignSystemPage() {
             title="색상 — Semantic Tokens"
           >
             {/* Semantic Sync 안내 */}
-            <div className="rounded-lg border border-line-subtle bg-canvas-secondary p-4 flex flex-col gap-3">
+            <div className="rounded-lg border border-line-subtle bg-canvas-quaternary p-4 flex flex-col gap-3">
               <div>
                 <p className="text-[12px] font-semibold text-content-primary mb-1">Semantic Sync — Figma 1:1 토큰 (마이그레이션 완료)</p>
                 <p className="text-[11px] text-content-assistive">bg-canvas-* / text-content-* / border-line-* 는 Figma 토큰명 직접 사용. shadcn 표준과 충돌 없음.</p>
@@ -835,7 +816,7 @@ export default function DesignSystemPage() {
               <div className="flex gap-6 flex-wrap items-end">
                 <div className="flex flex-col gap-2">
                   <code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded w-fit">border-border05</code>
-                  <div className="h-10 w-28 rounded-md bg-canvas-primary" style={{ border: "0.5px solid var(--border-line-primary)" }} />
+                  <div className="h-10 w-28 rounded-md bg-canvas-primary" style={{ border: "0.5px solid var(--border-subtle)" }} />
                   <p className="text-[11px] text-content-assistive">0.5px · 특수 케이스</p>
                 </div>
                 <div className="flex flex-col gap-2">
