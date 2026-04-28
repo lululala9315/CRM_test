@@ -49,11 +49,11 @@ const ATOMIC_COOL_NEUTRAL: TokenGroup = {
   tokens: [
     { name: "cool-neutral-50",  hex: "→ bg-canvas-secondary" },
     { name: "cool-neutral-100", hex: "→ bg-canvas-tertiary · fill-subtle" },
-    { name: "cool-neutral-150", hex: "→ bg-canvas-quaternary · bg-muted" },
+    { name: "cool-neutral-150", hex: "→ bg-canvas-quaternary · fill-normal" },
     { name: "cool-neutral-200", hex: "→ border-line-subtle · fill-strong" },
     { name: "cool-neutral-250", hex: "→ fill-hover" },
-    { name: "cool-neutral-300", hex: "→ border-line-primary" },
-    { name: "cool-neutral-400", hex: "→ border-line-strong · text-content-disabled" },
+    { name: "cool-neutral-300", hex: "→ border-primary" },
+    { name: "cool-neutral-400", hex: "→ text-content-disabled" },
     { name: "cool-neutral-600", hex: "→ text-content-assistive" },
     { name: "cool-neutral-700", hex: "→ text-content-quaternary" },
     { name: "cool-neutral-800", hex: "→ text-content-tertiary" },
@@ -65,27 +65,27 @@ const ATOMIC_COOL_NEUTRAL: TokenGroup = {
 const ATOMIC_BLUE: TokenGroup = {
   group: "Blue",
   tokens: [
-    { name: "blue-50",  hex: "→ accent-bg-blue" },
-    { name: "blue-500", hex: "→ accent / 브랜드 / #3182F6" },
-    { name: "blue-700", hex: "→ accent-fg-blue" },
+    { name: "blue-50",  hex: "→ bg-blue-tint" },
+    { name: "blue-500", hex: "→ bg-primary · text-primary / 브랜드 / #3182F6" },
+    { name: "blue-700", hex: "→ text-blue-tint" },
   ],
 }
 
 const ATOMIC_STATUS: TokenGroup = {
   group: "Red / Green / Amber / Orange",
   tokens: [
-    { name: "red-50",     hex: "→ badge-tint-danger-bg · accent-bg-red" },
+    { name: "red-50",     hex: "→ bg-red-tint" },
     { name: "red-500",    hex: "→ destructive / error" },
-    { name: "red-600",    hex: "→ badge-tint-danger-fg" },
-    { name: "red-700",    hex: "→ error-foreground · accent-fg-red" },
-    { name: "green-50",   hex: "→ badge-tint-success-bg · accent-bg-green" },
-    { name: "green-400",  hex: "→ success-foreground · accent-fg-green" },
+    { name: "red-600",    hex: "→ text-red-tint" },
+    { name: "red-700",    hex: "→ (미사용 — semantic 토큰 없음)" },
+    { name: "green-50",   hex: "→ bg-green-tint" },
+    { name: "green-400",  hex: "→ text-success-foreground" },
     { name: "green-500",  hex: "→ success" },
-    { name: "amber-50",   hex: "→ badge-tint-warning-bg" },
+    { name: "amber-50",   hex: "→ bg-amber-tint" },
     { name: "amber-500",  hex: "→ warning" },
-    { name: "amber-700",  hex: "→ badge-tint-warning-fg · warning-foreground" },
-    { name: "orange-50",  hex: "→ accent-bg-orange" },
-    { name: "orange-390", hex: "→ accent-fg-orange" },
+    { name: "amber-700",  hex: "→ text-amber-tint · warning-foreground" },
+    { name: "orange-50",  hex: "→ bg-orange-tint" },
+    { name: "orange-390", hex: "→ warning-foreground" },
     { name: "orange-500", hex: "→ warning (일부)" },
   ],
 }
@@ -104,16 +104,15 @@ const BG_GROUP: TokenGroup = {
 const TEXT_GROUP: TokenGroup = {
   group: "Content — text-content-*",
   tokens: [
-    { name: "text-content-primary",    kind: "text", cssVar: "text-primary",    hex: "= cool-neutral-990 · 타이틀",          copyText: "text-content-primary" },
-    { name: "text-content-secondary",  kind: "text", cssVar: "text-secondary",  hex: "= cool-neutral-900 · 본문",            copyText: "text-content-secondary" },
-    { name: "text-content-quaternary", kind: "text", cssVar: "text-quaternary", hex: "= cool-neutral-700 · 보조 정보",        copyText: "text-content-quaternary" },
-    { name: "text-content-assistive",  kind: "text", cssVar: "text-assistive",  hex: "= cool-neutral-600 · placeholder",     copyText: "text-content-assistive" },
-    { name: "text-content-disabled",   kind: "text", cssVar: "text-disabled",   hex: "= cool-neutral-400 · 비활성",          copyText: "text-content-disabled" },
-    { name: "text-content-primary",         kind: "text", hex: "= text-content-primary (shadcn 호환)" },
-    { name: "text-content-assistive",   kind: "text", cssVar: "muted-foreground", hex: "= text-content-assistive (shadcn 호환)", copyText: "text-content-assistive" },
-    { name: "text-primary",             kind: "text", cssVar: "accent",           hex: "= #3182F6 · 링크·브랜드 텍스트",       copyText: "text-primary" },
-    { name: "text-inverse-primary",  kind: "text", cssVar: "accent-foreground", hex: "흰색 · 브랜드 버튼 위",             copyText: "text-inverse-primary" },
-    { name: "text-inverse-primary",    kind: "text", cssVar: "common-100",       hex: "흰색 · 다크 배경 위",                 copyText: "text-inverse-primary" },
+    { name: "text-content-primary",    kind: "text", cssVar: "text-primary",    hex: "= cool-neutral-990 · 타이틀",      copyText: "text-content-primary" },
+    { name: "text-content-secondary",  kind: "text", cssVar: "text-secondary",  hex: "= cool-neutral-900 · 본문",        copyText: "text-content-secondary" },
+    { name: "text-content-tertiary",   kind: "text", cssVar: "text-tertiary",   hex: "= cool-neutral-800 · 서브 텍스트", copyText: "text-content-tertiary" },
+    { name: "text-content-quaternary", kind: "text", cssVar: "text-quaternary", hex: "= cool-neutral-700 · 보조 정보",   copyText: "text-content-quaternary" },
+    { name: "text-content-assistive",  kind: "text", cssVar: "text-assistive",  hex: "= cool-neutral-600 · placeholder", copyText: "text-content-assistive" },
+    { name: "text-content-disabled",   kind: "text", cssVar: "text-disabled",   hex: "= cool-neutral-400 · 비활성",      copyText: "text-content-disabled" },
+    { name: "text-muted-foreground",   kind: "text", cssVar: "muted-foreground", hex: "shadcn 호환 — text-content-assistive와 동일값", copyText: "text-muted-foreground" },
+    { name: "text-primary",            kind: "text", cssVar: "primary",          hex: "= #3182F6 · 링크·브랜드 텍스트",   copyText: "text-primary" },
+    { name: "text-inverse-primary",    kind: "text", cssVar: "common-100",       hex: "흰색 · 다크 배경 위 (버튼 라벨)", copyText: "text-inverse-primary" },
   ],
 }
 
@@ -123,7 +122,7 @@ const BORDER_GROUP: TokenGroup = {
     { name: "border-line-subtle",  kind: "border", cssVar: "border-subtle",  hex: "= cool-neutral-200 · 카드 보더", copyText: "border-line-subtle" },
     { name: "border-border",       kind: "border", hex: "= cool-neutral-300 (shadcn 호환)", cssVar: "border", copyText: "border-border" },
     { name: "border-input",        kind: "border", hex: "= cool-neutral-300 (shadcn input)", cssVar: "input", copyText: "border-input" },
-    { name: "border-primary",       kind: "border", cssVar: "accent", hex: "= #3182F6 · 선택 상태", copyText: "border-primary" },
+    { name: "border-primary",       kind: "border", cssVar: "primary", hex: "= #3182F6 · 선택 상태", copyText: "border-primary" },
   ],
 }
 
