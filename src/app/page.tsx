@@ -16,7 +16,7 @@ export default function Home() {
 
       {/* 페이지 타이틀 */}
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-heading-xl text-content-primary">상담 진행 고객</h1>
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">상담 진행 고객</h1>
         <p className="text-[14px] text-content-assistive mt-2">
           배정된 고객의 상담 상태를 관리합니다
         </p>

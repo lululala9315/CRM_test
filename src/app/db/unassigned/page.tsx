@@ -15,7 +15,7 @@ export default function UnassignedDbPage() {
 
       {/* 페이지 타이틀 */}
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-heading-xl text-content-primary">미배정 DB</h1>
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">미배정 DB</h1>
         <p className="text-[14px] text-content-assistive mt-2">
           배정이 되지 않은 DB를 설계사에게 재배정 할 수 있습니다
         </p>

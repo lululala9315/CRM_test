@@ -233,8 +233,8 @@ export default function DashboardPage() {
                     {kpi.label}
                   </p>
                   <div className="flex items-baseline gap-0.5">
-                    <span className="text-kpi text-content-primary tabular-nums">{kpi.value}</span>
-                    <span className="text-kpi text-content-primary">{kpi.unit}</span>
+                    <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{kpi.value}</span>
+                    <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{kpi.unit}</span>
                   </div>
                   <div className={cn(
                     "mt-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[11px] font-semibold",

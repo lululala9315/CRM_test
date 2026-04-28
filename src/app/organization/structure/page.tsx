@@ -13,7 +13,7 @@ export default function OrgStructurePage() {
 
       {/* 타이틀 */}
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-heading-xl text-content-primary">
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">
           조직 구조 설정
         </h1>
         <p className="text-[14px] text-content-assistive mt-2">

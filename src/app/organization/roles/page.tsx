@@ -16,7 +16,7 @@ export default function RolesPage() {
       {/* 타이틀 + 등록 버튼 */}
       <div className="px-6 pt-10 pb-6 flex items-start justify-between">
         <div>
-          <h1 className="text-heading-xl text-content-primary">
+          <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">
             직책·권한 설정
           </h1>
           <p className="text-[14px] text-content-assistive mt-2">

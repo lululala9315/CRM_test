@@ -15,7 +15,7 @@ export default function PendingPage() {
 
       {/* 페이지 타이틀 */}
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-heading-xl text-content-primary">계약 예정 고객</h1>
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">계약 예정 고객</h1>
         <p className="text-[14px] text-content-assistive mt-2">
           계약 진행을 약속한 고객을 관리할 수 있습니다
         </p>

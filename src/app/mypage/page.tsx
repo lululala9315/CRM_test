@@ -10,7 +10,7 @@ export default function MypagePage() {
   return (
     <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-heading-xl text-content-primary">마이페이지</h1>
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">마이페이지</h1>
         <p className="text-[14px] text-content-assistive mt-2">개인정보를 확인하고 수정할 수 있습니다</p>
       </div>
       <TitleObserver />

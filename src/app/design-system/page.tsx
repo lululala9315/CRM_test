@@ -909,8 +909,8 @@ export default function DesignSystemPage() {
                       {i > 0 && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />}
                       <p className="text-[12px] font-medium text-content-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">{stat.label}</p>
                       <div className="flex items-baseline gap-0.5">
-                        <span className="text-kpi text-content-primary tabular-nums">{stat.value}</span>
-                        <span className="text-kpi text-content-primary">{stat.unit}</span>
+                        <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{stat.value}</span>
+                        <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{stat.unit}</span>
                       </div>
                     </div>
                   ))}

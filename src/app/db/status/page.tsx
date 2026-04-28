@@ -13,7 +13,7 @@ export default function DbStatusPage() {
 
       {/* 페이지 타이틀 */}
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-heading-xl text-content-primary">DB 분배 현황</h1>
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">DB 분배 현황</h1>
         <p className="text-[14px] text-content-assistive mt-2">
           각 지점별 설계사 또는 권역별 배정된 DB 수량을 확인할 수 있습니다
         </p>

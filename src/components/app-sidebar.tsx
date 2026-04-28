@@ -106,7 +106,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 >
                   <Link href="/dashboard">
                     <MsIcon name="home" />
-                    <span className="text-nav text-[13px] font-semibold whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0">홈 대시보드</span>
+                    <span className="text-[13px] font-semibold tracking-tight leading-none whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0">홈 대시보드</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -138,7 +138,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           }}
                         >
                           <MsIcon name={menu.icon} />
-                          <span className="text-nav text-[13px] font-semibold whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0">{menu.title}</span>
+                          <span className="text-[13px] font-semibold tracking-tight leading-none whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0">{menu.title}</span>
                           {menu.items && menu.items.length > 0 && (
                             <ChevronDown
                               className="ml-auto h-3 w-3 shrink-0 text-sidebar-foreground/40 transition-[transform,opacity] duration-200 ease-out group-data-[state=open]/collapsible:rotate-180 group-data-[collapsible=icon]:opacity-0"
@@ -166,7 +166,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                   >
                                     <Link href={subItem.url}>
                                       <span className={cn(
-                                        "transition-colors duration-75 text-nav text-[13px] font-semibold",
+                                        "transition-colors duration-75 text-[13px] font-semibold tracking-tight leading-none",
                                         isActive ? "text-primary" : "text-content-quaternary"
                                       )}>
                                         {subItem.name}
@@ -204,7 +204,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 >
                   <Link href="/design-system">
                     <MsIcon name="palette" />
-                    <span className="text-nav text-[13px] font-semibold whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0">디자인 시스템</span>
+                    <span className="text-[13px] font-semibold tracking-tight leading-none whitespace-nowrap truncate transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0">디자인 시스템</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

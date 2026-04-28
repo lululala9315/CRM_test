@@ -13,7 +13,7 @@ export default function ReassignTypePage() {
 
       {/* 페이지 타이틀 */}
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-heading-xl text-content-primary">재배정 타입 설정</h1>
+        <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">재배정 타입 설정</h1>
         <p className="text-[14px] text-content-assistive mt-2">
           다른 설계사에게 고객 재배정 시, 사유를 설정할 수 있습니다
         </p>

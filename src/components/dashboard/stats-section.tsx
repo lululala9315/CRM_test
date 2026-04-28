@@ -30,10 +30,10 @@ export function StatsSection() {
               {stat.label}
             </p>
             <div className="flex items-baseline gap-0.5">
-              <span className="text-kpi text-content-primary">
+              <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">
                 {stat.value}
               </span>
-              <span className="text-kpi text-content-primary">
+              <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">
                 {stat.unit}
               </span>
             </div>
