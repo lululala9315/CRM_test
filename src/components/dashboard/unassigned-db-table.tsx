@@ -125,7 +125,7 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
               {displayedRows.map((row) => (
                 <TableRow
                   key={row.no}
-                  className={`cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120 data-[state=selected]:bg-primary/5${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
+                  className={`cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
                   data-state={selectedIds.includes(row.no) ? "selected" : undefined}
                   onClick={() => console.log("open detail", row.no)}
                 >
