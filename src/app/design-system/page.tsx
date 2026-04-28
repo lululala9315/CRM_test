@@ -589,6 +589,7 @@ export default function DesignSystemPage() {
         <h1 className="text-[28px] font-semibold tracking-tight leading-tight text-content-primary [text-wrap:balance]">
           디자인 시스템
         </h1>
+        <p className="text-[14px] text-content-assistive mt-2">Semantic Sync 토큰 (Figma 1:1 + shadcn 표준 호환)</p>
       </div>
 
       {/* 탭 네비게이션 — sticky */}
@@ -670,22 +671,6 @@ export default function DesignSystemPage() {
               <div>
                 <p className="text-[12px] font-semibold text-content-primary mb-1">Semantic Sync — Figma 1:1 토큰 (마이그레이션 완료)</p>
                 <p className="text-[11px] text-content-assistive">bg-canvas-* / text-content-* / border-line-* 는 Figma 토큰명 직접 사용. shadcn 표준과 충돌 없음.</p>
-              </div>
-              {/* 브랜드(accent) SWAP은 아직 진행 중 — 4b/4.5단계 대기 */}
-              <div className="rounded-md border border-primary/20 bg-primary/5 p-3">
-                <p className="text-[11px] font-semibold text-primary mb-1.5">⚠ 브랜드 토큰 SWAP 잔존 (4b/4.5 완료 전)</p>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-0.5">
-                  {[
-                    { cls: "bg-primary",              shadcn: "서브틀 hover",   ours: "브랜드 블루 #3182F6" },
-                    { cls: "text-primary",             shadcn: "서브틀 글자",   ours: "브랜드 블루 링크" },
-                    { cls: "text-inverse-primary",  shadcn: "서브틀 위 글자", ours: "흰 글자 (버튼 위)" },
-                  ].map(r => (
-                    <div key={r.cls} className="flex items-baseline gap-1.5 py-0.5">
-                      <code className="text-[11px] text-primary shrink-0">{r.cls}</code>
-                      <span className="text-[10px] text-content-assistive">→ {r.ours}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
 
