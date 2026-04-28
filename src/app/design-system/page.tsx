@@ -244,7 +244,7 @@ const SPACING_PATTERNS = [
 // ── 버튼 ──────────────────────────────────────────────────────────────────
 // 6 variants — 모두 실제 사용 중
 const BUTTON_VARIANTS = [
-  { label: "default",     variant: "default" as const,     desc: "메인 액션 — 저장 / 재배정 / 확인" },
+  { label: "primary",     variant: "primary" as const,     desc: "메인 액션 — 저장 / 재배정 / 확인" },
   { label: "secondary",   variant: "secondary" as const,   desc: "보조 액션 — 필터 검색 (서브틀 브랜드)" },
   { label: "outline",     variant: "outline" as const,     desc: "약한 강조 — 취소 / 보조 옵션" },
   { label: "ghost",       variant: "ghost" as const,       desc: "투명 — 페이지네이션 / 아이콘 트리거" },
