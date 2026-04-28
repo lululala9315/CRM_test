@@ -6,8 +6,8 @@
  */
 
 import { useState } from "react"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { RadioGroup, RadioOption } from "@/components/ui/radio-group"
 import { Info } from "lucide-react"
 
 type AutoAssignMode = "disabled" | "enabled"
@@ -30,11 +30,11 @@ export function AutoAssignSettings() {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="bg-card rounded-lg border border-border/40 overflow-hidden">
+      <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
 
         {/* 안내 */}
         <div className="px-6 pt-6 pb-6">
-          <p className="text-[14px] font-semibold text-foreground leading-relaxed">
+          <p className="text-[14px] font-semibold text-content-primary leading-relaxed">
             사용함을 선택하시면, 보닥에서 제공하는 DB를 설계사에게 까지 자동 배정해 드립니다.
           </p>
           <div className="mt-4 flex items-start gap-2.5 bg-primary/5 border border-primary/10 rounded-md px-4 py-3">
@@ -44,52 +44,32 @@ export function AutoAssignSettings() {
             </p>
           </div>
         </div>
-        <div className="mx-6 h-px bg-border/30" />
+        <div className="mx-6 h-px bg-divider-subtle" />
 
         {/* 옵션 */}
-        {OPTIONS.map((option, index) => {
-          const isSelected = selected === option.value
-          return (
+        <RadioGroup
+          value={selected}
+          onValueChange={(v) => setSelected(v as AutoAssignMode)}
+          className="gap-0"
+        >
+          {OPTIONS.map((option, index) => (
             <div key={option.value}>
-              {index !== 0 && <div className="mx-6 h-px bg-border/20" />}
-              <button
-                onClick={() => setSelected(option.value)}
-                className={cn(
-                  "w-full flex items-start gap-4 px-6 py-4 text-left transition-colors",
-                  isSelected ? "bg-primary/[0.06]" : "hover:bg-muted/30"
-                )}
-              >
-                <div className={cn(
-                  "mt-0.5 w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
-                  isSelected ? "border-primary" : "border-border/50"
-                )}>
-                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className={cn(
-                    "text-[15px] font-semibold leading-snug transition-colors",
-                    isSelected ? "text-foreground" : "text-foreground/50"
-                  )}>
-                    {option.label}
-                  </span>
-                  <span className={cn(
-                    "text-[13px] leading-relaxed transition-colors",
-                    isSelected ? "text-muted-foreground/80" : "text-muted-foreground/40"
-                  )}>
-                    {option.description}
-                  </span>
-                </div>
-              </button>
+              {index !== 0 && <div className="mx-6 h-px bg-divider-subtle" />}
+              <RadioOption
+                value={option.value}
+                label={option.label}
+                description={option.description}
+              />
             </div>
-          )
-        })}
+          ))}
+        </RadioGroup>
       </div>
 
       {/* 하단 */}
       <div className="flex flex-col gap-4">
-        <div className="h-px bg-border/40" />
+        <div className="h-px bg-divider-subtle" />
         <div className="flex justify-end">
-          <Button className="px-8 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 shadow-none">
+          <Button>
             확인
           </Button>
         </div>

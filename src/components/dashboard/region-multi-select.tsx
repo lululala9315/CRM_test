@@ -2,7 +2,7 @@
 
 /**
  * 역할: 지역 multi-select 드롭다운 — Popover + Checkbox
- * 주요 기능: "지역 전체" 또는 선택된 지역 개수 표시, 체크박스 토글
+ * 주요 기능: 지역 전체/개별 선택 (통화 조건은 CallConditionSelect로 분리됨)
  */
 
 import { useState } from "react"
@@ -23,22 +23,16 @@ export function RegionMultiSelect() {
   const isAll = selectedRegions.length === 0
   const allChecked = selectedRegions.length === REGIONS.length
 
-  // "전체" 토글 — 전체 선택 또는 전체 해제
   const toggleAll = () => {
     setSelectedRegions(allChecked ? [] : [...REGIONS])
   }
 
-  // 개별 지역 토글
   const toggleRegion = (region: string) => {
-    setSelectedRegions(prev => {
-      if (prev.includes(region)) {
-        return prev.filter(r => r !== region)
-      }
-      return [...prev, region]
-    })
+    setSelectedRegions(prev =>
+      prev.includes(region) ? prev.filter(r => r !== region) : [...prev, region]
+    )
   }
 
-  // 트리거 텍스트
   const displayText = isAll
     ? "지역 전체"
     : selectedRegions.length === 1
@@ -50,48 +44,47 @@ export function RegionMultiSelect() {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "flex h-8 items-center justify-between gap-1.5 rounded-md border border-border/60 bg-background px-2.5 text-[13px] shadow-none transition-colors min-w-[120px]",
-            "hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-            isAll ? "text-foreground" : "text-foreground"
+            "flex h-8 items-center justify-between gap-1.5 rounded-md border border-line-subtle bg-fill-filter px-2.5 text-[13px] shadow-none transition-[color,background-color,border-color] min-w-[120px]",
+            "hover:bg-primary/5 hover:border-primary/30 hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+            "text-content-primary"
           )}
         >
           <span className="truncate">{displayText}</span>
-          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-content-assistive" />
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[240px] p-2 rounded-md border-border/60"
+        className="w-[260px] p-0 rounded-md border-line-subtle"
         align="start"
         sideOffset={4}
       >
-        {/* 전체 선택 */}
-        <label className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted/50">
-          <Checkbox
-            checked={allChecked}
-            onCheckedChange={toggleAll}
-            className="h-4 w-4 rounded-[4px] border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-          />
-          <span className="text-[13px] font-medium text-foreground">전체</span>
-        </label>
+        <div className="p-2">
+          {/* 전체 선택 */}
+          <label className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-fill-normal">
+            <Checkbox
+              checked={allChecked}
+              onCheckedChange={toggleAll}
+              className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            />
+            <span className="text-[13px] font-medium text-content-primary">전체</span>
+          </label>
 
-        {/* 구분선 */}
-        <div className="mx-2 my-1 h-px bg-border/30" />
-
-        {/* 개별 지역 — 3열 그리드 */}
-        <div className="grid grid-cols-3 gap-0.5 max-h-[200px] overflow-y-auto">
-          {REGIONS.map((region) => (
-            <label
-              key={region}
-              className="flex items-center gap-1.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted/50"
-            >
-              <Checkbox
-                checked={selectedRegions.includes(region)}
-                onCheckedChange={() => toggleRegion(region)}
-                className="h-3.5 w-3.5 rounded-[3px] border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-              />
-              <span className="text-[12px] text-foreground/80">{region}</span>
-            </label>
-          ))}
+          {/* 개별 지역 — 3열 그리드 */}
+          <div className="mt-1 grid grid-cols-3 gap-0.5 max-h-[200px] overflow-y-auto">
+            {REGIONS.map((region) => (
+              <label
+                key={region}
+                className="flex items-center gap-1.5 px-2 py-1.5 rounded-md cursor-pointer hover:bg-fill-normal"
+              >
+                <Checkbox
+                  checked={selectedRegions.includes(region)}
+                  onCheckedChange={() => toggleRegion(region)}
+                  className="h-3.5 w-3.5 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <span className="text-[12px] text-content-secondary">{region}</span>
+              </label>
+            ))}
+          </div>
         </div>
       </PopoverContent>
     </Popover>

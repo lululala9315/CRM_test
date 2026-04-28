@@ -25,20 +25,21 @@ import { CSS } from "@dnd-kit/utilities"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-// 기능 배지 → shadcn variant 매핑
-const TAG_VARIANT: Record<string, "tag-red" | "tag-dark" | "tag-green" | "tag-blue" | "tag-muted"> = {
-  "종합진단":    "tag-red",
-  "AI 상담내역": "tag-dark",
-  "보험료점검":  "tag-green",
-  "보장확대":    "tag-blue",
+// 기능 배지 → 디자인 시스템 토큰 매핑 (accent-bg-* / accent-fg-*)
+const TAG_COLOR: Record<string, string> = {
+  "종합진단":    "bg-red-tint text-red-tint border-transparent",
+  "AI 상담내역": "bg-canvas-tertiary text-content-assistive border-transparent",
+  "보험료점검":  "bg-green-tint text-green-tint border-transparent",
+  "보장확대":    "bg-blue-tint text-blue-tint border-transparent",
 }
+const TAG_COLOR_DEFAULT = "bg-canvas-tertiary text-content-assistive border-transparent"
 
-// 컬럼 스타일 — 타이틀 옆 원형 도트로 상태 구분
+// 컬럼 스타일 — 타이틀 옆 원형 도트로 상태 구분 (디자인 시스템 토큰 사용)
 const COLUMN_STYLE: Record<string, { dot: string; label: string }> = {
-  "col-before":  { dot: "bg-slate-400",   label: "text-foreground/70" },
-  "col-absent":  { dot: "bg-amber-400",   label: "text-foreground/70" },
-  "col-success": { dot: "bg-primary",     label: "text-foreground/70" },
-  "col-valid":   { dot: "bg-emerald-400", label: "text-foreground/70" },
+  "col-before":  { dot: "bg-canvas-quaternary",        label: "text-content-tertiary" },
+  "col-absent":  { dot: "bg-orange-tint",  label: "text-content-tertiary" },
+  "col-success": { dot: "bg-primary",            label: "text-content-tertiary" },
+  "col-valid":   { dot: "bg-green-tint",   label: "text-content-tertiary" },
 }
 
 // --- Types ---
@@ -142,21 +143,21 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
 
   return (
     <div className={cn(
-      "relative bg-card rounded-md border border-border/50 overflow-hidden",
+      "relative bg-canvas-primary rounded-md border border-line-subtle overflow-hidden",
       "cursor-grab active:cursor-grabbing select-none",
-      "hover:border-border hover:shadow-sm transition-colors duration-150",
+      "hover:border-border hover:shadow-sm transition-[color,border-color,box-shadow] duration-150",
       isDragging && "opacity-40 shadow-md"
     )}>
 
       <div className="px-3.5 pt-3.5 pb-3">
 
         {/* 이름 — 단독 강조 */}
-        <p className="text-[14px] font-semibold text-foreground leading-tight mb-0.5">
+        <p className="text-[14px] font-semibold text-content-primary leading-tight mb-0.5">
           {customer.name}
         </p>
 
         {/* 인적사항 — 이름 아래 서브 라인 */}
-        <p className="text-[12px] text-muted-foreground mb-3">
+        <p className="text-[12px] text-content-assistive mb-3">
           {customer.age}세 · {customer.gender} · {customer.region.split(" ")[0]}
         </p>
 
@@ -164,14 +165,14 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
         <div className="space-y-1 mb-3">
           {dates.map(({ label, value }) => (
             <div key={label} className="flex items-center justify-between">
-              <span className="text-[11px] text-muted-foreground/60 w-[44px] shrink-0">{label}</span>
-              <span className="text-[11px] text-muted-foreground tabular-nums">{value}</span>
+              <span className="text-[11px] text-content-assistive w-[44px] shrink-0">{label}</span>
+              <span className="text-[11px] text-content-assistive tabular-nums tracking-tighter">{value}</span>
             </div>
           ))}
         </div>
 
         {/* 구분선 */}
-        <div className="h-px bg-border/40 mb-2.5" />
+        <div className="h-px bg-divider-subtle mb-2.5" />
 
         {/* 푸터: 배지 + 통화 횟수 */}
         <div className="flex items-center justify-between gap-2">
@@ -179,14 +180,13 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
             {(customer.tags ?? []).slice(0, 2).map(tag => (
               <Badge
                 key={tag}
-                variant={TAG_VARIANT[tag] ?? "tag-muted"}
-                className="text-[10px] font-medium px-1.5 h-[18px] tracking-tight shrink-0"
+                className={cn("text-[10px] font-medium px-1.5 h-[18px] tracking-tight shrink-0", TAG_COLOR[tag] ?? TAG_COLOR_DEFAULT)}
               >
                 {tag}
               </Badge>
             ))}
           </div>
-          <span className="text-[11px] tabular-nums text-muted-foreground/70 shrink-0">
+          <span className="text-[11px] tabular-nums text-content-assistive shrink-0">
             {customer.callCount}회
           </span>
         </div>
@@ -295,12 +295,12 @@ export function KanbanBoard() {
       <div className="flex gap-3 px-6 pt-5 pb-7 w-full">
         {COLUMN_ORDER.map(colId => {
           const column = columns[colId]
-          const style = COLUMN_STYLE[colId] ?? { dot: "bg-foreground/20", label: "text-foreground/60" }
+          const style = COLUMN_STYLE[colId] ?? { dot: "bg-foreground/20", label: "text-content-quaternary" }
 
           return (
             <div
               key={column.id}
-              className="flex-1 min-w-0 flex flex-col bg-muted/70 rounded-lg overflow-hidden"
+              className="flex-1 min-w-0 flex flex-col bg-canvas-quaternary rounded-lg overflow-hidden"
             >
               {/* 컬럼 헤더 */}
               <div className="flex items-center gap-2 px-3.5 py-3">
@@ -308,17 +308,23 @@ export function KanbanBoard() {
                 <span className={cn("text-[13px] font-semibold tracking-tight", style.label)}>
                   {column.title}
                 </span>
-                <div className="flex items-center justify-center bg-slate-200/60 rounded-[4px] px-1.5 h-5 min-w-[20px]">
-                  <span className="text-[11px] font-bold tabular-nums text-slate-500">
+                <div className="flex items-center justify-center bg-canvas-quaternary rounded-sm px-1.5 h-5 min-w-[20px]">
+                  <span className="text-[11px] font-semibold tabular-nums text-content-tertiary">
                     {column.items.length}
                   </span>
                 </div>
               </div>
               <SortableContext id={column.id} items={column.items} strategy={verticalListSortingStrategy}>
                 <div className="flex flex-col gap-2 p-2 min-h-[80px] max-h-[780px] overflow-y-auto scrollbar-hide">
-                  {column.items.map(id => (
-                    <SortableCustomerCard key={id} id={id} customer={customers[id]} />
-                  ))}
+                  {column.items.length === 0 ? (
+                    <p className="text-[12px] text-content-disabled text-center py-6">
+                      해당 고객이 없습니다
+                    </p>
+                  ) : (
+                    column.items.map(id => (
+                      <SortableCustomerCard key={id} id={id} customer={customers[id]} />
+                    ))
+                  )}
                 </div>
               </SortableContext>
             </div>
@@ -333,7 +339,7 @@ export function KanbanBoard() {
         sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: "0.2" } } })
       }}>
         {activeId && (
-          <div className="shadow-lg rounded-lg scale-[1.02]">
+          <div className="shadow-xl rounded-lg scale-[1.02] rotate-[1deg]">
             <CustomerCard customer={customers[activeId]} />
           </div>
         )}

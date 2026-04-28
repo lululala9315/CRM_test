@@ -1,21 +1,15 @@
 "use client"
 
 /**
- * 역할: 배정 완료 DB 통합 카드 — 필터 + KPI + 테이블
- * 주요 기능: 필터(담당설계사/고객명/조건/지역), StatsSection, 체크박스 테이블, 선택 재배정
+ * 역할: 배정 완료 DB 통합 카드 — KPI + 필터 + 테이블 + 페이지네이션
+ * 주요 기능: 헤더 배경 제거, 여유로운 행 높이, 우측 페이지네이션
+ * 참고: filterSlot prop으로 필터 컴포넌트를 카드 안에 주입받음
  */
 
 import { useState } from "react"
-import { StatsSection } from "@/components/dashboard/stats-section"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { PageNumbers, PageSizeSelect } from "@/components/ui/pagination"
 import {
   Table,
   TableBody,
@@ -24,12 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  ChevronsLeft,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsRight,
-} from "lucide-react"
 
 // --- 목업 데이터 ---
 type Row = {
@@ -48,191 +36,191 @@ type Row = {
   planner: string
 }
 
-const MOCK_ROWS: Row[] = [
-  { no: 10, name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: "2026.01.01 00:00", callTry: "10회", callSuccess: "10회", validCall: null,    planner: "김홍도" },
-  { no: 9,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: null,               lastCall: null,               callTry: null,    callSuccess: null,    validCall: null,    planner: "김홍도" },
-  { no: 8,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: "2026.01.01 00:00", callTry: "10회", callSuccess: "10회", validCall: "10회", planner: "김홍도" },
-  { no: 7,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: null,               callTry: null,    callSuccess: null,    validCall: null,    planner: "김홍도" },
-  { no: 6,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: "2026.01.01 00:00", callTry: "10회", callSuccess: "10회", validCall: null,    planner: "김홍도" },
-  { no: 5,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: "2026.01.01 00:00", callTry: "10회", callSuccess: "10회", validCall: null,    planner: "김홍도" },
-  { no: 4,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: "2026.01.01 00:00", callTry: "10회", callSuccess: "10회", validCall: "10회", planner: "김홍도" },
-  { no: 3,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: null,               lastCall: null,               callTry: null,    callSuccess: null,    validCall: null,    planner: "김홍도" },
-  { no: 2,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: "2026.01.01 00:00", callTry: "10회", callSuccess: "10회", validCall: "10회", planner: "김홍도" },
-  { no: 1,  name: "이*혁", gender: "남성", birth: "1981.11.27 (40세)", phone: "0507-1111-1111", region: "서울특별시", assignedAt: "2026.01.01 00:00", firstCall: "2026.01.01 00:00", lastCall: "2026.01.01 00:00", callTry: "10회", callSuccess: "10회", validCall: "10회", planner: "김홍도" },
-]
+const MOCK_ROWS: Row[] = Array.from({ length: 50 }, (_, i) => ({
+  no: 50 - i,
+  name: "이*혁",
+  gender: "남성",
+  birth: "1981.11.27 (40세)",
+  phone: "0507-1111-1111",
+  region: "서울특별시",
+  assignedAt: "2026.01.01 00:00",
+  firstCall: i % 3 === 1 ? null : "2026.01.01 00:00",
+  lastCall: i % 3 === 1 ? null : "2026.01.01 00:00",
+  callTry: i % 3 === 1 ? null : "10회",
+  callSuccess: i % 3 === 1 ? null : "10회",
+  validCall: i % 2 === 0 ? "10회" : null,
+  planner: "김홍도",
+}))
 
-const TOTAL_PAGES = 10
-
-export function AssignedDbTable() {
+export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[] } = {}) {
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [pageSize, setPageSize] = useState("10")
   const [currentPage, setCurrentPage] = useState(1)
+  const pageSizeNum = parseInt(pageSize)
+  const totalPages = Math.ceil(MOCK_ROWS.length / pageSizeNum)
+  const displayedRows = MOCK_ROWS.slice((currentPage - 1) * pageSizeNum, currentPage * pageSizeNum)
 
-  const allSelected = selectedIds.length === MOCK_ROWS.length
-  const someSelected = selectedIds.length > 0 && !allSelected
+  const allSelected = displayedRows.length > 0 && displayedRows.every(r => selectedIds.includes(r.no))
+  const someSelected = displayedRows.some(r => selectedIds.includes(r.no)) && !allSelected
 
-  const toggleAll = () => setSelectedIds(allSelected ? [] : MOCK_ROWS.map(r => r.no))
+  const toggleAll = () => setSelectedIds(allSelected ? selectedIds.filter(id => !displayedRows.find(r => r.no === id)) : [...new Set([...selectedIds, ...displayedRows.map(r => r.no)])])
   const toggleRow = (no: number) => setSelectedIds(prev =>
     prev.includes(no) ? prev.filter(id => id !== no) : [...prev, no]
   )
 
-  // 현재 페이지 주변 ±2 + 첫/끝 페이지 + 줄임표 패턴
-  const getPageNumbers = () => {
-    const delta = 2
-    const range: (number | "...")[] = []
-    let prev = 0
-    for (let i = 1; i <= TOTAL_PAGES; i++) {
-      if (i === 1 || i === TOTAL_PAGES || (i >= currentPage - delta && i <= currentPage + delta)) {
-        if (prev && i - prev > 1) range.push("...")
-        range.push(i)
-        prev = i
-      }
-    }
-    return range
-  }
+  const STAT_TILES = [
+    { label: "총 배정 DB",       value: "33", unit: "건" },
+    { label: "통화 시도",        value: "30", unit: "건" },
+    { label: "통화 미시도",      value: "3",  unit: "건" },
+    { label: "평균 성공율",      value: "25.8", unit: "%" },
+    { label: "평균 유효통화율",  value: "40.5", unit: "%" },
+  ]
 
   return (
-    <div className="bg-card rounded-lg border border-border/40 overflow-hidden flex flex-col">
+    <div className="flex flex-col gap-8">
 
-      {/* KPI 타일 */}
-      <StatsSection />
-
-      {/* 총 건수 + 선택 재배정 + 페이지 크기 */}
-      <div className="flex items-center justify-between px-6 py-3">
-        <span className="text-[12px] font-medium text-muted-foreground">
-          총 <span className="font-semibold">{MOCK_ROWS.length}</span>개
-        </span>
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            disabled={selectedIds.length === 0}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95"
-          >
-            선택 재배정
-          </Button>
-          <Select value={pageSize} onValueChange={setPageSize}>
-            <SelectTrigger className="h-8 w-[72px] px-2.5 rounded-md text-[12px] font-medium border-border/60 bg-background shadow-none gap-1.5">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="rounded-md border-border/60">
-              <SelectItem value="10">10개</SelectItem>
-              <SelectItem value="20">20개</SelectItem>
-              <SelectItem value="50">50개</SelectItem>
-            </SelectContent>
-          </Select>
+      {/* KPI 타일 카드 */}
+      <div className="bg-canvas-primary rounded-lg py-5 border border-line-subtle">
+        <div className="flex items-stretch">
+          {STAT_TILES.map((stat, i) => (
+            <div
+              key={stat.label}
+              className="flex-1 px-6 relative"
+            >
+              {i > 0 && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />
+              )}
+              <p className="text-[12px] font-medium text-content-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">
+                {stat.label}
+              </p>
+              <div className="flex items-baseline gap-0.5">
+                <span className="text-kpi text-content-primary">
+                  {stat.value}
+                </span>
+                <span className="text-kpi text-content-primary">
+                  {stat.unit}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* 테이블 */}
-      <div className="px-6 pb-2 overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-border/40 hover:bg-transparent">
-              {/* 전체 선택 체크박스 */}
-              <TableHead className="w-10 px-3">
-                <Checkbox
-                  checked={allSelected}
-                  ref={(el) => {
-                    if (el) (el as HTMLButtonElement & { indeterminate?: boolean }).indeterminate = someSelected
-                  }}
-                  onCheckedChange={toggleAll}
-                  className="h-4 w-4 rounded-[4px] border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                />
-              </TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3 w-[48px]">No.</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3 w-[72px]">이름</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3 w-[52px]">성별</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3">생년월일</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3">연락처</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3">지역</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3">배정시간</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3">최초통화</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3">최근통화</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3 text-center">통화시도</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3 text-center">통화성공</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3 text-center">유효통화</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3">담당 설계사</TableHead>
-              <TableHead className="text-[12px] font-semibold text-muted-foreground/70 px-3 text-center">배정이력</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {MOCK_ROWS.map((row) => (
-              <TableRow
-                key={row.no}
-                className="border-border/30 hover:bg-muted/30 transition-colors"
-                data-state={selectedIds.includes(row.no) ? "selected" : undefined}
-              >
-                <TableCell className="px-3 py-3.5">
+      {/* 툴바 + 테이블 + 페이지네이션 */}
+      <div className="sticky top-3 z-[5] flex flex-col gap-0.5">
+
+      {/* 툴바 */}
+      <div className="bg-canvas-tertiary flex items-center justify-between py-1">
+        <span className="text-[13px] font-medium text-content-assistive tabular-nums">
+          {selectedIds.length > 0
+            ? `${selectedIds.length}건 선택`
+            : `전체 ${MOCK_ROWS.length}건`
+          }
+        </span>
+        <div className="flex items-center gap-1">
+          <PageSizeSelect
+            value={pageSize}
+            onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
+          />
+          <Button>
+            선택 재배정
+          </Button>
+        </div>
+      </div>
+
+      {/* 테이블 카드 */}
+      <div className="bg-canvas-primary rounded-lg overflow-hidden border border-line-subtle">
+
+        <div className="overflow-auto max-h-[calc(100svh-10rem)]">
+          <Table>
+            <TableHeader className="sticky top-0 z-10">
+              <TableRow className="border-b border-divider-normal hover:bg-transparent">
+                <TableHead className="text-left h-10 w-10 !pl-3 !pr-1">
                   <Checkbox
-                    checked={selectedIds.includes(row.no)}
-                    onCheckedChange={() => toggleRow(row.no)}
-                    className="h-4 w-4 rounded-[4px] border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    checked={allSelected}
+                    ref={(el) => {
+                      if (el) (el as HTMLButtonElement & { indeterminate?: boolean }).indeterminate = someSelected
+                    }}
+                    onCheckedChange={toggleAll}
+                    className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
-                </TableCell>
-                <TableCell className="text-[13px] text-muted-foreground/70 px-3 py-3.5">{row.no}</TableCell>
-                <TableCell className="px-3 py-3.5">
-                  <button className="text-[13px] font-medium text-primary hover:underline underline-offset-2 transition-colors">
-                    {row.name}
-                  </button>
-                </TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.gender}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.birth}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.phone}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.region}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.assignedAt}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.firstCall ?? <span className="text-muted-foreground/40">-</span>}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.lastCall ?? <span className="text-muted-foreground/40">-</span>}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5 text-center">{row.callTry ?? <span className="text-muted-foreground/40">-</span>}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5 text-center">{row.callSuccess ?? <span className="text-muted-foreground/40">-</span>}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5 text-center">{row.validCall ?? <span className="text-muted-foreground/40">-</span>}</TableCell>
-                <TableCell className="text-[13px] text-foreground/80 px-3 py-3.5">{row.planner}</TableCell>
-                <TableCell className="px-3 py-3.5 text-center">
-                  <button className="text-[13px] font-medium text-primary hover:underline underline-offset-2 transition-colors">
-                    확인
-                  </button>
-                </TableCell>
+                </TableHead>
+                <TableHead className="text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">이름</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-16">성별</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">생년월일</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-36">연락처</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">지역</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">배정시간</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">최초통화</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">최근통화</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20">통화시도</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20">통화성공</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20">유효통화</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">담당 설계사</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20 !pr-5">배정이력</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {displayedRows.map((row) => (
+                <TableRow
+                  key={row.no}
+                  className={`cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120 data-[state=selected]:bg-primary/5${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
+                  data-state={selectedIds.includes(row.no) ? "selected" : undefined}
+                  onClick={() => console.log("open detail", row.no)}
+                >
+                  <TableCell
+                    className="text-left w-10 !pl-3 !pr-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Checkbox
+                      checked={selectedIds.includes(row.no)}
+                      onCheckedChange={() => toggleRow(row.no)}
+                      disabled={disabledRowKeys.includes(row.no)}
+                      className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    />
+                  </TableCell>
+                  <TableCell className="text-center num-cell">{row.no}</TableCell>
+                  <TableCell className="text-left">{row.name}</TableCell>
+                  <TableCell className="text-left">{row.gender}</TableCell>
+                  <TableCell className="text-left num-cell">{row.birth}</TableCell>
+                  <TableCell className="text-left num-cell">{row.phone}</TableCell>
+                  <TableCell className="text-left">{row.region}</TableCell>
+                  <TableCell className="text-left num-cell">{row.assignedAt}</TableCell>
+                  <TableCell className="text-left num-cell">{row.firstCall ?? <span className="text-content-disabled">-</span>}</TableCell>
+                  <TableCell className="text-left num-cell">{row.lastCall ?? <span className="text-content-disabled">-</span>}</TableCell>
+                  <TableCell className="text-left num-cell">{row.callTry ?? <span className="text-content-disabled">-</span>}</TableCell>
+                  <TableCell className="text-left num-cell">{row.callSuccess ?? <span className="text-content-disabled">-</span>}</TableCell>
+                  <TableCell className="text-left num-cell">{row.validCall ?? <span className="text-content-disabled">-</span>}</TableCell>
+                  <TableCell className="text-left">{row.planner}</TableCell>
+                  <TableCell className="text-left !pr-5" onClick={(e) => e.stopPropagation()}>
+                    <button className="text-[13px] text-content-secondary font-medium hover:underline underline-offset-2 transition-colors active:scale-[0.97]">
+                      확인
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {MOCK_ROWS.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={15} className="py-16 text-[13px] text-content-disabled text-center">
+                    데이터가 없습니다
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
       </div>
 
       {/* 페이지네이션 */}
-      <div className="flex items-center justify-center gap-1 px-6 py-4 border-t border-border/30 mt-auto">
-        <Button variant="ghost" size="sm" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}
-          className="h-8 w-8 p-0 rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 disabled:opacity-30">
-          <ChevronsLeft className="h-3.5 w-3.5" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}
-          className="h-8 w-8 p-0 rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 disabled:opacity-30">
-          <ChevronLeft className="h-3.5 w-3.5" />
-        </Button>
-
-        {getPageNumbers().map((n, i) =>
-          n === "..." ? (
-            <span key={`ellipsis-${i}`} className="h-8 w-8 flex items-center justify-center text-[12px] text-muted-foreground/50">…</span>
-          ) : (
-            <Button key={n} variant="ghost" size="sm" onClick={() => setCurrentPage(n)}
-              className={`h-8 w-8 p-0 rounded-md text-[12px] font-medium transition-colors ${
-                currentPage === n
-                  ? "bg-muted text-foreground hover:bg-muted/80"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }`}>
-              {n}
-            </Button>
-          )
-        )}
-
-        <Button variant="ghost" size="sm" onClick={() => setCurrentPage(p => Math.min(TOTAL_PAGES, p + 1))} disabled={currentPage === TOTAL_PAGES}
-          className="h-8 w-8 p-0 rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 disabled:opacity-30">
-          <ChevronRight className="h-3.5 w-3.5" />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => setCurrentPage(TOTAL_PAGES)} disabled={currentPage === TOTAL_PAGES}
-          className="h-8 w-8 p-0 rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 disabled:opacity-30">
-          <ChevronsRight className="h-3.5 w-3.5" />
-        </Button>
+      <PageNumbers
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        className="mt-1"
+      />
       </div>
-
     </div>
   )
 }

@@ -2,7 +2,8 @@
 
 /**
  * 역할: 통계 요약 섹션 — 주요 KPI 지표 표시
- * 주요 기능: 토스증권 analytics 스타일 — 흰 타일 + 테두리 + 큰 값
+ * 주요 기능: 세로 구분선 KPI 타일 (정보 표시 전용, 인터랙션 없음)
+ * 참고: 카드 래핑 없음 — 호출부에서 카드 컨테이너 제공
  */
 
 const stats = [
@@ -15,19 +16,25 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <div className="px-6 pt-4 pb-6">
-      <div className="flex gap-2">
-        {stats.map((stat) => (
+    <div className="bg-canvas-primary rounded-lg py-5 border border-line-subtle">
+      <div className="flex items-stretch">
+        {stats.map((stat, i) => (
           <div
             key={stat.label}
-            className="flex-1 bg-[#f8f9fa] rounded-lg px-4 py-4 border border-transparent"
+            className="flex-1 px-6 relative"
           >
-            <p className="text-[12px] font-medium text-muted-foreground/70 mb-2 tracking-tight leading-none">
+            {i > 0 && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />
+            )}
+            <p className="text-[12px] font-medium text-content-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">
               {stat.label}
             </p>
             <div className="flex items-baseline gap-0.5">
-              <span className="text-[26px] font-semibold tracking-tighter text-[#334155] leading-none">
-                {stat.value}{stat.unit}
+              <span className="text-kpi text-content-primary">
+                {stat.value}
+              </span>
+              <span className="text-kpi text-content-primary">
+                {stat.unit}
               </span>
             </div>
           </div>

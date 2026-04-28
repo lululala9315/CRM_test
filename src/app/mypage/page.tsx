@@ -3,17 +3,21 @@
  */
 
 import { MypageSettings } from "@/components/settings/mypage-settings"
+import { Footer } from "@/components/footer"
+import { TitleObserver } from "@/components/title-observer"
 
 export default function MypagePage() {
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-muted/40 scrollbar-hide">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
       <div className="px-6 pt-10 pb-6">
-        <h1 className="text-[28px] font-semibold text-foreground tracking-tight leading-tight">마이페이지</h1>
-        <p className="text-[12px] text-muted-foreground mt-0.5">개인정보를 확인하고 수정할 수 있습니다.</p>
+        <h1 className="text-heading-xl text-content-primary">마이페이지</h1>
+        <p className="text-[14px] text-content-assistive mt-2">개인정보를 확인하고 수정할 수 있습니다</p>
       </div>
-      <div className="px-6 pt-6 pb-10">
+      <TitleObserver />
+      <div className="px-6 pt-6 pb-15">
         <MypageSettings />
       </div>
+      <Footer />
     </div>
   )
 }

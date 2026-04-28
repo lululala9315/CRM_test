@@ -15,18 +15,18 @@ const stats = [
 
 export function AssignedDbStats() {
   return (
-    <div className="bg-card rounded-lg border border-border/40 px-6 py-6">
+    <div className="bg-canvas-primary rounded-lg border border-line-subtle px-6 py-6">
       <div className="flex gap-3">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="flex-1 bg-[#f8f9fa] rounded-lg p-6 transition-all hover:bg-[#f1f3f5] border border-transparent hover:border-slate-200/50"
+            className="flex-1 bg-fill-subtle rounded-lg p-6 transition-[background-color,border-color] duration-150 hover:bg-fill-normal border border-transparent hover:border-line-subtle"
           >
-            <p className="text-[13px] font-medium text-muted-foreground/80 mb-3 tracking-tight leading-none">
+            <p className="text-[13px] font-medium text-content-assistive mb-3 tracking-tight leading-none">
               {stat.label}
             </p>
             <div className="flex items-baseline gap-0.5">
-              <span className="text-[24px] font-bold tracking-tighter text-[#334155] leading-none">
+              <span className="text-kpi text-content-primary">
                 {stat.value}{stat.unit}
               </span>
             </div>

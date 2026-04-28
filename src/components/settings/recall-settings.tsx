@@ -9,6 +9,7 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { RadioGroup, RadioOption } from "@/components/ui/radio-group"
 import { Info } from "lucide-react"
 
 type RecallMode = "disabled" | "enabled"
@@ -19,11 +20,11 @@ export function RecallSettings() {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="bg-card rounded-lg border border-border/40 overflow-hidden">
+      <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
 
         {/* 안내 */}
         <div className="px-6 pt-6 pb-6">
-          <p className="text-[14px] font-semibold text-foreground leading-relaxed">
+          <p className="text-[14px] font-semibold text-content-primary leading-relaxed">
             설계사에게 배정한 DB를 설정한 시간 내 상담을 시작하지 않으면
             자동으로 DB를 미배정으로 회수할 수 있어요.
           </p>
@@ -34,84 +35,47 @@ export function RecallSettings() {
             </p>
           </div>
         </div>
-        <div className="mx-6 h-px bg-border/30" />
+        <div className="mx-6 h-px bg-divider-subtle" />
 
-        {/* 사용안함 */}
-        <button
-          onClick={() => setSelected("disabled")}
-          className={cn(
-            "w-full flex items-start gap-4 px-6 py-4 text-left transition-colors",
-            selected === "disabled" ? "bg-primary/[0.06]" : "hover:bg-muted/30"
-          )}
+        {/* 옵션 */}
+        <RadioGroup
+          value={selected}
+          onValueChange={(v) => setSelected(v as RecallMode)}
+          className="gap-0"
         >
-          <div className={cn(
-            "mt-0.5 w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
-            selected === "disabled" ? "border-primary" : "border-border/50"
-          )}>
-            {selected === "disabled" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className={cn(
-              "text-[15px] font-semibold transition-colors",
-              selected === "disabled" ? "text-foreground" : "text-foreground/50"
-            )}>
-              사용안함
-            </span>
-          </div>
-        </button>
-
-        <div className="mx-6 h-px bg-border/20" />
-
-        {/* 사용함 */}
-        <button
-          onClick={() => setSelected("enabled")}
-          className={cn(
-            "w-full flex items-start gap-4 px-6 py-4 text-left transition-colors",
-            selected === "enabled" ? "bg-primary/[0.06]" : "hover:bg-muted/30"
-          )}
-        >
-          <div className={cn(
-            "mt-0.5 w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
-            selected === "enabled" ? "border-primary" : "border-border/50"
-          )}>
-            {selected === "enabled" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-          </div>
-          <div className="flex flex-col gap-2">
-            <span className={cn(
-              "text-[15px] font-semibold transition-colors",
-              selected === "enabled" ? "text-foreground" : "text-foreground/50"
-            )}>
-              사용함
-            </span>
-            {/* 시간 입력 — 항상 노출, 미선택 시 흐리게 */}
+          <RadioOption value="disabled" label="사용안함" />
+          <div className="mx-6 h-px bg-divider-subtle" />
+          <RadioOption value="enabled" label="사용함">
+            {/* 시간 입력 — 항상 노출, 미선택 시 흐리게.
+                stopPropagation으로 input 영역 클릭이 라디오 재선택을 일으키지 않도록 차단. */}
             <div
               className={cn(
-                "flex items-center gap-2 transition-opacity",
+                "mt-1 flex items-center gap-2 transition-opacity",
                 selected === "enabled" ? "opacity-100" : "opacity-30 pointer-events-none"
               )}
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <Input
                 type="number"
                 value={hours}
-                onChange={e => setHours(e.target.value)}
+                onChange={(e) => setHours(e.target.value)}
                 min={1}
-                className="w-[72px] h-8 rounded-md border-border/60 bg-background shadow-none text-center !text-[13px] md:!text-[13px]"
+                className="w-[72px] border-line-subtle bg-canvas-tertiary text-center text-[13px]"
               />
-              <span className="text-[13px] text-muted-foreground/70">
+              <span className="text-[13px] text-content-assistive">
                 시간 이내 상담 미 시도 시, 미배정으로 자동 회수됩니다.
               </span>
             </div>
-          </div>
-        </button>
+          </RadioOption>
+        </RadioGroup>
 
       </div>
 
       {/* 하단 */}
       <div className="flex flex-col gap-4">
-        <div className="h-px bg-border/40" />
+        <div className="h-px bg-divider-subtle" />
         <div className="flex justify-end">
-          <Button className="px-8 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 shadow-none">
+          <Button>
             확인
           </Button>
         </div>
