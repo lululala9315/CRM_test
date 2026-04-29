@@ -21,7 +21,7 @@ const buttonVariants = cva(
         neutral:
           "bg-quaternary text-foreground hover:bg-fill-hover aria-expanded:bg-fill-hover aria-expanded:text-foreground",
         destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20",
+          "bg-destructive-subtle text-destructive hover:bg-destructive-subtle-hover focus-visible:border-destructive-subtle focus-visible:ring-destructive/20",
       },
       // 5 sizes — default/sm/xs는 user 사용, icon/icon-sm은 shadcn 내부 사용
       size: {

@@ -447,6 +447,9 @@
   --primary-subtle-hover: var(--blue-200);             /* 선택 상태 hover */
   --primary-hover:        var(--blue-550);             /* primary 버튼 hover bg */
   --info-border:          var(--blue-200);             /* 안내 박스 보더 */
+  --destructive-subtle:       var(--red-50);           /* destructive 틴트 배경 */
+  --destructive-subtle-hover: var(--red-100);          /* destructive 틴트 hover */
+  --destructive-subtle-border: var(--red-200);         /* destructive focus 보더 */
   --secondary:            var(--bg-secondary);
   --secondary-foreground: var(--text-primary);
   --muted:                var(--bg-subtle);
@@ -594,6 +597,9 @@
 @utility bg-primary-subtle-hover { background-color: var(--primary-subtle-hover); }
 @utility bg-primary-hover        { background-color: var(--primary-hover); }
 @utility border-info             { border-color: var(--info-border); }
+@utility bg-destructive-subtle       { background-color: var(--destructive-subtle); }
+@utility bg-destructive-subtle-hover { background-color: var(--destructive-subtle-hover); }
+@utility border-destructive-subtle   { border-color: var(--destructive-subtle-border); }
 @utility bg-secondary    { background-color: var(--bg-secondary); }
 @utility bg-quaternary   { background-color: var(--bg-subtle); }
 
