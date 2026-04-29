@@ -100,7 +100,7 @@ function RadioOption({
       data-slot="radio-option"
       className={cn(
         "group/radio-option flex w-full cursor-pointer items-start gap-4 px-6 py-4 text-left transition-colors",
-        "has-[[data-state=checked]]:bg-primary/[0.04]",
+        "has-[[data-state=checked]]:bg-blue-tint",
         "has-[[data-state=unchecked]]:hover:bg-fill-subtle",
         className
       )}
