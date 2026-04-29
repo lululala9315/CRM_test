@@ -23,9 +23,9 @@ const radioGroupItemVariants = cva(
   [
     "group/radio-group-item peer relative flex aspect-square shrink-0 items-center justify-center rounded-full border-2 border-subtle outline-none transition-colors",
     "after:absolute after:-inset-x-3 after:-inset-y-2",
-    "focus-visible:ring-3 focus-visible:ring-ring/50",
+    "focus-visible:ring-3 focus-visible:ring-ring-glow",
     "disabled:cursor-not-allowed disabled:opacity-50",
-    "aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
+    "aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-ring-glow-destructive",
     "data-[state=checked]:border-primary",
   ].join(" "),
   {

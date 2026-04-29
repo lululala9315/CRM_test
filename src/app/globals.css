@@ -98,6 +98,8 @@
   --color-chart-2:                  var(--chart-2);
   --color-chart-1:                  var(--chart-1);
   --color-ring:                     var(--ring);
+  --color-ring-glow:                var(--ring-glow);
+  --color-ring-glow-destructive:    var(--ring-glow-destructive);
   --color-success:                  var(--success);
   --color-success-foreground:       var(--success-foreground);
   --color-warning:                  var(--warning);
@@ -460,6 +462,8 @@
   --border:               var(--border-primary);
   --input:                var(--border-primary);
   --ring:                 var(--accent);
+  --ring-glow:            var(--blue-350);             /* focus ring glow (ring-ring/50 대체) */
+  --ring-glow-destructive: var(--red-200);             /* destructive focus ring (ring-destructive/20 대체) */
   --success:              var(--success-color);
   --success-foreground:   var(--success-fg-color);
   --warning:              var(--warning-color);
