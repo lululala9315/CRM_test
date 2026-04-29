@@ -12,7 +12,7 @@ const badgeVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground [a]:hover:bg-primary-hover",
         secondary:
-          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary",
         destructive:
           "bg-destructive-subtle text-destructive focus-visible:ring-ring-glow-destructive [a]:hover:bg-destructive-subtle-hover",
         outline:
@@ -22,10 +22,10 @@ const badgeVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         // 활성/진행 상태 outline pill — border + text 색으로 의미 구분
         // border는 alpha 기반이라 Tailwind 유틸리티 유지 (globals.css 주석 참고)
-        "pill-success":  "bg-transparent border-green-600/30 text-green-tint",
-        "pill-warning":  "bg-transparent border-amber-500/40 text-amber-tint",
-        "pill-danger":   "bg-transparent border-red-500/40 text-red-tint",
-        "pill-neutral":  "bg-transparent border-muted-foreground/25 text-neutral-tint",
+        "pill-success":  "bg-transparent border-green-tint text-green-tint",
+        "pill-warning":  "bg-transparent border-amber-tint text-amber-tint",
+        "pill-danger":   "bg-transparent border-red-tint text-red-tint",
+        "pill-neutral":  "bg-transparent border-neutral-tint text-neutral-tint",
         // 종결 상태 tint — 배경 fill로 의미 강조
         "tint-success":  "bg-green-tint text-green-tint border-transparent",
         "tint-warning":  "bg-amber-tint text-amber-tint border-transparent",

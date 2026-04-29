@@ -161,7 +161,7 @@ function TeamItem({
           "w-full flex items-center pl-9 pr-2.5 py-1.5 rounded-md text-[12px] transition-[background-color,color] duration-150",
           isActive
             ? "bg-canvas-quaternary text-content-primary font-semibold hover:bg-canvas-quaternary"
-            : "font-medium text-content-primary/55 hover:bg-canvas-tertiary hover:text-content-secondary"
+            : "font-medium text-content-quaternary hover:bg-canvas-tertiary hover:text-content-secondary"
         )}
       >
         <span className="truncate">{team.title}</span>
@@ -325,7 +325,7 @@ function CascadeDialog({
                     "w-full text-left px-2.5 py-2 rounded-md text-[13px] transition-colors",
                     activeUnit === unit.id
                       ? "bg-primary-subtle text-primary font-semibold"
-                      : "text-content-tertiary font-medium hover:bg-canvas-tertiary hover:text-content-primary/90"
+                      : "text-content-tertiary font-medium hover:bg-canvas-tertiary hover:text-content-primary"
                   )}
                 >
                   {unit.title}
@@ -346,7 +346,7 @@ function CascadeDialog({
                     "w-full text-left px-2.5 py-2 rounded-md text-[13px] transition-colors",
                     activeBranch === branch.id
                       ? "bg-primary-subtle text-primary font-semibold"
-                      : "text-content-tertiary font-medium hover:bg-canvas-tertiary hover:text-content-primary/90"
+                      : "text-content-tertiary font-medium hover:bg-canvas-tertiary hover:text-content-primary"
                   )}
                 >
                   {branch.title}
@@ -367,7 +367,7 @@ function CascadeDialog({
                     "w-full text-left px-2.5 py-2 rounded-md text-[13px] transition-colors",
                     selectedTeam === team.id
                       ? "bg-primary-subtle text-primary font-semibold"
-                      : "text-content-tertiary font-medium hover:bg-canvas-tertiary hover:text-content-primary/90"
+                      : "text-content-tertiary font-medium hover:bg-canvas-tertiary hover:text-content-primary"
                   )}
                 >
                   {team.title}

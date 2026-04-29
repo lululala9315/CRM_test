@@ -159,7 +159,7 @@ function OrgTreeRows({
             className={cn(
               "h-4 w-4 shrink-0 cursor-grab active:cursor-grabbing",
               isSelected
-                ? "text-background/30"
+                ? "text-selected-icon"
                 : "text-content-disabled group-hover:text-content-disabled transition-colors"
             )}
           />
@@ -172,7 +172,7 @@ function OrgTreeRows({
           <span
             className={cn(
               "text-[11px] shrink-0 select-none leading-none",
-              isSelected ? "text-background/35" : "text-content-disabled"
+              isSelected ? "text-selected-dim" : "text-content-disabled"
             )}
           >
             └
@@ -189,7 +189,7 @@ function OrgTreeRows({
               ? "text-background"
               : !node.active
               ? "text-content-disabled"
-              : "text-content-primary/90"
+              : "text-content-primary"
           )}
         >
           {node.name}
@@ -200,7 +200,7 @@ function OrgTreeRows({
           className={cn(
             "text-[12px] shrink-0 w-[52px] text-right mr-0.5",
             isSelected
-              ? "text-background/55"
+              ? "text-selected-muted"
               : node.active
               ? "text-content-assistive"
               : "text-content-disabled"
@@ -215,7 +215,7 @@ function OrgTreeRows({
           className={cn(
             "h-7 w-7 flex items-center justify-center rounded-md transition-colors shrink-0",
             isSelected
-              ? "text-background/60 hover:bg-background/10"
+              ? "text-selected-body hover:bg-selected-hover"
               : "text-content-disabled hover:bg-canvas-quaternary hover:text-content-assistive"
           )}
           onClick={(e) => e.stopPropagation()}
@@ -229,7 +229,7 @@ function OrgTreeRows({
             className={cn(
               "h-7 w-7 flex items-center justify-center rounded-md transition-colors shrink-0",
               isSelected
-                ? "text-background/60 hover:bg-background/10"
+                ? "text-selected-body hover:bg-selected-hover"
                 : "text-content-disabled hover:bg-canvas-quaternary hover:text-content-assistive"
             )}
             onClick={(e) => {

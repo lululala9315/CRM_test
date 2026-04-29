@@ -195,7 +195,7 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
 
       {/* 취소 고객 오버레이 */}
       {customer.isCancelled && (
-        <div className="absolute inset-0 bg-foreground/20 backdrop-blur-[1px] flex flex-col items-center justify-center gap-0.5 px-3.5">
+        <div className="absolute inset-0 bg-fill-normal backdrop-blur-[1px] flex flex-col items-center justify-center gap-0.5 px-3.5">
           <p className="text-[12px] font-semibold text-background leading-snug text-center">
             상담 취소 요청
           </p>
@@ -295,7 +295,7 @@ export function KanbanBoard() {
       <div className="flex gap-3 px-6 pt-5 pb-7 w-full">
         {COLUMN_ORDER.map(colId => {
           const column = columns[colId]
-          const style = COLUMN_STYLE[colId] ?? { dot: "bg-foreground/20", label: "text-content-quaternary" }
+          const style = COLUMN_STYLE[colId] ?? { dot: "bg-fill-normal", label: "text-content-quaternary" }
 
           return (
             <div
