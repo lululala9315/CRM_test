@@ -28,9 +28,9 @@ export function RecallSettings() {
             설계사에게 배정한 DB를 설정한 시간 내 상담을 시작하지 않으면
             자동으로 DB를 미배정으로 회수할 수 있어요.
           </p>
-          <div className="mt-4 flex items-start gap-2.5 bg-primary/5 border border-primary/10 rounded-md px-4 py-3">
-            <Info className="h-4 w-4 text-primary/70 mt-0.5 shrink-0" />
-            <p className="text-[13px] text-primary/80 leading-relaxed font-medium">
+          <div className="mt-4 flex items-start gap-2.5 bg-blue-tint border border-info rounded-md px-4 py-3">
+            <Info className="h-4 w-4 text-blue-tint mt-0.5 shrink-0" />
+            <p className="text-[13px] text-blue-tint leading-relaxed font-medium">
               변경한 설정 값은 <span className="font-semibold">익일 00:00시</span> 부터 적용됩니다.
             </p>
           </div>

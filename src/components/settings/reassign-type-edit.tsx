@@ -115,7 +115,7 @@ export function ReassignTypeEdit() {
               {/* 삭제 버튼 */}
               <button
                 onClick={() => deleteType(type.id)}
-                className="w-8 flex justify-center p-1.5 rounded-md text-content-disabled hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+                className="w-8 flex justify-center p-1.5 rounded-md text-content-disabled hover:text-destructive hover:bg-red-tint transition-colors shrink-0"
               >
                 <Trash2 className="h-4 w-4" />
               </button>

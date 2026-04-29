@@ -37,9 +37,9 @@ export function AutoAssignSettings() {
           <p className="text-[14px] font-semibold text-content-primary leading-relaxed">
             사용함을 선택하시면, 보닥에서 제공하는 DB를 설계사에게 까지 자동 배정해 드립니다.
           </p>
-          <div className="mt-4 flex items-start gap-2.5 bg-primary/5 border border-primary/10 rounded-md px-4 py-3">
-            <Info className="h-4 w-4 text-primary/70 mt-0.5 shrink-0" />
-            <p className="text-[13px] text-primary/80 leading-relaxed font-medium">
+          <div className="mt-4 flex items-start gap-2.5 bg-blue-tint border border-info rounded-md px-4 py-3">
+            <Info className="h-4 w-4 text-blue-tint mt-0.5 shrink-0" />
+            <p className="text-[13px] text-blue-tint leading-relaxed font-medium">
               변경한 설정 값은 <span className="font-semibold">익일 00:00시</span> 부터 적용됩니다.
             </p>
           </div>

@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       // 6 variants — 실제 사용 중인 것만
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+        primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
         secondary:
           "bg-primary-subtle text-primary hover:bg-primary-subtle-hover aria-expanded:bg-primary-subtle-hover aria-expanded:text-primary",
         outline:

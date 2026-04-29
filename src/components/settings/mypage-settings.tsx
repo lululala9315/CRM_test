@@ -81,7 +81,7 @@ export function MypageSettings() {
             <Button variant="outline" size="sm" className="border-line-subtle text-[13px]">
               변경
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-md text-content-disabled hover:text-destructive hover:bg-destructive/5">
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-md text-content-disabled hover:text-destructive hover:bg-red-tint">
               <Trash2 className="h-4 w-4" />
             </Button>
           </InfoRow>
