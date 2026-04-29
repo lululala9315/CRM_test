@@ -156,7 +156,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 <SidebarMenuSubItem key={subItem.name}>
                                   <SidebarMenuSubButton
                                     asChild
-                                    isActive={isActive}
                                     className={cn(
                                       "h-9 pl-9 gap-2.5",
                                       isActive

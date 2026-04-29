@@ -32,11 +32,11 @@ import {
 
 // ─── 색상 상수 — 블루→퍼플 단일 팔레트 ─────────────────────────────────────
 const C = {
-  b1: "#3182F6",  // blue
-  b2: "#4F75F0",  // blue-purple
-  b3: "#6B68EB",  // mid
-  b4: "#855BE6",  // purple
-  b5: "#9B4FE0",  // deep purple
+  b1: "var(--color-chart-1)",
+  b2: "var(--color-chart-2)",
+  b3: "var(--color-chart-3)",
+  b4: "var(--color-chart-4)",
+  b5: "var(--color-chart-5)",
 }
 const muted = "#8B95A1"
 const grid  = "#F2F4F6"
