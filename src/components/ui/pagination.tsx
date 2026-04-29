@@ -223,8 +223,8 @@ function PageNumbers({
             className={cn(
               "h-8 w-8 p-0 rounded-md text-[12px] font-medium tabular-nums transition-colors duration-120 active:scale-[0.97]",
               currentPage === slot
-                ? "bg-quaternary text-foreground font-semibold hover:bg-quaternary"
-                : "text-muted-foreground hover:text-foreground hover:bg-fill-normal"
+                ? "bg-fill-normal text-foreground font-semibold hover:bg-fill-normal"
+                : "text-muted-foreground hover:text-foreground hover:bg-fill-subtle"
             )}
           >
             {slot}
