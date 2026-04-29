@@ -188,7 +188,7 @@ function BranchItem({
     <li>
       <button
         onClick={() => onToggle(branch.id)}
-        className="w-full flex items-center justify-between pl-5 pr-2.5 py-1.5 rounded-md text-[12px] font-medium text-content-primary/65 hover:bg-canvas-tertiary hover:text-content-primary/85 transition-colors"
+        className="w-full flex items-center justify-between pl-5 pr-2.5 py-1.5 rounded-md text-[12px] font-medium text-content-quaternary hover:bg-canvas-tertiary hover:text-primary-dim transition-colors"
       >
         <span className="truncate">{branch.title}</span>
         {isOpen
@@ -235,7 +235,7 @@ function BusinessUnitItem({
     <li className="mb-0.5">
       <button
         onClick={() => onToggleUnit(unit.id)}
-        className="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-[13px] font-semibold text-content-primary/85 hover:bg-canvas-tertiary hover:text-content-primary transition-colors"
+        className="w-full flex items-center justify-between px-2.5 py-2 rounded-md text-[13px] font-semibold text-primary-dim hover:bg-canvas-tertiary hover:text-content-primary transition-colors"
       >
         <span className="truncate">{unit.title}</span>
         {isOpen

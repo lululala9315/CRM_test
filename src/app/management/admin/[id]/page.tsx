@@ -32,7 +32,7 @@ export default function AdminDetailPage() {
         </Button>
         <Button
           size="default"
-          className="bg-foreground text-inverse-primary hover:bg-foreground/85 shadow-none"
+          className="bg-foreground text-inverse-primary hover:bg-foreground-hover shadow-none"
         >
           수정
         </Button>

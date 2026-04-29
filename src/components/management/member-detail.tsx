@@ -136,7 +136,7 @@ function ApprovalStatusCell({
       <span className="text-[13px] font-medium text-primary mr-1">대기</span>
       <Button
         size="sm"
-        className="bg-foreground text-inverse-primary hover:bg-foreground/85 shadow-none"
+        className="bg-foreground text-inverse-primary hover:bg-foreground-hover shadow-none"
         onClick={handleApprove}
       >
         승인하기

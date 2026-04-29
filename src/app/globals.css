@@ -346,6 +346,7 @@
   --alpha-white-35: oklch(1 0 0 / 0.35);
   --alpha-white-55: oklch(1 0 0 / 0.55);
   --alpha-white-60: oklch(1 0 0 / 0.60);
+  --alpha-white-80: oklch(1 0 0 / 0.80);
 
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -476,15 +477,22 @@
   --ring-glow:            var(--blue-350);             /* focus ring glow (ring-ring/50 대체) */
   --ring-glow-destructive: var(--red-200);             /* destructive focus ring (ring-destructive/20 대체) */
 
+  /* 어두운 강조 버튼 (bg-foreground) hover */
+  --foreground-hover:    var(--cool-neutral-900);
+
+  /* 텍스트 dimming 계층 */
+  --text-primary-dim:    var(--cool-neutral-850);      /* content-primary/85 근사치 */
+
   /* 선택된 colored 카드(bg-primary) 위 텍스트·버튼 오버레이 */
-  --selected-text-icon:  var(--alpha-white-30);
-  --selected-text-dim:   var(--alpha-white-35);
-  --selected-text-muted: var(--alpha-white-55);
-  --selected-text-body:  var(--alpha-white-60);
-  --selected-hover-bg:   var(--alpha-white-10);
+  --selected-text-icon:   var(--alpha-white-30);
+  --selected-text-dim:    var(--alpha-white-35);
+  --selected-text-muted:  var(--alpha-white-55);
+  --selected-text-body:   var(--alpha-white-60);
+  --selected-text-strong: var(--alpha-white-80);
+  --selected-hover-bg:    var(--alpha-white-10);
 
   /* 차트 그리드 선 */
-  --chart-grid-stroke:   var(--border-subtle);
+  --chart-grid-stroke:    var(--border-subtle);
   --success:              var(--success-color);
   --success-foreground:   var(--success-fg-color);
   --warning:              var(--warning-color);
@@ -626,12 +634,19 @@
 @utility bg-destructive-subtle-hover { background-color: var(--destructive-subtle-hover); }
 @utility border-destructive-subtle   { border-color: var(--destructive-subtle-border); }
 
+/* 어두운 강조 버튼 hover */
+@utility bg-foreground-hover { background-color: var(--foreground-hover); }
+
+/* 텍스트 dimming */
+@utility text-primary-dim    { color: var(--text-primary-dim); }
+
 /* 선택된 colored 카드 위 오버레이 텍스트/버튼 */
-@utility text-selected-icon  { color: var(--selected-text-icon); }
-@utility text-selected-dim   { color: var(--selected-text-dim); }
-@utility text-selected-muted { color: var(--selected-text-muted); }
-@utility text-selected-body  { color: var(--selected-text-body); }
-@utility bg-selected-hover   { background-color: var(--selected-hover-bg); }
+@utility text-selected-icon   { color: var(--selected-text-icon); }
+@utility text-selected-dim    { color: var(--selected-text-dim); }
+@utility text-selected-muted  { color: var(--selected-text-muted); }
+@utility text-selected-body   { color: var(--selected-text-body); }
+@utility text-selected-strong { color: var(--selected-text-strong); }
+@utility bg-selected-hover    { background-color: var(--selected-hover-bg); }
 
 /* 차트 그리드 선 */
 @utility stroke-chart-grid   { stroke: var(--chart-grid-stroke); }

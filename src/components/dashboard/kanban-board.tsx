@@ -199,7 +199,7 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
           <p className="text-[12px] font-semibold text-background leading-snug text-center">
             상담 취소 요청
           </p>
-          <p className="text-[11px] text-background/80 leading-snug text-center">
+          <p className="text-[11px] text-selected-strong leading-snug text-center">
             {customer.deletedAt} 삭제 예정
           </p>
         </div>
