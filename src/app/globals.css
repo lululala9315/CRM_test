@@ -350,6 +350,8 @@
   --popover-foreground:   var(--text-primary);
   --primary:              var(--blue-500);             /* 브랜드 블루 (shadcn 표준 복원) */
   --primary-foreground:   var(--common-100);           /* 흰 글자 on brand */
+  --primary-subtle:       var(--blue-50);              /* 선택/활성 틴트 배경 */
+  --primary-subtle-hover: var(--blue-200);             /* 선택 상태 hover */
   --secondary:            var(--bg-secondary);
   --secondary-foreground: var(--text-primary);
   --muted:                var(--bg-subtle);
@@ -379,7 +381,7 @@
   --sidebar-foreground:         oklch(0.450 0.010 260);
   --sidebar-primary:            var(--accent);
   --sidebar-primary-foreground: var(--bg-primary);
-  --sidebar-accent:             var(--bg-subtle);
+  --sidebar-accent:             var(--fill-hover);
   --sidebar-accent-foreground:  oklch(0.210 0.006 286);
   --sidebar-border:             var(--bg-subtle);
   --sidebar-ring:               var(--accent);
@@ -493,6 +495,8 @@
 
 /* === Background (Layer 2 bg_*) === */
 /* bg-primary → @theme inline (brand blue, alpha modifier 지원) */
+@utility bg-primary-subtle       { background-color: var(--primary-subtle); }
+@utility bg-primary-subtle-hover { background-color: var(--primary-subtle-hover); }
 @utility bg-secondary    { background-color: var(--bg-secondary); }
 @utility bg-quaternary   { background-color: var(--bg-subtle); }
 

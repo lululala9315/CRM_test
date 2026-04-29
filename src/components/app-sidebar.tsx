@@ -127,7 +127,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           isActive={false}
                           className={cn(
                             "h-10 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-content-quaternary",
-                            hasActiveChild && "group-data-[collapsible=icon]:bg-primary/10 group-data-[collapsible=icon]:text-primary group-data-[collapsible=icon]:hover:bg-primary/10"
+                            hasActiveChild && "group-data-[collapsible=icon]:bg-primary-subtle group-data-[collapsible=icon]:text-primary group-data-[collapsible=icon]:hover:bg-primary-subtle"
                           )}
                           onClick={() => {
                             // 접힌 상태에서 클릭 시: 사이드바 펼치기 + 첫 번째 서브메뉴로 이동
@@ -160,7 +160,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     className={cn(
                                       "h-9 pl-9 gap-2.5",
                                       isActive
-                                        ? "bg-primary/10 text-primary hover:bg-primary/10"
+                                        ? "bg-primary-subtle text-primary hover:bg-primary-subtle"
                                         : "hover:bg-sidebar-accent"
                                     )}
                                   >
@@ -199,7 +199,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   isActive={pathname === "/design-system"}
                   className={cn(
                     "h-10 text-content-quaternary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                    pathname === "/design-system" && "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
+                    pathname === "/design-system" && "bg-primary-subtle text-primary hover:bg-primary-subtle hover:text-primary"
                   )}
                 >
                   <Link href="/design-system">
