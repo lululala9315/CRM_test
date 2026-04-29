@@ -130,8 +130,8 @@ const ACCENT_GROUP: TokenGroup = {
   group: "Accent — 브랜드 블루 (#3182F6)",
   tokens: [
     { name: "accent",              cls: "bg-primary",                                 hex: "bg-primary · #3182F6",          copyText: "bg-primary" },
-    { name: "accent / 10%",        cls: "bg-primary/10 border border-line-subtle",         hex: "bg-primary/10 · 검색버튼·틴트",   copyText: "bg-primary/10" },
-    { name: "accent / 5%",         cls: "bg-primary/5 border border-line-subtle",          hex: "bg-primary/5 · hover bg",        copyText: "bg-primary/5" },
+    { name: "primary-subtle",       cls: "bg-primary-subtle border border-line-subtle",     hex: "bg-primary-subtle · 사이드바 선택·틴트", copyText: "bg-primary-subtle" },
+    { name: "blue-tint",            cls: "bg-blue-tint border border-line-subtle",           hex: "bg-blue-tint · 선택행·안내박스",  copyText: "bg-blue-tint" },
     { name: "accent-foreground",   cls: "bg-accent-foreground border border-line-subtle", hex: "흰색 · text-inverse-primary",  copyText: "bg-accent-foreground" },
   ],
 }
@@ -487,7 +487,7 @@ function TypoRow({ token, size, weight, lh, ls = "-0.5px", sample, cls, tag }: {
         <div className="flex items-center gap-1.5 mb-0.5">
           <p className="text-[12px] font-medium text-content-primary">{token}</p>
           {tag === "underline" && (
-            <span className="text-[9px] bg-primary/10 text-primary rounded px-1 py-px leading-none font-medium">underline</span>
+            <span className="text-[9px] bg-primary-subtle text-primary rounded px-1 py-px leading-none font-medium">underline</span>
           )}
           {tag === "reading" && (
             <span className="text-[9px] bg-fill-normal text-content-tertiary rounded px-1 py-px leading-none font-medium">reading</span>
@@ -532,7 +532,7 @@ function MigrationTable({ rows }: {
                 <code className="text-[10px] bg-fill-normal text-content-assistive px-1 py-0.5 rounded">{r.from}</code>
               </td>
               <td className="py-2 px-3">
-                <code className="text-[10px] bg-primary/10 text-primary px-1 py-0.5 rounded">{r.to}</code>
+                <code className="text-[10px] bg-primary-subtle text-primary px-1 py-0.5 rounded">{r.to}</code>
               </td>
               <td className="py-2 px-3 text-content-assistive text-[11px]">{r.reason}</td>
             </tr>
@@ -623,7 +623,7 @@ export default function DesignSystemPage() {
                 href={`#${item.id}`}
                 className={`flex items-center gap-2 text-[12px] rounded-md px-2 py-1.5 transition-colors duration-120 ${
                   activeId === item.id
-                    ? "bg-primary/10 text-primary font-semibold"
+                    ? "bg-primary-subtle text-primary font-semibold"
                     : "text-content-assistive hover:text-content-primary hover:bg-fill-normal"
                 }`}
               >
@@ -755,7 +755,7 @@ export default function DesignSystemPage() {
                 {RADIUS_REFERENCE.map(r => (
                   <div key={r.cls} className="flex flex-col items-center gap-2">
                     <div
-                      className="w-12 h-12 bg-primary/10 border border-primary/25"
+                      className="w-12 h-12 bg-primary-subtle border border-info"
                       style={{ borderRadius: r.px >= 9999 ? "9999px" : `${r.px}px` }}
                     />
                     <div className="text-center">
@@ -784,7 +784,7 @@ export default function DesignSystemPage() {
                         <td className="py-2.5 px-3 text-content-primary">{r.level}</td>
                         <td className="py-2.5 px-3">
                           <code className={`text-[11px] px-1.5 py-0.5 rounded ${
-                            r.cls === "rounded-xl" ? "bg-red-50 text-red-600" : "bg-primary/10 text-primary"
+                            r.cls === "rounded-xl" ? "bg-red-50 text-red-600" : "bg-primary-subtle text-primary"
                           }`}>{r.cls}</code>
                         </td>
                         <td className="py-2.5 px-3 text-content-assistive">{r.note}</td>
@@ -799,12 +799,12 @@ export default function DesignSystemPage() {
               <SubLabel>Border Width</SubLabel>
               <div className="flex gap-6 flex-wrap items-end">
                 <div className="flex flex-col gap-2">
-                  <code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded w-fit">border-border05</code>
+                  <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">border-border05</code>
                   <div className="h-10 w-28 rounded-md bg-canvas-primary" style={{ border: "0.5px solid var(--border-subtle)" }} />
                   <p className="text-[11px] text-content-assistive">0.5px · 특수 케이스</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded w-fit">border / border-border10</code>
+                  <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">border / border-border10</code>
                   <div className="h-10 w-28 rounded-md bg-canvas-primary border border-line-subtle" />
                   <p className="text-[11px] text-content-assistive">1px · 기본 (Tailwind border)</p>
                 </div>
@@ -820,7 +820,7 @@ export default function DesignSystemPage() {
                   { cls: "shadow-md",  note: "모달 · 사이드바" },
                 ].map(s => (
                   <div key={s.cls} className="flex flex-col gap-2">
-                    <code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded w-fit">{s.cls}</code>
+                    <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">{s.cls}</code>
                     <div className={`h-10 w-28 rounded-md bg-canvas-primary ${s.cls}`} />
                     <p className="text-[11px] text-content-assistive">{s.note}</p>
                   </div>
@@ -837,7 +837,7 @@ export default function DesignSystemPage() {
               <div className="flex items-end gap-3 flex-wrap">
                 {SPACING_SCALE.map(s => (
                   <div key={s.px} className="flex flex-col items-center gap-1.5">
-                    <div className="w-8 bg-primary/15 border border-primary/25 rounded-sm" style={{ height: `${s.px}px` }} />
+                    <div className="w-8 bg-primary-subtle border border-info rounded-sm" style={{ height: `${s.px}px` }} />
                     <div className="text-center">
                       <p className="text-[11px] font-semibold text-content-primary tabular-nums">{s.px}px</p>
                       <p className="text-[10px] text-primary">{s.s}</p>
@@ -863,7 +863,7 @@ export default function DesignSystemPage() {
                       <tr key={p.label} className="border-t border-divider-subtle">
                         <td className="py-2.5 px-3 font-medium text-content-primary">{p.label}</td>
                         <td className="py-2.5 px-3">
-                          <code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">{p.cls}</code>
+                          <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{p.cls}</code>
                         </td>
                         <td className="py-2.5 px-3 text-content-assistive">{p.note}</td>
                       </tr>
@@ -888,7 +888,7 @@ export default function DesignSystemPage() {
                 <div className="px-6 py-4">
                   <p className="text-[13px] text-content-secondary">
                     내부 구분선:{" "}
-                    <code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">mx-6 h-px bg-divider-subtle</code>
+                    <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">mx-6 h-px bg-divider-subtle</code>
                     {" "}— 좌우 mx-6 인셋 필수
                   </p>
                 </div>
@@ -918,7 +918,7 @@ export default function DesignSystemPage() {
               </div>
               <p className="text-[11px] text-content-assistive mt-1.5">
                 수직 구분선:{" "}
-                <code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">absolute h-12 w-px bg-divider-normal</code>
+                <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">absolute h-12 w-px bg-divider-normal</code>
               </p>
             </div>
           </Section>
@@ -995,20 +995,20 @@ export default function DesignSystemPage() {
                     </thead>
                     <tbody>
                       {[
-                        { v: "default",     bg: "bg-primary",         text: "text-inverse-primary", hover: "bg-primary/90"      },
-                        { v: "secondary",   bg: "bg-primary/10",      text: "text-primary",            hover: "bg-primary/20"      },
-                        { v: "outline",     bg: "border-border",     text: "text-content-primary",        hover: "bg-canvas-quaternary"     },
-                        { v: "ghost",       bg: "—",                 text: "text-content-primary",        hover: "bg-canvas-quaternary"     },
-                        { v: "neutral",     bg: "bg-canvas-quaternary",     text: "text-content-primary",        hover: "bg-fill-hover"     },
-                        { v: "destructive", bg: "bg-destructive/10", text: "text-destructive",       hover: "bg-destructive/20" },
+                        { v: "primary",     bg: "bg-primary",              text: "text-inverse-primary",  hover: "bg-primary-hover"            },
+                        { v: "secondary",   bg: "bg-primary-subtle",       text: "text-primary",          hover: "bg-primary-subtle-hover"     },
+                        { v: "outline",     bg: "border-border",           text: "text-content-primary",  hover: "bg-canvas-quaternary"        },
+                        { v: "ghost",       bg: "—",                       text: "text-content-primary",  hover: "bg-canvas-quaternary"        },
+                        { v: "neutral",     bg: "bg-canvas-quaternary",    text: "text-content-primary",  hover: "bg-fill-hover"               },
+                        { v: "destructive", bg: "bg-destructive-subtle",   text: "text-destructive",      hover: "bg-destructive-subtle-hover" },
                       ].map(r => (
                         <tr key={r.v} className="border-t border-divider-subtle">
                           <td className="py-2 px-3 text-content-tertiary font-medium">{r.v}</td>
                           <td className="py-2 px-3">
-                            <code className="text-[10px] bg-primary/10 text-primary px-1 py-0.5 rounded">{r.bg}</code>
+                            <code className="text-[10px] bg-primary-subtle text-primary px-1 py-0.5 rounded">{r.bg}</code>
                           </td>
                           <td className="py-2 px-3">
-                            <code className="text-[10px] bg-primary/10 text-primary px-1 py-0.5 rounded">{r.text}</code>
+                            <code className="text-[10px] bg-primary-subtle text-primary px-1 py-0.5 rounded">{r.text}</code>
                           </td>
                           <td className="py-2 px-3">
                             <code className="text-[10px] bg-fill-normal text-content-secondary px-1 py-0.5 rounded">{r.hover}</code>
@@ -1019,8 +1019,8 @@ export default function DesignSystemPage() {
                   </table>
                 </div>
                 <div className="px-3 py-2 border-t border-divider-subtle text-[11px] text-content-assistive flex flex-wrap gap-x-4 gap-y-1">
-                  <span>focus →{" "}<code className="text-[10px] bg-primary/10 text-primary px-1 py-0.5 rounded">border-ring ring-ring/50</code></span>
-                  <span>disabled →{" "}<code className="text-[10px] bg-primary/10 text-primary px-1 py-0.5 rounded">opacity-50 pointer-events-none</code></span>
+                  <span>focus →{" "}<code className="text-[10px] bg-primary-subtle text-primary px-1 py-0.5 rounded">border-ring ring-ring-glow</code></span>
+                  <span>disabled →{" "}<code className="text-[10px] bg-primary-subtle text-primary px-1 py-0.5 rounded">opacity-50 pointer-events-none</code></span>
                 </div>
               </div>
               <MigrationTable rows={[
@@ -1076,7 +1076,7 @@ export default function DesignSystemPage() {
               </div>
               <p className="text-[11px] text-content-assistive mt-2">
                 컨트롤 공통:{" "}
-                <code className="text-[11px] bg-primary/10 text-primary px-1 py-0.5 rounded">bg-fill-filter border-line-subtle shadow-none rounded-md h-8</code>
+                <code className="text-[11px] bg-primary-subtle text-primary px-1 py-0.5 rounded">bg-fill-filter border-line-subtle shadow-none rounded-md h-8</code>
                 {" "}· 초기화는 아이콘 버튼 금지
               </p>
             </div>
@@ -1095,7 +1095,7 @@ export default function DesignSystemPage() {
                 <div>
                   <p className="text-[11px] font-semibold text-content-primary mb-2">Select</p>
                   <MigrationTable rows={[
-                    { from: "bg-primary (shadcn 서브틀 hover)",     to: "hover:bg-primary/5 + border-primary/30 + text-primary", reason: "brand 컬러 명시적 hover (accent↔muted SWAP)" },
+                    { from: "bg-primary (shadcn 서브틀 hover)",     to: "hover:bg-blue-tint + border-info + text-primary", reason: "brand 컬러 명시적 hover — named atomic 참조 (alpha modifier 금지)" },
                     { from: "bg-popover border-border (Content)",  to: "border-line-subtle className 추가",        reason: "필터용 보더를 subtle로 오버라이드" },
                     { from: "bg-background (Trigger 기본)",        to: "bg-fill-filter className 추가",       reason: "필터용 흰 배경 명시" },
                   ]} />
@@ -1196,11 +1196,11 @@ export default function DesignSystemPage() {
                     { attr: "나머지 컬럼",     val: "text-left", note: "기본" },
                     { attr: "숫자/날짜/전화",  val: "num-cell", note: "tabular-nums + tracking" },
                     { attr: "행 hover",        val: "hover:bg-fill-subtle", note: "" },
-                    { attr: "선택 행",         val: "data-[state=selected]:bg-primary/5", note: "" },
+                    { attr: "선택 행",         val: "data-[state=selected]:bg-blue-tint", note: "" },
                   ].map(r => (
                     <tr key={r.attr} className="border-t border-divider-subtle">
                       <td className="py-2.5 px-3 font-medium text-content-primary">{r.attr}</td>
-                      <td className="py-2.5 px-3"><code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">{r.val}</code></td>
+                      <td className="py-2.5 px-3"><code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{r.val}</code></td>
                       <td className="py-2.5 px-3 text-content-assistive">{r.note}</td>
                     </tr>
                   ))}
@@ -1332,7 +1332,7 @@ export default function DesignSystemPage() {
                   ].map(r => (
                     <tr key={r.comp} className="border-t border-divider-subtle">
                       <td className="py-2.5 px-3 font-medium text-content-primary">{r.comp}</td>
-                      <td className="py-2.5 px-3"><code className="text-[11px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">{r.usage}</code></td>
+                      <td className="py-2.5 px-3"><code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{r.usage}</code></td>
                     </tr>
                   ))}
                 </tbody>

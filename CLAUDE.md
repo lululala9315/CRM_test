@@ -84,7 +84,11 @@ Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 
 **핵심 원칙**: shadcn `--primary` = brand blue (표준 그대로). Figma 토큰은 별도 prefix로 노출 (`bg-canvas-*`, `text-content-*`, `border-line-*` 등) → 이름 충돌 없음.
 
-**alpha modifier**: `@theme inline`으로 모든 색 토큰이 `bg-primary/10`, `text-primary/50` 등 자동 지원.
+**⚠️ alpha modifier 원칙**: semantic 토큰에 `/숫자` alpha modifier 금지. 반드시 named atomic 토큰을 참조해야 한다.
+- ❌ `bg-primary/10` → ✅ `bg-primary-subtle` (= `var(--blue-100)`)
+- ❌ `hover:bg-primary/5` → ✅ `hover:bg-blue-tint` (= `var(--blue-50)`)
+- ❌ `ring-ring/50` → ✅ `ring-ring-glow` (= `var(--blue-350)`)
+- alpha가 필요한 경우 `--alpha-white-*`, `--alpha-blue-*` 같은 **명명된 원자 토큰**으로 정의해야 한다.
 
 ## 색상 토큰
 
@@ -92,7 +96,7 @@ Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 
 | 클래스 | 값 | 용도 |
 |---|---|---|
-| `bg-primary` | brand blue | shadcn primary 액션 (Button default 등) |
+| `bg-primary` | brand blue | shadcn primary 액션 (Button primary 등) |
 | `bg-canvas-primary` | 흰 (#FFFFFF) | Figma `bg_primary`, 카드/모달 배경 |
 | `bg-canvas-secondary` | cool-neutral-50 | Figma `bg_secondary` |
 | `bg-canvas-tertiary` | cool-neutral-100 | Figma `bg_tertiary`, 페이지 배경 |
@@ -108,7 +112,7 @@ Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 | 클래스 | 값 | 용도 |
 |---|---|---|
 | `text-primary` | brand blue | shadcn primary 글자, 링크 |
-| `text-primary-foreground` | 흰 | brand blue 위 텍스트 (Button default) |
+| `text-primary-foreground` | 흰 | brand blue 위 텍스트 (Button primary) |
 | `text-content-primary` | #191F28 | Figma `text_primary`, 진한 본문 |
 | `text-content-secondary` | cool-neutral-900 | Figma `text_secondary` |
 | `text-content-tertiary` | cool-neutral-700 | Figma `text_tertiary` |
@@ -178,7 +182,7 @@ useEffect(() => {
 ### 영향 받는 컴포넌트 (자동 추종)
 
 `--primary` 변경 시 다음이 모두 자동으로 새 브랜드 색을 사용:
-- `<Button variant="default">` (액션 버튼)
+- `<Button variant="primary">` (액션 버튼)
 - `<Badge variant="default">`
 - 사이드바 selected/ring
 - 링크 (`text-primary`)
@@ -384,10 +388,10 @@ shadcn `Button` size variant를 그대로 사용. **`h-*`, `px-*` 수동 오버�
 
 | 용도 | 코드 |
 |---|---|
-| 메인 액션 (저장, 재배정 등) | `<Button>` (variant="default" — `bg-primary text-primary-foreground` 내장) |
-| 필터 검색 (보조 액션) | `<Button variant="secondary">` 또는 className override `bg-primary/10 text-primary hover:bg-primary/20` |
+| 메인 액션 (저장, 재배정 등) | `<Button>` (variant="primary" — `bg-primary text-primary-foreground` 내장) |
+| 필터 검색 (보조 액션) | `<Button variant="secondary">` |
 | 연장 등 소형 버튼 | `<Button variant="outline" size="xs">` |
-| 어두운 강조 버튼 | `bg-foreground text-inverse-primary hover:bg-foreground/85` (예: 멤버 상세 페이지) |
+| 어두운 강조 버튼 | `bg-foreground text-inverse-primary hover:bg-foreground-hover` (예: 멤버 상세 페이지) |
 
 모든 필터 컨트롤(Select/Input/Button) 높이: shadcn 기본 `h-9` 통일. 버튼은 `size="default"` (h-9).
 
@@ -405,7 +409,7 @@ shadcn `Button` size variant를 그대로 사용. **`h-*`, `px-*` 수동 오버�
 <SelectTrigger className="bg-fill-filter border-subtle">...</SelectTrigger>
 
 {/* 검색 버튼 */}
-<Button className="bg-primary/10 text-primary hover:bg-primary/20 shadow-none rounded-md">검색</Button>
+<Button variant="secondary" className="shadow-none rounded-md">검색</Button>
 
 {/* 필터 초기화 — 필터 변경 시에만 노출, 텍스트 언더라인 버튼 */}
 {hasFilter && (
