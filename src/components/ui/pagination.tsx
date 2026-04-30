@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Select as SelectPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -6,8 +7,6 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select"
 import {
   ChevronLeftIcon,
@@ -188,7 +187,7 @@ function PageNumbers({
         onClick={() => onPageChange(1)}
         disabled={isFirst}
         aria-label="첫 페이지"
-        className="h-8 w-8 p-0 rounded-md text-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
+        className="h-8 w-8 p-0 rounded-md text-content-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
       >
         <ChevronsLeftIcon className="h-3.5 w-3.5" />
       </Button>
@@ -198,7 +197,7 @@ function PageNumbers({
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={isFirst}
         aria-label="이전 페이지"
-        className="h-8 w-8 p-0 rounded-md text-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
+        className="h-8 w-8 p-0 rounded-md text-content-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
       >
         <ChevronLeftIcon className="h-3.5 w-3.5" />
       </Button>
@@ -208,7 +207,7 @@ function PageNumbers({
           <span
             key={`ellipsis-${i}`}
             aria-hidden
-            className="h-8 w-8 flex items-center justify-center text-[12px] text-disabled"
+            className="h-8 w-8 flex items-center justify-center text-body5-medium text-content-disabled"
           >
             …
           </span>
@@ -221,10 +220,10 @@ function PageNumbers({
             aria-current={currentPage === slot ? "page" : undefined}
             aria-label={`${slot} 페이지`}
             className={cn(
-              "h-8 w-8 p-0 rounded-md text-[12px] font-medium tabular-nums transition-colors duration-120 active:scale-[0.97]",
+              "h-8 w-8 p-0 rounded-md text-body5-medium tabular-nums transition-colors duration-120 active:scale-[0.97]",
               currentPage === slot
-                ? "bg-fill-normal text-foreground font-semibold hover:bg-fill-normal"
-                : "text-muted-foreground hover:text-foreground hover:bg-fill-subtle"
+                ? "bg-fill-strong text-foreground font-semibold hover:bg-fill-strong"
+                : "text-muted-foreground hover:text-foreground hover:bg-fill-muted"
             )}
           >
             {slot}
@@ -238,7 +237,7 @@ function PageNumbers({
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={isLast}
         aria-label="다음 페이지"
-        className="h-8 w-8 p-0 rounded-md text-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
+        className="h-8 w-8 p-0 rounded-md text-content-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
       >
         <ChevronRightIcon className="h-3.5 w-3.5" />
       </Button>
@@ -248,7 +247,7 @@ function PageNumbers({
         onClick={() => onPageChange(totalPages)}
         disabled={isLast}
         aria-label="마지막 페이지"
-        className="h-8 w-8 p-0 rounded-md text-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
+        className="h-8 w-8 p-0 rounded-md text-content-assistive hover:text-foreground hover:bg-fill-normal disabled:opacity-30"
       >
         <ChevronsRightIcon className="h-3.5 w-3.5" />
       </Button>
@@ -280,16 +279,28 @@ function PageSizeSelect({
 }: PageSizeSelectProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger
+      <SelectPrimitive.Trigger
         data-slot="page-size-select"
         className={cn(
-          "h-7 px-2 py-0 border-transparent bg-transparent shadow-none gap-1 !text-[12px] text-muted-foreground hover:bg-fill-subtle hover:text-foreground rounded-md",
+          "h-7 pl-2 pr-1 inline-flex items-center gap-0.5 rounded-md text-[13px] font-medium text-content-tertiary hover:bg-fill-subtle hover:text-content-primary outline-none transition-colors data-placeholder:text-content-tertiary [&>span]:line-clamp-1",
           className
         )}
       >
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent className="rounded-md border-subtle text-[13px]">
+        <SelectPrimitive.Value />
+        <SelectPrimitive.Icon asChild>
+          {/* arrow_drop_down — Material Symbols 모양의 filled triangle */}
+          <svg className="size-4 shrink-0 -mr-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M7 10l5 5 5-5z" />
+          </svg>
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+      <SelectContent
+        position="popper"
+        side="bottom"
+        align="end"
+        sideOffset={4}
+        className="min-w-[var(--radix-select-trigger-width)] rounded-md border-subtle text-body4-normal"
+      >
         {options.map((opt) => (
           <SelectItem key={opt} value={String(opt)}>
             {opt}건

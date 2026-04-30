@@ -4,8 +4,7 @@
 
 export function Footer() {
   return (
-    <footer className="mt-auto shrink-0">
-      <div className="h-px bg-divider-normal" />
+    <footer className="shrink-0 bg-canvas-tertiary border-t border-subtle">
       <div className="flex items-center justify-between px-6 py-4 text-[11px] text-content-disabled">
         <span>Copyright© Aijinet. All rights reserved</span>
         <div className="flex items-center gap-1">

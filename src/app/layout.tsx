@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { BreadcrumbProvider } from "@/components/breadcrumb-context";
 import { StickyBreadcrumb } from "@/components/sticky-breadcrumb";
 import { cn } from "@/lib/utils";
@@ -60,8 +61,9 @@ export default function RootLayout({
               */}
               <main className="flex-1 min-w-0 min-h-0 overflow-hidden bg-canvas-tertiary flex flex-col">
                 <StickyBreadcrumb />
-                <div className="flex-1 min-h-0 overflow-hidden">
+                <div className="flex-1 min-h-0 overflow-y-auto bg-canvas-tertiary">
                   {children}
+                  <Footer />
                 </div>
               </main>
             </div>

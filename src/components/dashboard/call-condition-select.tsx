@@ -26,28 +26,30 @@ export function CallConditionSelect() {
     )
   }
 
-  const displayText = selected.length === 0
-    ? "통화 조건"
-    : selected.length === CONDITIONS.length
-      ? "통화 조건 전체"
-      : CONDITIONS.filter(c => selected.includes(c.id)).map(c => c.label).join(", ")
+  const displayText = selected.length === 0 || selected.length === CONDITIONS.length
+    ? "전체"
+    : CONDITIONS.filter(c => selected.includes(c.id)).map(c => c.label).join(", ")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "flex h-8 items-center justify-between gap-1.5 rounded-md border border-line-subtle bg-fill-filter px-2.5 text-[13px] shadow-none transition-[color,background-color,border-color] min-w-[120px]",
+            "flex h-8 items-center justify-between gap-1.5 rounded-md border border-subtle bg-fill-filter px-2.5 text-[13px] shadow-none transition-[color,background-color,border-color] min-w-[120px]",
             "hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow",
             "text-content-primary"
           )}
         >
-          <span className="truncate">{displayText}</span>
+          <span className="flex items-center gap-1 min-w-0 flex-1">
+            <span className="text-content-assistive shrink-0">통화조건</span>
+            <span className="text-content-disabled shrink-0">·</span>
+            <span className="truncate">{displayText}</span>
+          </span>
           <ChevronDown className="h-3.5 w-3.5 shrink-0 text-content-assistive" />
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[180px] p-2 rounded-md border-line-subtle"
+        className="w-[180px] p-2 rounded-md border-subtle"
         align="start"
         sideOffset={4}
       >
@@ -59,7 +61,7 @@ export function CallConditionSelect() {
             <Checkbox
               checked={selected.includes(condition.id)}
               onCheckedChange={() => toggle(condition.id)}
-              className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+              className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
             />
             <span className="text-[13px] font-medium text-content-secondary">{condition.label}</span>
           </label>

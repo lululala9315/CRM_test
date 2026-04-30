@@ -33,13 +33,13 @@ export function Header() {
       <div className="flex items-center">
         <SidebarToggle />
         <Link href="/" className="flex items-center hover:opacity-75 transition-opacity">
-          <span className="text-[18px] font-semibold text-content-primary tracking-tight mr-2">보닥 플래너</span>
+          <span className="font-size-16 font-weight-bold font_letter_spacing-050 text-sidebar-foreground mr-2">보닥 플래너</span>
           <div className="h-4 w-px bg-border shrink-0 mr-2" />
-          {/* 실제 이미지 760×449 비율 유지 — 높이 22px 기준 */}
+          {/* 실제 이미지 760×449 비율 유지 */}
           <img
             src="/kb-life-logo2.svg"
             alt="KB라이프"
-            style={{ height: "18px", width: "auto" }}
+            style={{ height: "16px", width: "auto" }}
             className="opacity-90"
           />
         </Link>
@@ -47,7 +47,7 @@ export function Header() {
 
       {/* 우측: 세션 + 연장 + 프로필 */}
       <div className="flex items-center gap-2 pr-4">
-        <span className="font-medium text-xs tabular-nums tracking-tighter text-content-assistive">세션 10:00</span>
+        <span className="font-medium text-xs tabular-nums tracking-tighter text-content-assistive">10:00</span>
         <Button variant="outline" size="xs" className="text-xs">연장</Button>
         <div className="h-4 w-px bg-border mx-0.5 shrink-0" />
         <Link href="/mypage">

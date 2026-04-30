@@ -51,7 +51,7 @@ export function ReassignTypeEdit() {
     <div className="flex flex-col gap-3">
 
       {/* 기본 타입 카드 (읽기 전용) */}
-      <div className="bg-canvas-primary rounded-lg border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg border border-subtle">
         <div className="flex items-center px-6 py-4">
           <span className="text-[13px] font-semibold text-content-tertiary w-[160px] shrink-0">타입 이름</span>
           <span className="text-[13px] text-content-disabled">기본</span>
@@ -59,7 +59,7 @@ export function ReassignTypeEdit() {
       </div>
 
       {/* 편집 가능한 타입 카드 */}
-      <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
+      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
 
         {/* 컬럼 헤더 */}
         <div className="flex items-center gap-4 px-6 py-3">
@@ -82,7 +82,7 @@ export function ReassignTypeEdit() {
                   value={type.name}
                   onChange={e => updateType(type.id, "name", e.target.value)}
                   placeholder="타입 이름"
-                  className="border-line-subtle bg-canvas-tertiary text-[13px]"
+                  className="border-subtle bg-canvas-tertiary text-[13px]"
                 />
               </div>
 
@@ -92,7 +92,7 @@ export function ReassignTypeEdit() {
                   value={type.description}
                   onChange={e => updateType(type.id, "description", e.target.value)}
                   placeholder="설명을 입력하세요"
-                  className="border-line-subtle bg-canvas-tertiary text-[13px]"
+                  className="border-subtle bg-canvas-tertiary text-[13px]"
                 />
               </div>
 
@@ -104,11 +104,11 @@ export function ReassignTypeEdit() {
               >
                 <label className="flex cursor-pointer items-center gap-1.5">
                   <RadioGroupItem value="yes" size="sm" />
-                  <span className="text-[13px] text-content-secondary">사용함</span>
+                  <span className="text-body4-normal text-content-secondary">사용함</span>
                 </label>
                 <label className="flex cursor-pointer items-center gap-1.5">
                   <RadioGroupItem value="no" size="sm" />
-                  <span className="text-[13px] text-content-secondary">사용안함</span>
+                  <span className="text-body4-normal text-content-secondary">사용안함</span>
                 </label>
               </RadioGroup>
 
@@ -129,7 +129,7 @@ export function ReassignTypeEdit() {
       <Button
         variant="outline"
         onClick={addType}
-        className="w-full border-line-subtle text-[13px] font-medium text-content-assistive hover:text-content-primary gap-1.5"
+        className="w-full border-subtle text-body4-medium text-content-assistive hover:text-content-primary gap-1.5"
       >
         <Plus className="h-4 w-4" />
         타입 추가
@@ -142,7 +142,7 @@ export function ReassignTypeEdit() {
           <Button
             variant="outline"
             onClick={() => router.push("/settings/reassign")}
-            className="border-line-subtle"
+            className="border-subtle"
           >
             취소
           </Button>

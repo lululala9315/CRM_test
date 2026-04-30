@@ -34,7 +34,7 @@ export function RegionMultiSelect() {
   }
 
   const displayText = isAll
-    ? "지역 전체"
+    ? "전체"
     : selectedRegions.length === 1
       ? selectedRegions[0]
       : `${selectedRegions[0]} 외 ${selectedRegions.length - 1}개`
@@ -44,17 +44,21 @@ export function RegionMultiSelect() {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "flex h-8 items-center justify-between gap-1.5 rounded-md border border-line-subtle bg-fill-filter px-2.5 text-[13px] shadow-none transition-[color,background-color,border-color] min-w-[120px]",
+            "flex h-8 items-center justify-between gap-1.5 rounded-md border border-subtle bg-fill-filter px-2.5 text-[13px] shadow-none transition-[color,background-color,border-color] min-w-[120px]",
             "hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow",
             "text-content-primary"
           )}
         >
-          <span className="truncate">{displayText}</span>
+          <span className="flex items-center gap-1 min-w-0 flex-1">
+            <span className="text-content-assistive shrink-0">지역</span>
+            <span className="text-content-disabled shrink-0">·</span>
+            <span className="truncate">{displayText}</span>
+          </span>
           <ChevronDown className="h-3.5 w-3.5 shrink-0 text-content-assistive" />
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[260px] p-0 rounded-md border-line-subtle"
+        className="w-[260px] p-0 rounded-md border-subtle"
         align="start"
         sideOffset={4}
       >
@@ -64,7 +68,7 @@ export function RegionMultiSelect() {
             <Checkbox
               checked={allChecked}
               onCheckedChange={toggleAll}
-              className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+              className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
             />
             <span className="text-[13px] font-medium text-content-primary">전체</span>
           </label>
@@ -79,7 +83,7 @@ export function RegionMultiSelect() {
                 <Checkbox
                   checked={selectedRegions.includes(region)}
                   onCheckedChange={() => toggleRegion(region)}
-                  className="h-3.5 w-3.5 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  className="h-3.5 w-3.5 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <span className="text-[12px] text-content-secondary">{region}</span>
               </label>

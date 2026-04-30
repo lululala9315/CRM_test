@@ -17,6 +17,8 @@ type OrgNode = {
   active: boolean
   createdAt: string
   updatedAt: string | null
+  /** 직접 소속 인원수 */
+  memberCount?: number
   children?: OrgNode[]
 }
 
@@ -27,6 +29,7 @@ const ORG_TREE: OrgNode = {
   active: true,
   createdAt: "2026.01.01",
   updatedAt: null,
+  memberCount: 0,
   children: [
     {
       id: "div1",
@@ -34,6 +37,7 @@ const ORG_TREE: OrgNode = {
       active: true,
       createdAt: "2026.01.01",
       updatedAt: null,
+      memberCount: 2,
       children: [
         {
           id: "branch1a",
@@ -41,6 +45,7 @@ const ORG_TREE: OrgNode = {
           active: true,
           createdAt: "2026.01.01",
           updatedAt: null,
+          memberCount: 4,
           children: [
             {
               id: "team1a",
@@ -48,17 +53,19 @@ const ORG_TREE: OrgNode = {
               active: true,
               createdAt: "2026.01.12",
               updatedAt: null,
+              memberCount: 12,
               children: [
-                { id: "team1b", name: "B팀", active: true, createdAt: "2026.01.12", updatedAt: null },
-                { id: "team1c", name: "C팀", active: true, createdAt: "2026.01.12", updatedAt: null },
+                { id: "team1b", name: "B팀", active: true, createdAt: "2026.01.12", updatedAt: null, memberCount: 8 },
+                { id: "team1c", name: "C팀", active: true, createdAt: "2026.01.12", updatedAt: null, memberCount: 6 },
                 {
                   id: "new1",
                   name: "조직명 입력해 주세요.",
                   active: true,
                   createdAt: "2026.01.12",
                   updatedAt: null,
+                  memberCount: 0,
                   children: [
-                    { id: "new1a", name: "조직명 입력해 주세요.", active: true, createdAt: "2026.01.12", updatedAt: null },
+                    { id: "new1a", name: "조직명 입력해 주세요.", active: true, createdAt: "2026.01.12", updatedAt: null, memberCount: 0 },
                   ],
                 },
               ],
@@ -71,9 +78,10 @@ const ORG_TREE: OrgNode = {
           active: true,
           createdAt: "2026.01.01",
           updatedAt: null,
+          memberCount: 3,
           children: [
-            { id: "team2a", name: "1팀", active: true, createdAt: "2026.01.01", updatedAt: null },
-            { id: "team2b", name: "2팀", active: true, createdAt: "2026.01.01", updatedAt: null },
+            { id: "team2a", name: "1팀", active: true, createdAt: "2026.01.01", updatedAt: null, memberCount: 9 },
+            { id: "team2b", name: "2팀", active: true, createdAt: "2026.01.01", updatedAt: null, memberCount: 7 },
           ],
         },
       ],
@@ -84,9 +92,10 @@ const ORG_TREE: OrgNode = {
       active: true,
       createdAt: "2026.01.01",
       updatedAt: null,
+      memberCount: 1,
       children: [
-        { id: "team3a", name: "A팀", active: true, createdAt: "2026.01.01", updatedAt: null },
-        { id: "team3b", name: "B팀", active: true, createdAt: "2026.01.01", updatedAt: null },
+        { id: "team3a", name: "A팀", active: true, createdAt: "2026.01.01", updatedAt: null, memberCount: 11 },
+        { id: "team3b", name: "B팀", active: true, createdAt: "2026.01.01", updatedAt: null, memberCount: 5 },
       ],
     },
     {
@@ -95,13 +104,14 @@ const ORG_TREE: OrgNode = {
       active: true,
       createdAt: "2026.01.01",
       updatedAt: null,
+      memberCount: 1,
       children: [
-        { id: "team4a", name: "A팀", active: true, createdAt: "2026.01.01", updatedAt: null },
-        { id: "team4b", name: "B팀", active: true, createdAt: "2026.01.01", updatedAt: null },
+        { id: "team4a", name: "A팀", active: true, createdAt: "2026.01.01", updatedAt: null, memberCount: 10 },
+        { id: "team4b", name: "B팀", active: true, createdAt: "2026.01.01", updatedAt: null, memberCount: 8 },
       ],
     },
-    { id: "team5", name: "선릉 1팀", active: true, createdAt: "2026.01.01", updatedAt: null },
-    { id: "team6", name: "선릉 2팀", active: false, createdAt: "2026.01.01", updatedAt: null },
+    { id: "team5", name: "선릉 1팀", active: true,  createdAt: "2026.01.01", updatedAt: null, memberCount: 14 },
+    { id: "team6", name: "선릉 2팀", active: false, createdAt: "2026.01.01", updatedAt: null, memberCount: 0 },
   ],
 }
 
@@ -147,8 +157,8 @@ function OrgTreeRows({
         aria-selected={isSelected}
         aria-expanded={hasChildren ? isExpanded : undefined}
         className={cn(
-          "flex items-center gap-1 h-11 pr-1.5 cursor-pointer select-none transition-colors duration-75 border-b border-divider-subtle last:border-b-0 group",
-          isSelected ? "bg-foreground" : "hover:bg-fill-subtle"
+          "flex items-center gap-s4 h-11 pr-s6 cursor-pointer select-none transition-colors duration-75 border-b border-divider-subtle last:border-b-0 group",
+          isSelected ? "bg-primary-subtle" : "hover:bg-alpha-black-02"
         )}
         style={{ paddingLeft: `${isRoot ? 14 : 6 + depth * 20}px` }}
         onClick={() => onSelect(node.id)}
@@ -157,36 +167,24 @@ function OrgTreeRows({
         {!isRoot ? (
           <GripVertical
             className={cn(
-              "h-4 w-4 shrink-0 cursor-grab active:cursor-grabbing",
+              "h-4 w-4 shrink-0 cursor-grab active:cursor-grabbing transition-opacity",
               isSelected
-                ? "text-selected-icon"
-                : "text-content-disabled group-hover:text-content-disabled transition-colors"
+                ? "text-content-tertiary opacity-100"
+                : "text-content-disabled opacity-0 group-hover:opacity-100"
             )}
           />
         ) : (
           <div className="w-1 shrink-0" />
         )}
 
-        {/* 계층 인디케이터 */}
-        {!isRoot && (
-          <span
-            className={cn(
-              "text-[11px] shrink-0 select-none leading-none",
-              isSelected ? "text-selected-dim" : "text-content-disabled"
-            )}
-          >
-            └
-          </span>
-        )}
-
         {/* 조직명 */}
         <span
           className={cn(
-            "flex-1 text-[13px] min-w-0 truncate",
+            "flex-1 text-body4-normal min-w-0 truncate",
             isRoot && "font-semibold",
             isPlaceholder && !isSelected && "text-content-disabled italic",
             isSelected
-              ? "text-background"
+              ? "text-primary font-medium"
               : !node.active
               ? "text-content-disabled"
               : "text-content-primary"
@@ -198,9 +196,9 @@ function OrgTreeRows({
         {/* 사용 여부 */}
         <span
           className={cn(
-            "text-[12px] shrink-0 w-[52px] text-right mr-0.5",
+            "text-body5-normal shrink-0 w-[52px] text-right mr-s2",
             isSelected
-              ? "text-selected-muted"
+              ? "text-primary"
               : node.active
               ? "text-content-assistive"
               : "text-content-disabled"
@@ -213,10 +211,10 @@ function OrgTreeRows({
         <button
           title="하위 조직 추가"
           className={cn(
-            "h-7 w-7 flex items-center justify-center rounded-md transition-colors shrink-0",
+            "h-7 w-7 flex items-center justify-center rounded-md transition-[opacity,background-color] shrink-0",
             isSelected
-              ? "text-selected-body hover:bg-selected-hover"
-              : "text-content-disabled hover:bg-canvas-quaternary hover:text-content-assistive"
+              ? "text-primary opacity-100 hover:bg-primary-subtle-hover"
+              : "text-content-tertiary opacity-0 group-hover:opacity-100 hover:bg-canvas-quaternary"
           )}
           onClick={(e) => e.stopPropagation()}
         >
@@ -229,8 +227,8 @@ function OrgTreeRows({
             className={cn(
               "h-7 w-7 flex items-center justify-center rounded-md transition-colors shrink-0",
               isSelected
-                ? "text-selected-body hover:bg-selected-hover"
-                : "text-content-disabled hover:bg-canvas-quaternary hover:text-content-assistive"
+                ? "text-primary hover:bg-primary-subtle-hover"
+                : "text-content-disabled hover:bg-canvas-quaternary hover:text-content-tertiary"
             )}
             onClick={(e) => {
               e.stopPropagation()
@@ -291,17 +289,17 @@ export function OrgStructureTree() {
     : []
 
   return (
-    <div className="flex gap-6 items-start">
+    <div className="flex gap-s24 items-start">
 
       {/* ── 왼쪽: 조직 구조 트리 ── */}
       <div className="flex-[3] min-w-0">
-        <p className="text-[12px] font-semibold text-content-assistive mb-2.5 tracking-tight">
-          • 조직 구조
-        </p>
+        <h3 className="text-body3-bold text-content-primary mb-s12 tracking-tight">
+          조직 구조
+        </h3>
         <div
           role="tree"
           aria-label="조직 구조"
-          className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden"
+          className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden"
         >
           <OrgTreeRows
             node={ORG_TREE}
@@ -316,13 +314,13 @@ export function OrgStructureTree() {
 
       {/* ── 오른쪽: 조직 정보 ── */}
       <div className="w-[340px] shrink-0">
-        <p className="text-[12px] font-semibold text-content-assistive mb-2.5 tracking-tight">
-          • 조직 정보
-        </p>
+        <h3 className="text-body3-bold text-content-primary mb-s12 tracking-tight">
+          조직 정보
+        </h3>
 
         {selectedNode ? (
           <>
-            <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
+            <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
               {INFO_ROWS.map(({ label, value }, i) => (
                 <div
                   key={label}
@@ -332,32 +330,30 @@ export function OrgStructureTree() {
                   )}
                 >
                   {/* 레이블 */}
-                  <div className="w-[88px] px-4 py-3.5 bg-fill-subtle border-r border-divider-subtle shrink-0 flex items-center">
-                    <span className="text-[13px] font-medium text-content-assistive">
+                  <div className="w-[88px] px-s16 py-s14 bg-fill-subtle border-r border-divider-subtle shrink-0 flex items-center">
+                    <span className="text-body4-medium text-content-assistive">
                       {label}
                     </span>
                   </div>
                   {/* 값 */}
-                  <div className="flex-1 px-4 py-3.5 flex items-center">
+                  <div className="flex-1 px-s16 py-s14 flex items-center">
                     {value ? (
-                      <span className="text-[13px] text-content-secondary">{value}</span>
+                      <span className="text-body4-normal text-content-secondary">{value}</span>
                     ) : (
-                      <span className="text-[13px] text-content-disabled">-</span>
+                      <span className="text-body4-normal text-content-disabled">-</span>
                     )}
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-end mt-3">
-              <Button>
-                수정
-              </Button>
+            <div className="flex justify-end mt-s12">
+              <Button>수정</Button>
             </div>
           </>
         ) : (
-          <div className="bg-canvas-primary rounded-lg border border-line-subtle h-40 flex items-center justify-center">
-            <p className="text-[13px] text-content-disabled">조직을 선택해 주세요</p>
+          <div className="bg-canvas-primary rounded-lg border border-subtle h-40 flex items-center justify-center">
+            <p className="text-body4-normal text-content-disabled">조직을 선택해 주세요</p>
           </div>
         )}
       </div>

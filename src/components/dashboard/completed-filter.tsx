@@ -7,7 +7,7 @@
 import { SearchFilter } from "@/components/dashboard/search-filter"
 
 const REASON_OPTIONS = [
-  { value: "all", label: "사유 전체" },
+  { value: "all", label: "전체" },
   { value: "reject", label: "상담 거절" },
   { value: "contract", label: "계약 완료" },
 ]
@@ -15,7 +15,7 @@ const REASON_OPTIONS = [
 export function CompletedFilter() {
   return (
     <SearchFilter
-      extraSelects={[{ defaultValue: "all", options: REASON_OPTIONS }]}
+      extraSelects={[{ label: "사유", defaultValue: "all", options: REASON_OPTIONS }]}
     />
   )
 }

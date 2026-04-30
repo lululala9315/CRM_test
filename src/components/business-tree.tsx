@@ -305,7 +305,7 @@ function CascadeDialog({
             조직도 선택
           </DialogTitle>
           {currentPath && (
-            <p className="text-[12px] text-content-assistive mt-0.5">
+            <p className="text-body5-normal text-content-assistive mt-0.5">
               현재: {currentPath.unitTitle} &gt; {currentPath.branchTitle} &gt; {currentPath.teamTitle}
             </p>
           )}
@@ -418,7 +418,7 @@ export function BusinessTree({ visible = true }: BusinessTreeProps) {
 
   return (
     <>
-      <div className="w-[180px] shrink-0 bg-canvas-primary rounded-lg border border-line-subtle flex flex-col self-start sticky top-3">
+      <div className="w-[180px] shrink-0 bg-canvas-primary rounded-lg border border-subtle flex flex-col self-start sticky top-3">
         {/* 헤더 — 타이틀 + 펼쳐보기 버튼 */}
         <div className="px-4 pt-4 pb-2 flex items-center justify-between">
           <span className="text-[12px] font-semibold text-content-assistive tracking-tight">

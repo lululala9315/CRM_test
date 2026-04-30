@@ -74,10 +74,10 @@ function NullDash() {
 // --- 정의형 테이블 행 ---
 function DetailRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex min-h-[52px] border-b border-line-subtle last:border-0">
+    <div className="flex min-h-[52px] border-b border-subtle last:border-0">
       {/* 제목열 (LabelCell) — 회색 배경, 고정 너비 */}
-      <div className="w-[180px] shrink-0 flex items-center justify-center bg-fill-subtle px-4 py-3 border-r border-line-subtle">
-        <span className="text-[13px] font-medium text-content-assistive text-center leading-snug">
+      <div className="w-[180px] shrink-0 flex items-center justify-center bg-fill-subtle px-4 py-3 border-r border-subtle">
+        <span className="text-body4-medium text-content-assistive text-center leading-snug">
           {label}
         </span>
       </div>
@@ -92,7 +92,7 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
 // --- 섹션 헤더 ---
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-[14px] font-semibold text-content-primary mb-3 flex items-center gap-1.5">
+    <h2 className="text-body3-bold text-content-primary mb-3 flex items-center gap-1.5">
       <span className="text-primary text-[16px] leading-none">•</span>
       {children}
     </h2>
@@ -124,7 +124,7 @@ function ApprovalStatusCell({
   // actionDate가 있으면 처리 완료 — 날짜 표시
   if (actionDate !== null) {
     return (
-      <span className="text-[13px] text-content-secondary num-cell">
+      <span className="text-body4-normal text-content-secondary num-cell">
         {actionDate}
       </span>
     )
@@ -136,7 +136,7 @@ function ApprovalStatusCell({
       <span className="text-[13px] font-medium text-primary mr-1">대기</span>
       <Button
         size="sm"
-        className="bg-foreground text-inverse-primary hover:bg-foreground-hover shadow-none"
+        variant="secondary"
         onClick={handleApprove}
       >
         승인하기
@@ -163,18 +163,18 @@ export function MemberDetail({ variant }: { variant: "admin" | "planner" }) {
       {/* 기본 정보 */}
       <section>
         <SectionTitle>기본 정보</SectionTitle>
-        <div className="border border-line-subtle rounded-lg overflow-hidden">
+        <div className="border border-subtle rounded-lg overflow-hidden">
           <DetailRow label="아이디">
-            <span className="text-[13px] text-content-secondary">{data.userId}</span>
+            <span className="text-body4-normal text-content-secondary">{data.userId}</span>
           </DetailRow>
           <DetailRow label="이름">
-            <span className="text-[13px] text-content-secondary">{data.name}</span>
+            <span className="text-body4-normal text-content-secondary">{data.name}</span>
           </DetailRow>
           <DetailRow label="휴대폰 번호">
-            <span className="text-[13px] text-content-secondary num-cell">{data.phone}</span>
+            <span className="text-body4-normal text-content-secondary num-cell">{data.phone}</span>
           </DetailRow>
           <DetailRow label="보조 휴대폰 번호">
-            <span className="text-[13px] text-content-secondary num-cell">
+            <span className="text-body4-normal text-content-secondary num-cell">
               {data.subPhone ?? <NullDash />}
             </span>
           </DetailRow>
@@ -184,15 +184,15 @@ export function MemberDetail({ variant }: { variant: "admin" | "planner" }) {
       {/* 직책 및 소속 */}
       <section>
         <SectionTitle>직책 및 소속</SectionTitle>
-        <div className="border border-line-subtle rounded-lg overflow-hidden">
+        <div className="border border-subtle rounded-lg overflow-hidden">
           <DetailRow label="직책">
-            <span className="text-[13px] text-content-secondary">{data.position}</span>
+            <span className="text-body4-normal text-content-secondary">{data.position}</span>
           </DetailRow>
           <DetailRow label="업무">
-            <span className="text-[13px] text-content-secondary">{data.role}</span>
+            <span className="text-body4-normal text-content-secondary">{data.role}</span>
           </DetailRow>
           <DetailRow label="소속">
-            <span className="text-[13px] text-content-secondary flex items-center gap-1">
+            <span className="text-body4-normal text-content-secondary flex items-center gap-1">
               {data.org.map((item, i) => (
                 <span key={i} className="flex items-center gap-1">
                   {i > 0 && (
@@ -209,7 +209,7 @@ export function MemberDetail({ variant }: { variant: "admin" | "planner" }) {
       {/* 상태 정보 */}
       <section>
         <SectionTitle>상태 정보</SectionTitle>
-        <div className="border border-line-subtle rounded-lg overflow-hidden">
+        <div className="border border-subtle rounded-lg overflow-hidden">
           <DetailRow label="승인상태">
             <ApprovalStatusCell
               status={data.approvalStatus}
@@ -222,10 +222,10 @@ export function MemberDetail({ variant }: { variant: "admin" | "planner" }) {
             </span>
           </DetailRow>
           <DetailRow label="가입일">
-            <span className="text-[13px] text-content-secondary num-cell">{data.joinedAt}</span>
+            <span className="text-body4-normal text-content-secondary num-cell">{data.joinedAt}</span>
           </DetailRow>
           <DetailRow label="최근 접속일">
-            <span className="text-[13px] text-content-secondary num-cell">
+            <span className="text-body4-normal text-content-secondary num-cell">
               {data.lastLoginAt ?? <NullDash />}
             </span>
           </DetailRow>

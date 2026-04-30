@@ -99,20 +99,19 @@ function RadioOption({
     <label
       data-slot="radio-option"
       className={cn(
-        "group/radio-option flex w-full cursor-pointer items-start gap-4 px-6 py-4 text-left transition-colors",
-        "has-[[data-state=checked]]:bg-blue-tint",
-        "has-[[data-state=unchecked]]:hover:bg-fill-subtle",
+        "group/radio-option flex w-full cursor-pointer items-start gap-s12 px-s24 py-s16 text-left transition-colors",
+        "has-[[data-state=unchecked]]:hover:bg-alpha-black-02",
         className
       )}
       {...props}
     >
       <RadioGroupItem value={value} className="mt-0.5" />
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-s4">
         <span
           className={cn(
-            "text-[15px] font-semibold leading-snug transition-colors",
-            "text-quaternary",
-            "group-has-[[data-state=checked]]/radio-option:text-foreground"
+            "text-body3-bold leading-snug transition-colors",
+            "text-content-tertiary",
+            "group-has-[[data-state=checked]]/radio-option:text-primary"
           )}
         >
           {label}
@@ -120,9 +119,9 @@ function RadioOption({
         {description && (
           <span
             className={cn(
-              "text-[13px] leading-relaxed transition-colors",
-              "text-disabled",
-              "group-has-[[data-state=checked]]/radio-option:text-assistive"
+              "text-body4-normal leading-relaxed transition-colors",
+              "text-content-assistive",
+              "group-has-[[data-state=checked]]/radio-option:text-content-secondary"
             )}
           >
             {description}

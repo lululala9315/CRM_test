@@ -102,7 +102,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   tooltip="홈 대시보드"
-                  className="h-10 text-content-quaternary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  className="h-10 text-content-tertiary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
                   <Link href="/dashboard">
                     <MsIcon name="home" />
@@ -126,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           tooltip={menu.title}
                           isActive={false}
                           className={cn(
-                            "h-10 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-content-quaternary",
+                            "h-10 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-content-tertiary",
                             hasActiveChild && "group-data-[collapsible=icon]:bg-primary-subtle group-data-[collapsible=icon]:text-primary group-data-[collapsible=icon]:hover:bg-primary-subtle"
                           )}
                           onClick={() => {
@@ -159,14 +159,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     className={cn(
                                       "h-9 pl-9 gap-2.5",
                                       isActive
-                                        ? "bg-primary-subtle text-primary hover:bg-primary-subtle"
+                                        ? "bg-primary-subtle text-primary hover:bg-primary-subtle-hover"
                                         : "hover:bg-sidebar-accent"
                                     )}
                                   >
                                     <Link href={subItem.url}>
                                       <span className={cn(
                                         "transition-colors duration-75 text-[13px] font-semibold tracking-tight leading-none",
-                                        isActive ? "text-primary" : "text-content-quaternary"
+                                        isActive ? "text-primary" : "text-content-tertiary"
                                       )}>
                                         {subItem.name}
                                       </span>
@@ -197,7 +197,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   tooltip="디자인 시스템"
                   isActive={pathname === "/design-system"}
                   className={cn(
-                    "h-10 text-content-quaternary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                    "h-10 text-content-tertiary hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                     pathname === "/design-system" && "bg-primary-subtle text-primary hover:bg-primary-subtle hover:text-primary"
                   )}
                 >

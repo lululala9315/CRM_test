@@ -22,15 +22,15 @@ export function ReassignTypeSettings() {
     <div className="flex flex-col gap-3">
 
       {/* 기본 타입 카드 */}
-      <div className="bg-canvas-primary rounded-lg border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg border border-subtle">
         <div className="flex items-center px-6 py-4">
           <span className="text-[13px] font-semibold text-content-tertiary w-[160px] shrink-0">타입 이름</span>
-          <span className="text-[13px] text-content-secondary">기본</span>
+          <span className="text-body4-normal text-content-secondary">기본</span>
         </div>
       </div>
 
       {/* 사용자 정의 타입 카드 */}
-      <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
+      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
 
         {/* 컬럼 헤더 */}
         <div className="flex items-center px-6 py-3">

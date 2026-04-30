@@ -34,12 +34,12 @@ const TAG_COLOR: Record<string, string> = {
 }
 const TAG_COLOR_DEFAULT = "bg-canvas-tertiary text-content-assistive border-transparent"
 
-// 컬럼 스타일 — 타이틀 옆 원형 도트로 상태 구분 (디자인 시스템 토큰 사용)
-const COLUMN_STYLE: Record<string, { dot: string; label: string }> = {
-  "col-before":  { dot: "bg-canvas-quaternary",        label: "text-content-tertiary" },
-  "col-absent":  { dot: "bg-orange-tint",  label: "text-content-tertiary" },
-  "col-success": { dot: "bg-primary",            label: "text-content-tertiary" },
-  "col-valid":   { dot: "bg-green-tint",   label: "text-content-tertiary" },
+// 컬럼 스타일 — 타이틀 라벨 색상
+const COLUMN_STYLE: Record<string, { label: string }> = {
+  "col-before":  { label: "text-content-secondary" },
+  "col-absent":  { label: "text-content-secondary" },
+  "col-success": { label: "text-content-secondary" },
+  "col-valid":   { label: "text-content-secondary" },
 }
 
 // --- Types ---
@@ -143,7 +143,7 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
 
   return (
     <div className={cn(
-      "relative bg-canvas-primary rounded-md border border-line-subtle overflow-hidden",
+      "relative bg-canvas-primary rounded-md border border-subtle overflow-hidden",
       "cursor-grab active:cursor-grabbing select-none",
       "hover:border-border hover:shadow-sm transition-[color,border-color,box-shadow] duration-150",
       isDragging && "opacity-40 shadow-md"
@@ -152,12 +152,12 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
       <div className="px-3.5 pt-3.5 pb-3">
 
         {/* 이름 — 단독 강조 */}
-        <p className="text-[14px] font-semibold text-content-primary leading-tight mb-0.5">
+        <p className="text-body3-bold text-content-primary leading-tight mb-0.5">
           {customer.name}
         </p>
 
         {/* 인적사항 — 이름 아래 서브 라인 */}
-        <p className="text-[12px] text-content-assistive mb-3">
+        <p className="text-body4-normal text-content-tertiary mb-3">
           {customer.age}세 · {customer.gender} · {customer.region.split(" ")[0]}
         </p>
 
@@ -165,8 +165,8 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
         <div className="space-y-1 mb-3">
           {dates.map(({ label, value }) => (
             <div key={label} className="flex items-center justify-between">
-              <span className="text-[11px] text-content-assistive w-[44px] shrink-0">{label}</span>
-              <span className="text-[11px] text-content-assistive tabular-nums tracking-tighter">{value}</span>
+              <span className="text-[12px] text-content-tertiary w-[44px] shrink-0">{label}</span>
+              <span className="text-[12px] text-content-tertiary tabular-nums tracking-tighter">{value}</span>
             </div>
           ))}
         </div>
@@ -180,13 +180,13 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
             {(customer.tags ?? []).slice(0, 2).map(tag => (
               <Badge
                 key={tag}
-                className={cn("text-[10px] font-medium px-1.5 h-[18px] tracking-tight shrink-0", TAG_COLOR[tag] ?? TAG_COLOR_DEFAULT)}
+                className={cn("shrink-0", TAG_COLOR[tag] ?? TAG_COLOR_DEFAULT)}
               >
                 {tag}
               </Badge>
             ))}
           </div>
-          <span className="text-[11px] tabular-nums text-content-assistive shrink-0">
+          <span className="text-[12px] tabular-nums text-content-tertiary shrink-0">
             {customer.callCount}회
           </span>
         </div>
@@ -196,7 +196,7 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
       {/* 취소 고객 오버레이 */}
       {customer.isCancelled && (
         <div className="absolute inset-0 bg-fill-normal backdrop-blur-[1px] flex flex-col items-center justify-center gap-0.5 px-3.5">
-          <p className="text-[12px] font-semibold text-background leading-snug text-center">
+          <p className="text-body5-bold text-background leading-snug text-center">
             상담 취소 요청
           </p>
           <p className="text-[11px] text-selected-strong leading-snug text-center">
@@ -292,10 +292,10 @@ export function KanbanBoard() {
       onDragEnd={handleDragEnd}
     >
       {/* 칸반 보드 — 4개 컬럼 균등 분할 */}
-      <div className="flex gap-3 px-6 pt-5 pb-7 w-full">
+      <div className="flex gap-3 w-full">
         {COLUMN_ORDER.map(colId => {
           const column = columns[colId]
-          const style = COLUMN_STYLE[colId] ?? { dot: "bg-fill-normal", label: "text-content-quaternary" }
+          const style = COLUMN_STYLE[colId] ?? { label: "text-content-quaternary" }
 
           return (
             <div
@@ -304,12 +304,11 @@ export function KanbanBoard() {
             >
               {/* 컬럼 헤더 */}
               <div className="flex items-center gap-2 px-3.5 py-3">
-                <span className={cn("w-2 h-2 rounded-full shrink-0", style.dot)} />
-                <span className={cn("text-[13px] font-semibold tracking-tight", style.label)}>
+                <span className={cn("text-body4-bold tracking-tight", style.label)}>
                   {column.title}
                 </span>
-                <div className="flex items-center justify-center bg-canvas-quaternary rounded-sm px-1.5 h-5 min-w-[20px]">
-                  <span className="text-[11px] font-semibold tabular-nums text-content-tertiary">
+                <div className="flex items-center justify-center bg-fill-strong rounded-sm px-1.5 h-5 min-w-[20px]">
+                  <span className="text-[11px] font-semibold tabular-nums text-content-secondary">
                     {column.items.length}
                   </span>
                 </div>
@@ -317,7 +316,7 @@ export function KanbanBoard() {
               <SortableContext id={column.id} items={column.items} strategy={verticalListSortingStrategy}>
                 <div className="flex flex-col gap-2 p-2 min-h-[80px] max-h-[780px] overflow-y-auto scrollbar-hide">
                   {column.items.length === 0 ? (
-                    <p className="text-[12px] text-content-disabled text-center py-6">
+                    <p className="text-body5-normal text-content-disabled text-center py-6">
                       해당 고객이 없습니다
                     </p>
                   ) : (

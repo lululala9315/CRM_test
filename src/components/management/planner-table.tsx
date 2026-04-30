@@ -9,13 +9,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { PageSizeSelect } from "@/components/ui/pagination"
 import {
   Table,
   TableBody,
@@ -29,6 +23,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsRight,
+  ArrowUpDown,
 } from "lucide-react"
 
 // --- KPI 타일 데이터 ---
@@ -43,12 +38,6 @@ const KPI_ITEMS = [
 // --- 목업 데이터 ---
 type ApprovalStatus = "approved" | "rejected" | "none"
 type ActivityStatus = "정상" | "대기" | "일시제한"
-
-const ACTIVITY_COLOR: Record<ActivityStatus, string> = {
-  "정상":     "text-content-secondary",
-  "대기":     "text-primary",
-  "일시제한": "text-content-assistive",
-}
 
 type Row = {
   no: number
@@ -67,18 +56,26 @@ const ORGS = ["본사", "본사 > 사업단 1", "본사 > 사업단 1 > 지점 1
 const POSITIONS = ["최고관리자", "사업단장", "지점장", "팀장"]
 const ACTIVITIES: ActivityStatus[] = ["정상", "대기", "일시제한"]
 
-const MOCK_ROWS: Row[] = Array.from({ length: 50 }, (_, i) => ({
-  no: 50 - i,
-  name: "이민혁",
-  gender: i % 2 === 0 ? "남성" : "여성",
-  phone: "010-1111-1111",
-  org: ORGS[i % ORGS.length],
-  position: POSITIONS[i % POSITIONS.length],
-  joinedAt: "2026.01.01",
-  approval: (i % 3 === 0 ? "none" : i % 3 === 1 ? "rejected" : "approved") as ApprovalStatus,
-  approvalDate: i % 3 === 0 ? "2026.02.01" : null,
-  activity: ACTIVITIES[i % ACTIVITIES.length],
-}))
+const NAMES_M = ["김민준", "이준혁", "박서준", "최도윤", "정시우", "한지호", "윤재원", "임현우"]
+const NAMES_F = ["이지수", "김유진", "박하늘", "최소희", "정채원", "한지아", "윤다은", "임지연"]
+const PHONES = ["010-1234-5678", "010-2345-6789", "010-3456-7890", "010-4567-8901", "010-5678-9012", "010-6789-0123", "010-7890-1234", "010-8901-2345", "010-9012-3456", "010-1122-3344", "010-2233-4455", "010-3344-5566", "010-4455-6677", "010-5566-7788", "010-6677-8899"]
+const JOIN_DATES = ["2026.01.03", "2025.11.15", "2025.08.22", "2026.02.10", "2025.06.30", "2025.12.05", "2026.03.18", "2025.09.07", "2025.07.14", "2026.01.28", "2025.10.01", "2025.05.19", "2026.02.25", "2025.03.11", "2025.04.08"]
+
+const MOCK_ROWS: Row[] = Array.from({ length: 50 }, (_, i) => {
+  const isFemale = i % 2 !== 0
+  return {
+    no: 50 - i,
+    name: isFemale ? NAMES_F[(i >> 1) % NAMES_F.length] : NAMES_M[(i >> 1) % NAMES_M.length],
+    gender: isFemale ? "여성" : "남성",
+    phone: PHONES[i % PHONES.length],
+    org: ORGS[i % ORGS.length],
+    position: POSITIONS[i % POSITIONS.length],
+    joinedAt: JOIN_DATES[i % JOIN_DATES.length],
+    approval: (i % 3 === 0 ? "none" : i % 3 === 1 ? "rejected" : "approved") as ApprovalStatus,
+    approvalDate: i % 3 === 0 ? "2026.02.01" : null,
+    activity: ACTIVITIES[i % ACTIVITIES.length],
+  }
+})
 
 // 승인상태 렌더링 — 승인 완료·거절은 처리 날짜, 대기는 승인/거절 버튼
 // min-w-[128px] 고정 — 버튼↔날짜 전환 시 열 너비 reflow 방지
@@ -107,7 +104,7 @@ function ApprovalCell({ status, date }: { status: ApprovalStatus; date: string |
   }
 
   return (
-    <div className="flex items-center justify-start gap-1 min-w-[128px]">
+    <div className="flex items-center justify-start gap-s6 min-w-[128px]">
       <Button variant="neutral" size="xs" onClick={handleApprove}>승인</Button>
       <Button variant="destructive" size="xs" onClick={handleReject}>거절</Button>
     </div>
@@ -122,7 +119,9 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
   const [currentPage, setCurrentPage] = useState(1)
   const pageSizeNum = parseInt(pageSize)
   const totalPages = Math.ceil(MOCK_ROWS.length / pageSizeNum)
-  const displayedRows = MOCK_ROWS.slice((currentPage - 1) * pageSizeNum, currentPage * pageSizeNum)
+  // 정렬: 최신순 = no DESC (큰 번호 = 최근), 오래된순 = no ASC
+  const sortedRows = [...MOCK_ROWS].sort((a, b) => sortOrder === "latest" ? b.no - a.no : a.no - b.no)
+  const displayedRows = sortedRows.slice((currentPage - 1) * pageSizeNum, currentPage * pageSizeNum)
 
   const allSelected = displayedRows.length > 0 && displayedRows.every(r => selectedIds.includes(r.no))
   const someSelected = displayedRows.some(r => selectedIds.includes(r.no)) && !allSelected
@@ -155,7 +154,7 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
     <div className="flex flex-col gap-8">
 
       {/* KPI 타일 카드 */}
-      <div className="bg-canvas-primary rounded-lg py-5 border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle">
         <div className="flex items-stretch">
           {KPI_ITEMS.map((stat, i) => (
             <div
@@ -165,14 +164,14 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
               {i > 0 && (
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />
               )}
-              <p className="text-[12px] font-medium text-content-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">
+              <p className="text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap">
                 {stat.label}
               </p>
               <div className="flex items-baseline gap-0.5">
-                <span className="text-[24px] font-semibold tracking-tight text-content-primary leading-none tabular-nums">
+                <span className="text-h3-bold tabular-nums text-content-primary">
                   {stat.value}
                 </span>
-                <span className="text-[24px] font-semibold tracking-tight text-content-primary leading-none">
+                <span className="text-h3-bold text-content-primary">
                   {stat.unit}
                 </span>
               </div>
@@ -182,41 +181,37 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
       </div>
 
       {/* 툴바 + 테이블 + 페이지네이션 */}
-      <div className="sticky top-3 z-[5] flex flex-col gap-0.5">
+      <div className="flex flex-col gap-0.5">
 
       {/* 툴바 */}
-      <div className="bg-canvas-tertiary flex items-center justify-between py-1">
-        <span className="text-[12px] font-medium text-content-assistive tabular-nums">
-          {hasSelection
-            ? `${selectedIds.length}건 선택`
-            : `전체 ${MOCK_ROWS.length}건`
-          }
+      <div className="sticky top-3 z-20 bg-canvas-tertiary flex h-10 items-center justify-between">
+        <span className="text-body4-medium text-content-tertiary tabular-nums">
+          {hasSelection ? (
+            <>
+              <span className="text-primary font-semibold">{selectedIds.length}</span>건 선택
+            </>
+          ) : (
+            `전체 ${MOCK_ROWS.length}건`
+          )}
         </span>
         <div className="flex items-center gap-1">
           {/* 선택 시: 정렬 숨기고 일괄 승인 버튼 노출 */}
           {!hasSelection && (
-            <Select value={sortOrder} onValueChange={(v) => { setSortOrder(v); setCurrentPage(1) }}>
-              <SelectTrigger className="h-7 px-2 py-0 border-transparent bg-transparent shadow-none gap-1 !text-[12px] text-content-assistive hover:bg-fill-subtle hover:text-content-primary rounded-md">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="rounded-md border-line-subtle text-[13px]">
-                <SelectItem value="latest">최신순</SelectItem>
-                <SelectItem value="oldest">오래된순</SelectItem>
-              </SelectContent>
-            </Select>
+            <button
+              type="button"
+              onClick={() => { setSortOrder(prev => prev === "latest" ? "oldest" : "latest"); setCurrentPage(1) }}
+              className="h-7 pl-2 pr-1.5 inline-flex items-center gap-1 rounded-md text-[13px] font-medium text-content-tertiary hover:bg-fill-subtle hover:text-content-primary transition-colors"
+            >
+              {sortOrder === "latest" ? "최신순" : "오래된순"}
+              <ArrowUpDown className="size-3.5" />
+            </button>
           )}
-          <Select value={pageSize} onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}>
-            <SelectTrigger className="h-7 px-2 py-0 border-transparent bg-transparent shadow-none gap-1 !text-[12px] text-content-assistive hover:bg-fill-subtle hover:text-content-primary rounded-md">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="rounded-md border-line-subtle text-[13px]">
-              <SelectItem value="10">10건</SelectItem>
-              <SelectItem value="20">20건</SelectItem>
-              <SelectItem value="50">50건</SelectItem>
-            </SelectContent>
-          </Select>
+          <PageSizeSelect
+            value={pageSize}
+            onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
+          />
           {hasSelection && (
-            <Button>
+            <Button size="sm">
               선택 일괄 승인
             </Button>
           )}
@@ -224,11 +219,10 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
       </div>
 
       {/* 테이블 카드 */}
-      <div className="bg-canvas-primary rounded-lg overflow-hidden border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg border border-subtle">
 
-        <div className="overflow-auto max-h-[calc(100svh-10rem)]">
           <Table className="table-fixed w-auto min-w-full">
-            <TableHeader className="sticky top-0 z-10">
+            <TableHeader className="sticky top-[44px] z-30 bg-canvas-primary">
               <TableRow className="border-b border-divider-normal hover:bg-transparent">
                 <TableHead className="text-left h-10 w-10 !pl-3 !pr-1">
                   <Checkbox
@@ -237,10 +231,10 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
                       if (el) (el as HTMLButtonElement & { indeterminate?: boolean }).indeterminate = someSelected
                     }}
                     onCheckedChange={toggleAll}
-                    className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                 </TableHead>
-                <TableHead className="text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
+                <TableHead className="!text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-24">이름</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-24">성별</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-36">휴대폰번호</TableHead>
@@ -255,7 +249,7 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
               {displayedRows.map((row) => (
                 <TableRow
                   key={row.no}
-                  className={`cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
+                  className={`cursor-pointer border-divider-subtle${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
                   data-state={selectedIds.includes(row.no) ? "selected" : undefined}
                   onClick={() => router.push(`/management/planner/${row.no}`)}
                 >
@@ -267,7 +261,7 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
                       checked={selectedIds.includes(row.no)}
                       onCheckedChange={() => toggleRow(row.no)}
                       disabled={disabledRowKeys.includes(row.no)}
-                      className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
                   </TableCell>
                   <TableCell className="text-center num-cell !pl-1">{row.no}</TableCell>
@@ -280,19 +274,18 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
                   <TableCell className="text-left" onClick={(e) => e.stopPropagation()}>
                     <ApprovalCell status={row.approval} date={row.approvalDate} />
                   </TableCell>
-                  <TableCell className={`text-left font-medium ${ACTIVITY_COLOR[row.activity]}`}>{row.activity}</TableCell>
+                  <TableCell className="text-left">{row.activity}</TableCell>
                 </TableRow>
               ))}
               {MOCK_ROWS.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={10} className="py-16 text-[13px] text-content-disabled text-center">
+                  <TableCell colSpan={10} className="py-16 text-body4-normal text-content-disabled text-center">
                     데이터가 없습니다
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </div>
 
       </div>
 
@@ -316,7 +309,7 @@ export function PlannerTable({ disabledRowKeys = [] }: { disabledRowKeys?: numbe
             <Button key={n} variant="ghost" size="sm" onClick={() => setCurrentPage(n)}
               className={`h-8 w-8 p-0 rounded-md text-[12px] font-medium tabular-nums transition-colors duration-120 active:scale-[0.97] ${
                 currentPage === n
-                  ? "bg-canvas-quaternary text-content-primary font-semibold hover:bg-canvas-quaternary"
+                  ? "bg-fill-strong text-content-primary font-semibold hover:bg-fill-strong"
                   : "text-content-assistive hover:text-content-primary hover:bg-fill-normal"
               }`}>
               {n}

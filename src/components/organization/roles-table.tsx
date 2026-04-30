@@ -73,18 +73,18 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
   }
 
   return (
-    <div className="sticky top-3 z-[5] flex flex-col gap-0.5">
+    <div className="flex flex-col gap-0.5">
 
       {/* 툴바 */}
-      <div className="bg-canvas-tertiary flex items-center justify-between py-1">
-        <span className="text-[13px] font-medium text-content-assistive tabular-nums">
+      <div className="sticky top-3 z-20 bg-canvas-tertiary flex items-center justify-between py-1">
+        <span className="text-body5-medium text-content-assistive tabular-nums">
           총 {MOCK_ROWS.length}개
         </span>
         <Select value={pageSize} onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}>
           <SelectTrigger className="h-7 px-2 py-0 border-transparent bg-transparent shadow-none gap-1 !text-[12px] text-content-assistive hover:bg-fill-subtle hover:text-content-primary rounded-md">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="rounded-md border-line-subtle text-[13px]">
+          <SelectContent className="rounded-md border-subtle text-body4-normal">
             <SelectItem value="10">10개</SelectItem>
             <SelectItem value="20">20개</SelectItem>
             <SelectItem value="50">50개</SelectItem>
@@ -93,13 +93,12 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
       </div>
 
       {/* 테이블 카드 */}
-      <div className="bg-canvas-primary rounded-lg overflow-hidden border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg border border-subtle">
 
-        <div className="overflow-auto max-h-[calc(100svh-10rem)]">
           <Table>
-            <TableHeader className="sticky top-0 z-10">
+            <TableHeader className="sticky top-[44px] z-30 bg-canvas-primary">
               <TableRow className="border-b border-divider-normal hover:bg-transparent">
-                <TableHead className="text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
+                <TableHead className="!text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">직책/직급</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">업무 권한</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">사용 여부</TableHead>
@@ -111,7 +110,7 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
               {displayedRows.map((row) => (
                 <TableRow
                   key={row.no}
-                  className={`cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
+                  className={`cursor-pointer border-divider-subtle${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
                 >
                   <TableCell className="text-center num-cell !pl-1">{row.no}</TableCell>
                   <TableCell className="text-left">{row.title}</TableCell>
@@ -125,14 +124,13 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
               ))}
               {MOCK_ROWS.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-16 text-[13px] text-content-disabled text-center">
+                  <TableCell colSpan={6} className="py-16 text-body4-normal text-content-disabled text-center">
                     데이터가 없습니다
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </div>
 
       </div>
 
@@ -156,7 +154,7 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
             <Button key={n} variant="ghost" size="sm" onClick={() => setCurrentPage(n)}
               className={`h-8 w-8 p-0 rounded-md text-[12px] font-medium tabular-nums transition-colors duration-120 active:scale-[0.97] ${
                 currentPage === n
-                  ? "bg-canvas-quaternary text-content-primary font-semibold hover:bg-canvas-quaternary"
+                  ? "bg-fill-strong text-content-primary font-semibold hover:bg-fill-strong"
                   : "text-content-assistive hover:text-content-primary hover:bg-fill-normal"
               }`}>
               {n}

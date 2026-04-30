@@ -7,6 +7,8 @@ import type { TooltipValueType } from "recharts"
 import { cn } from "@/lib/utils"
 
 // Format: { THEME_NAME: CSS_SELECTOR }
+// shadcn 원본 API 보존 — 라이트 전용 프로젝트지만 ChartConfig.theme 인터페이스 호환을 위해 dark 키 유지.
+// `.dark` 셀렉터는 실제 발동되지 않음 (다크모드 미사용).
 const THEMES = { light: "", dark: ".dark" } as const
 
 const INITIAL_DIMENSION = { width: 320, height: 200 } as const

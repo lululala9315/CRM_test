@@ -29,22 +29,21 @@ export function AutoAssignSettings() {
   const [selected, setSelected] = useState<AutoAssignMode>("disabled")
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
+    <div className="flex flex-col gap-s16">
+      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
 
-        {/* 안내 */}
-        <div className="px-6 pt-6 pb-6">
-          <p className="text-[14px] font-semibold text-content-primary leading-relaxed">
+        {/* 카드 헤더 — 안내 + info 노트 */}
+        <div className="px-s24 pt-s20 pb-s20 border-b border-divider-subtle">
+          <p className="text-body3-bold text-content-primary leading-relaxed [text-wrap:pretty]">
             사용함을 선택하시면, 보닥에서 제공하는 DB를 설계사에게 까지 자동 배정해 드립니다.
           </p>
-          <div className="mt-4 flex items-start gap-2.5 bg-blue-tint border border-info rounded-md px-4 py-3">
-            <Info className="h-4 w-4 text-blue-tint mt-0.5 shrink-0" />
-            <p className="text-[13px] text-blue-tint leading-relaxed font-medium">
+          <div className="mt-s12 flex items-start gap-s8 bg-blue-tint-soft border border-info rounded-md px-s12 py-s10">
+            <Info className="h-4 w-4 text-blue-tint mt-px shrink-0" />
+            <p className="text-body4-medium text-blue-tint leading-relaxed">
               변경한 설정 값은 <span className="font-semibold">익일 00:00시</span> 부터 적용됩니다.
             </p>
           </div>
         </div>
-        <div className="mx-6 h-px bg-divider-subtle" />
 
         {/* 옵션 */}
         <RadioGroup
@@ -54,7 +53,7 @@ export function AutoAssignSettings() {
         >
           {OPTIONS.map((option, index) => (
             <div key={option.value}>
-              {index !== 0 && <div className="mx-6 h-px bg-divider-subtle" />}
+              {index !== 0 && <div className="mx-s24 h-px bg-divider-subtle" />}
               <RadioOption
                 value={option.value}
                 label={option.label}
@@ -65,14 +64,9 @@ export function AutoAssignSettings() {
         </RadioGroup>
       </div>
 
-      {/* 하단 */}
-      <div className="flex flex-col gap-4">
-        <div className="h-px bg-divider-subtle" />
-        <div className="flex justify-end">
-          <Button>
-            확인
-          </Button>
-        </div>
+      {/* 하단 액션 — 카드 외부 자연 흐름 */}
+      <div className="flex justify-end">
+        <Button>확인</Button>
       </div>
     </div>
   )

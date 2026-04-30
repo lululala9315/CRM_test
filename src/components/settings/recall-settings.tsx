@@ -19,23 +19,22 @@ export function RecallSettings() {
   const [hours, setHours] = useState("30")
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
+    <div className="flex flex-col gap-s16">
+      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
 
-        {/* 안내 */}
-        <div className="px-6 pt-6 pb-6">
-          <p className="text-[14px] font-semibold text-content-primary leading-relaxed">
+        {/* 카드 헤더 — 안내 + info 노트 */}
+        <div className="px-s24 pt-s20 pb-s20 border-b border-divider-subtle">
+          <p className="text-body3-bold text-content-primary leading-relaxed [text-wrap:pretty]">
             설계사에게 배정한 DB를 설정한 시간 내 상담을 시작하지 않으면
             자동으로 DB를 미배정으로 회수할 수 있어요.
           </p>
-          <div className="mt-4 flex items-start gap-2.5 bg-blue-tint border border-info rounded-md px-4 py-3">
-            <Info className="h-4 w-4 text-blue-tint mt-0.5 shrink-0" />
-            <p className="text-[13px] text-blue-tint leading-relaxed font-medium">
+          <div className="mt-s12 flex items-start gap-s8 bg-blue-tint-soft border border-info rounded-md px-s12 py-s10">
+            <Info className="h-4 w-4 text-blue-tint mt-px shrink-0" />
+            <p className="text-body4-medium text-blue-tint leading-relaxed">
               변경한 설정 값은 <span className="font-semibold">익일 00:00시</span> 부터 적용됩니다.
             </p>
           </div>
         </div>
-        <div className="mx-6 h-px bg-divider-subtle" />
 
         {/* 옵션 */}
         <RadioGroup
@@ -44,14 +43,12 @@ export function RecallSettings() {
           className="gap-0"
         >
           <RadioOption value="disabled" label="사용안함" />
-          <div className="mx-6 h-px bg-divider-subtle" />
+          <div className="mx-s24 h-px bg-divider-subtle" />
           <RadioOption value="enabled" label="사용함">
-            {/* 시간 입력 — 항상 노출, 미선택 시 흐리게.
-                stopPropagation으로 input 영역 클릭이 라디오 재선택을 일으키지 않도록 차단. */}
             <div
               className={cn(
-                "mt-1 flex items-center gap-2 transition-opacity",
-                selected === "enabled" ? "opacity-100" : "opacity-30 pointer-events-none"
+                "mt-s4 flex items-center gap-s8 transition-opacity",
+                selected === "enabled" ? "opacity-100" : "opacity-40 pointer-events-none"
               )}
               onClick={(e) => e.stopPropagation()}
             >
@@ -60,9 +57,9 @@ export function RecallSettings() {
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
                 min={1}
-                className="w-[72px] border-line-subtle bg-canvas-tertiary text-center text-[13px]"
+                className="w-[72px] border-subtle bg-canvas-tertiary text-center text-[13px]"
               />
-              <span className="text-[13px] text-content-assistive">
+              <span className="text-body4-normal text-content-assistive">
                 시간 이내 상담 미 시도 시, 미배정으로 자동 회수됩니다.
               </span>
             </div>
@@ -71,14 +68,9 @@ export function RecallSettings() {
 
       </div>
 
-      {/* 하단 */}
-      <div className="flex flex-col gap-4">
-        <div className="h-px bg-divider-subtle" />
-        <div className="flex justify-end">
-          <Button>
-            확인
-          </Button>
-        </div>
+      {/* 하단 액션 — 카드 외부 자연 흐름 */}
+      <div className="flex justify-end">
+        <Button>확인</Button>
       </div>
     </div>
   )

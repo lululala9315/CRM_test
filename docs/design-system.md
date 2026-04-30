@@ -7,17 +7,17 @@
 
 ## 개요 — Semantic Sync 토큰 전략
 
-이 프로젝트는 **shadcn 표준 색상 의미를 그대로 유지**하면서, Figma 디자인 토큰을 별도 prefix(`bg-canvas-*`, `text-content-*`, `border-line-*`)로 나란히 노출합니다.
+이 프로젝트는 **shadcn 표준 색상 의미를 그대로 유지**하면서, Figma 디자인 토큰을 별도 prefix(`bg-canvas-*`, `text-content-*`, `border-*`)로 나란히 노출합니다.
 
 ```
 shadcn 표준      Figma 1:1 노출
 ───────────      ──────────────
 bg-primary       bg-canvas-primary
 text-primary     text-content-primary
-border-border    border-line-subtle
+border-border    border-subtle
 ```
 
-shadcn 컴포넌트는 수정 없이 사용. Figma 스펙 컴포넌트는 canvas/content/line 클래스를 직접 참조.
+shadcn 컴포넌트는 수정 없이 사용. Figma 스펙 컴포넌트는 canvas/content/border 클래스를 직접 참조.
 
 ---
 
@@ -43,13 +43,12 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 | Figma 토큰 | Tailwind 클래스 | CSS 변수 | 색 값 | 용도 |
 |---|---|---|---|---|
 | `bg_primary` | `bg-canvas-primary` | `var(--bg-primary)` | `#FFFFFF` | 카드·모달·흰 패널 배경 |
-| `bg_secondary` | `bg-secondary` | `var(--bg-secondary)` | `cool-neutral-50` ≈ `#FAFAFA` | 살짝 오프화이트 영역 |
+| `bg_secondary` | `bg-canvas-secondary` | `var(--bg-secondary)` | `cool-neutral-50` ≈ `#FAFAFA` | 살짝 오프화이트 영역 |
 | `bg_tertiary` | `bg-canvas-tertiary` | `var(--bg-tertiary)` | `cool-neutral-100` ≈ `#F5F5F8` | 페이지 기본 배경 |
 | `bg_subtle` | `bg-canvas-quaternary` | `var(--bg-subtle)` | `cool-neutral-150` ≈ `#F0F0F3` | 섹션 배경, 테이블 짝수행 |
-| `bg_subtle` | `bg-quaternary` | `var(--bg-subtle)` | `cool-neutral-150` ≈ `#F0F0F3` | bg-canvas-quaternary와 동일값, @utility 경로 |
 | (shadcn) | `bg-primary` | `var(--primary)` | `#3182F6` | **브랜드 블루** — 메인 액션 버튼 배경 |
 | (shadcn) | `bg-accent` | `var(--accent)` | `cool-neutral-150` | 서브틀 hover bg (shadcn 표준) |
-| (shadcn) | `bg-background` | `var(--background)` | `= bg-tertiary` | 페이지 배경 (shadcn 표준) |
+| (shadcn) | `bg-background` | `var(--background)` | `= bg-canvas-tertiary` | 페이지 배경 (shadcn 표준) |
 
 > **실무 선택 기준**: 흰 카드 → `bg-canvas-primary`, 페이지 배경 → `bg-canvas-tertiary` 또는 `bg-background`
 
@@ -65,25 +64,25 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 | `text_disabled` | `text-content-disabled` | `var(--text-disabled)` | `cool-neutral-400` | 비활성 UI |
 | (shadcn) | `text-primary` | `var(--primary)` | `#3182F6` | **브랜드 블루 텍스트** (shadcn 표준) |
 | (shadcn) | `text-foreground` | `var(--foreground)` | `= text-content-primary` | 기본 글자색 (shadcn 표준) |
-| (Figma) | `text-secondary` | `var(--text-secondary)` | `cool-neutral-900` | text-content-secondary와 동일값, @utility 경로 |
-| (Figma) | `text-quaternary` | `var(--text-quaternary)` | `cool-neutral-700` | text-content-quaternary와 동일값 |
-| (Figma) | `text-assistive` | `var(--text-assistive)` | `cool-neutral-600` | text-content-assistive와 동일값 |
-| (Figma) | `text-disabled` | `var(--text-disabled)` | `cool-neutral-400` | text-content-disabled와 동일값 |
 | (특수) | `text-inverse-primary` | `var(--common-100)` | `#FFFFFF` | 짙은 배경 위 흰 텍스트 (버튼 라벨 등) |
 
 > **실무 선택 기준**: 제목 → `text-content-primary`, 본문 → `text-content-secondary`, 플레이스홀더 → `text-content-assistive`
+>
+> ⚠️ **삭제된 단축 alias** — `text-assistive`, `text-disabled`, `text-secondary`, `text-quaternary` (@utility 경로) 는 모두 삭제됨. `text-content-*` 형식 사용.
 
 ### 2-C. 보더 (Border / Line)
 
 | Figma 토큰 | Tailwind 클래스 | CSS 변수 | 색 값 | 용도 |
 |---|---|---|---|---|
-| `border_subtle` | `border-line-subtle` | `var(--border-subtle)` | `cool-neutral-200` ≈ `#E3E3E8` | 카드 외곽선, 테이블 로우 구분 |
-| `border_subtle` | `border-subtle` | `var(--border-subtle)` | `cool-neutral-200` | border-line-subtle과 동일값, @utility 경로 |
-| `border_primary` | `border-primary` | `var(--border-primary)` | `cool-neutral-300` ≈ `#D0D0D6` | Input/Select 기본 보더 |
-| (shadcn) | `border-border` | `var(--border)` | `= border-primary` | shadcn 표준 보더 (`border` shorthand) |
-| (shadcn) | `border-input` | `var(--input)` | `= border-primary` | shadcn Input 컴포넌트 보더 |
+| `border_subtle` | `border-subtle` | `var(--border-subtle)` | `cool-neutral-200` ≈ `#E3E3E8` | 카드 외곽선, 테이블 로우 구분 (가장 많이 사용) |
+| `border_primary` | `border-border` | `var(--border)` | `cool-neutral-300` ≈ `#D0D0D6` | shadcn 표준 보더, Input/Select 기본 |
+| `border_strong` | `border-strong` | `var(--border-strong)` | `cool-neutral-400` | 강조 구분선 |
+| (shadcn) | `border-input` | `var(--input)` | `= border-border` | shadcn Input 컴포넌트 보더 |
+| (shadcn) | `border-primary` | `var(--primary)` | `#3182F6` | 브랜드 블루 보더 (선택, focus) |
 
-> **실무 선택 기준**: 카드 테두리 → `border border-line-subtle`, Input → `border-input` (shadcn 표준)
+> **실무 선택 기준**: 카드 테두리 → `border border-subtle`, Input → `border-input` (shadcn 표준)
+>
+> ⚠️ **삭제된 클래스** — `border-line-subtle`, `border-line-primary`, `border-line-strong`, `border-action` 모두 삭제됨.
 
 ### 2-D. 브랜드 / 액션 색 (Primary)
 
@@ -91,11 +90,16 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 |---|---|---|---|
 | `bg-primary` | `var(--primary)` | `#3182F6` | 메인 액션 버튼 배경 |
 | `text-primary-foreground` | `var(--primary-foreground)` | `#FFFFFF` | 버튼 위 흰 라벨 |
-| `bg-primary/10` | (alpha) | `#3182F6 @ 10%` | 서브틀 액션 버튼, 필터 검색 버튼 |
+| `bg-primary-subtle` | `var(--primary-subtle)` | `blue-50` ≈ `#E8F3FF` | 서브틀 액션·선택 배경 |
+| `bg-primary-subtle-hover` | `var(--primary-subtle-hover)` | `blue-75` ≈ `#D8EAFF` | 선택 항목 hover 상태 |
+| `bg-primary-hover` | `var(--primary-hover)` | `blue-550` | primary 버튼 hover bg |
 | `text-primary` | `var(--primary)` | `#3182F6` | 브랜드 색 텍스트, 링크, 강조 수치 |
 | `ring-primary` | `var(--primary)` | `#3182F6` | Focus ring |
 
-> `bg-primary / text-primary`는 Tailwind v4 `@theme inline --color-primary`로 노출. alpha modifier (`bg-primary/10`, `text-primary/50`) 자동 지원.
+> ⚠️ **alpha modifier 금지** — semantic 토큰에 `/숫자` 사용 금지. 항상 named atomic 토큰을 참조한다.
+> - ❌ `bg-primary/10` → ✅ `bg-primary-subtle` (= `var(--blue-50)`)
+> - ❌ `hover:bg-primary/5` → ✅ `hover:bg-blue-tint`
+> - ❌ `ring-ring/50` → ✅ `ring-ring-glow` (= `var(--blue-350)`)
 
 ### 2-E. 상태색 (Semantic Status)
 
@@ -150,7 +154,7 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 
 ### "흰 카드 배경이 필요하다"
 ```tsx
-<div className="bg-canvas-primary rounded-lg border border-line-subtle">
+<div className="bg-canvas-primary rounded-lg border border-subtle">
 ```
 
 ### "페이지 배경이 필요하다"
@@ -180,7 +184,7 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 
 ### "서브틀 액션 버튼 (필터 검색)"
 ```tsx
-<Button className="bg-primary/10 text-primary hover:bg-primary/20 shadow-none">검색</Button>
+<Button variant="secondary">검색</Button>  {/* 내부적으로 bg-primary-subtle text-primary hover:bg-primary-subtle-hover */}
 ```
 
 ### "카드 내 수평 구분선"
@@ -190,8 +194,8 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 
 ### "필터 컨트롤 배경"
 ```tsx
-<SelectTrigger className="bg-fill-filter border-line-subtle">
-<Input variant="filter" className="bg-fill-filter border-line-subtle" />
+<SelectTrigger className="bg-fill-filter border-subtle">
+<Input variant="filter" className="bg-fill-filter border-subtle" />
 ```
 
 ### "상태 배지"
@@ -290,29 +294,34 @@ useEffect(() => {
 |---|---|
 | `bg-blue-tint / text-blue-tint` | Info 의미 — 브랜드 무관 (초록 브랜드여도 Info는 파랑) |
 | `bg-success / bg-warning / bg-destructive` | 시맨틱 상태색 — 브랜드와 독립 |
-| `bg-canvas-* / text-content-* / border-line-*` | 중립 레이아웃 색 |
+| `bg-canvas-* / text-content-* / border-*` | 중립 레이아웃 색 |
 
 ---
 
 ## 6. 사용 금지 토큰
 
-### 삭제된 구 토큰 (SWAP 시대 잔재)
+### 삭제된 구 토큰
 
-아래 클래스는 5c-pre 정리에서 삭제됨. 소스에서 발견 시 즉시 교체.
+아래 클래스는 삭제됨. 소스에서 발견 시 즉시 교체.
 
 | 삭제된 클래스 | 대체 |
 |---|---|
 | `bg-brand / text-brand` | → `bg-primary / text-primary` |
 | `bg-surface-* / text-label-*` | → `bg-canvas-* / text-content-*` |
-| `bg-canvas-secondary` | → `bg-secondary` 또는 `bg-canvas-tertiary` |
-| `bg-muted` (SWAP 의미) | → `bg-fill-normal` 또는 `bg-canvas-quaternary` |
-| `text-tertiary` (@utility) | → `text-content-tertiary` |
-| `border-strong` | → `border-line-subtle` 또는 직접 지정 |
-| `border-selected` | → `border-primary` (brand blue) |
-| `border-accent` | → `border-primary` (Semantic Sync 이후) |
-| `bg-divider-strong` | → `bg-divider-normal` + opacity 조정 |
-| `bg-fill-strong` | → `bg-fill-hover` |
-| `text-orange-tint` | → `text-amber-tint` 또는 직접 지정 |
+| `bg-secondary` (@utility) | → `bg-canvas-secondary` |
+| `bg-quaternary` (@utility) | → `bg-canvas-quaternary` |
+| `bg-tertiary` (@utility) | → `bg-canvas-tertiary` |
+| `text-assistive` (@utility) | → `text-content-assistive` |
+| `text-disabled` (@utility) | → `text-content-disabled` |
+| `text-secondary` (@utility) | → `text-content-secondary` |
+| `text-quaternary` (@utility) | → `text-content-quaternary` |
+| `border-line-subtle` | → `border-subtle` |
+| `border-line-primary` | → `border-border` |
+| `border-line-strong` | → `border-strong` |
+| `border-action` | → `border-primary` |
+| `bg-action` / `bg-button-accent-*` | → `bg-primary` |
+| `border-selected` | → `border-primary` |
+| `border-accent` | → `border-primary` |
 
 ### 일반 금지 사항
 
@@ -332,16 +341,59 @@ useEffect(() => {
 
 자주 쓰는 패턴 요약:
 
-| 용도 | 클래스 |
-|---|---|
-| 페이지 타이틀 (28px) | `text-[28px] font-semibold text-content-primary tracking-tight leading-tight` |
-| 카드 타이틀 (20px) | `text-[20px] font-semibold text-content-primary tracking-tight` |
-| 본문 16px | `text-body2-normal` (16/24/400) |
-| 본문 14px | `text-body3-normal` (14/22/400) |
-| 테이블 헤더 | `text-[12px] font-medium text-content-assistive` |
-| 테이블 셀 | `text-[13px] text-content-primary` |
-| KPI 숫자 | `text-[24px] font-semibold tracking-tight text-content-primary leading-none tabular-nums` |
+| 용도 | 클래스 | 비고 |
+|---|---|---|
+| 페이지 타이틀 (28px) | `<PageHeader title="..." subtitle="..." />` | text-h2-bold 자동 적용 |
+| 카드 헤더 (14px) | `text-body3-bold text-content-primary` | 14/22/600 |
+| 본문 14px | `text-body3-normal text-content-secondary` | 14/22/400 |
+| 보조 설명 13px | `text-body4-normal text-content-secondary` | 13/18/400 |
+| 테이블 헤더 | `<TableHead>` (text-body5-bold leading-none 내장) | 자동 |
+| 테이블 셀 | `<TableCell>` (text-body4-normal 내장) | 자동 |
+| 툴바 카운트 | `text-body5-medium text-content-assistive tabular-nums` | 12px (PageSizeSelect와 통일) |
+| KPI 숫자 | `text-h3-bold tabular-nums text-content-primary` | 카드 wrapper: `pt-4 pb-3` |
+| 페이지네이션 번호 | (`<PageNumbers>` 내장) | text-body5-medium |
+| Caption | `text-caption` | 10/16/400 |
+
+### Atomic 토큰 — CSS 속성명 그대로
+
+```tsx
+font-size-{N}            // font-size 직접 지정
+font-weight-{name}       // font-weight (normal/medium/semibold/bold)
+font_letter_spacing-{N}  // letter-spacing
+line-height-{N}          // line-height
+```
 
 ---
 
-*마지막 갱신: 5d (Semantic Sync 완전 이행 후)*
+## 8. 토큰 정책
+
+### 활성 토큰
+- `--spacing-s2 ~ s64` (s-토큰) — **재도입** (2026-04-30). 사용 시 `gap-s4`, `px-s24` 등. half-step(`gap-0.5`) 금지
+- `--blue-25` (#f4f9ff) — blue-50과 흰색 사이, info 박스 soft 배경
+- `--cool-neutral-75` (#f6f7f9) — 헤더/사이드바/콘텐츠 배경 (`bg-canvas-tertiary`)
+- `font-weight-bold` (700) — atomic typography
+- `text-h2-bold` (28/40/600) — 페이지 타이틀 (PageHeader 사용)
+- `border-divider-subtle/normal` — alpha border (테이블 셀 라인 등)
+- `bg-blue-tint-soft` — info 박스 가장 연한 배경
+
+### 폐기된 토큰
+
+| 토큰 카테고리 | 폐기 사유 | 대체 |
+|---|---|---|
+| `--radius-r4 ~ r9999` (r-토큰) | 사용처 미미 (button.tsx 1곳만) | `rounded-sm/md/lg/full` (Tailwind 표준) |
+| `--shadow-sd03 / sd25` | shadow-xs/sm/md/lg/xl로 대체됨 | `shadow-xs/sm/md/lg/xl` |
+
+---
+
+## 9. 핵심 컴포넌트
+
+| 컴포넌트 | 용도 |
+|---|---|
+| `<PageHeader title="" subtitle="" actions=?>` | 모든 페이지 타이틀 영역 (text-h2-bold + 가림막 sticky) |
+| `<KpiGroup items={[...]}>` | KPI 타일 그룹 — 라벨 + 숫자 + 변화율 배지 (sparkline 미사용) |
+| `<KpiCard ...>` | 단일 KPI 타일 |
+| `<RadioOption value label description?>` | 옵션 카드 — 좌측 bar 없이 라디오 + 라벨 색 변화로 강조 |
+
+---
+
+*마지막 갱신: 2026-04-30 (Spacing s-토큰 재도입, blue-25 / cool-neutral-75 추가, KpiGroup·PageHeader 컴포넌트 도입, RadioOption 디자인 정돈)*

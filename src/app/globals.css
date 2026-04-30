@@ -12,11 +12,9 @@
 
    Semantic Sync — Figma 1:1 + shadcn 표준 호환:
    - bg-primary / text-primary = 브랜드 블루 (shadcn 표준)
-   - bg-canvas-* / text-content-* / border-line-* = Figma 1:1 토큰
-   - bg-accent / text-accent = shadcn subtle hover bg (표준)
-   - bg-secondary / bg-tertiary / bg-quaternary = Layer 2 배경
-   - text-secondary / text-assistive / text-disabled = Layer 2 글자
-   - border-subtle / border-primary / border-strong = Layer 2 보더
+   - bg-canvas-* / text-content-* / border-* = Figma 1:1 토큰
+   - bg-accent = shadcn subtle hover bg (표준, cool-neutral-150)
+   - border-subtle / border-border / border-strong = 보더 3단계
    - bg-fill-* / bg-divider-* / *-tint = 보조 유틸리티
    ───────────────────────────────────────────────────────────────────── */
 
@@ -29,44 +27,29 @@
   --border-width-border05: 0.5px;
   --border-width-border10: 1px;
 
-  /* ── Radius (r4 ~ r9999) ── */
-  --radius-r4:    4px;
-  --radius-r6:    6px;
-  --radius-r8:    8px;
-  --radius-r10:   10px;
-  --radius-r12:   12px;
-  --radius-r16:   16px;
-  --radius-r20:   20px;
-  --radius-r24:   24px;
-  --radius-r9999: 9999px;
-
-  /* ── Spacing (s2 ~ s64) ── */
+  /* ── Spacing (s2 ~ s64) — 4px 그리드 + half-step (s2, s6 등 미세 조정용) ── */
   --spacing-s2:  2px;
   --spacing-s4:  4px;
   --spacing-s6:  6px;
   --spacing-s8:  8px;
   --spacing-s10: 10px;
   --spacing-s12: 12px;
+  --spacing-s14: 14px;
   --spacing-s16: 16px;
   --spacing-s20: 20px;
   --spacing-s24: 24px;
   --spacing-s28: 28px;
-  --spacing-s30: 30px;
   --spacing-s32: 32px;
-  --spacing-s38: 38px;
   --spacing-s40: 40px;
-  --spacing-s44: 44px;
   --spacing-s48: 48px;
-  --spacing-s52: 52px;
-  --spacing-s56: 56px;
-  --spacing-s58: 58px;
+  --spacing-s60: 60px;
   --spacing-s64: 64px;
 
-  /* ── Shadow (sd03, sd25) ── */
-  --shadow-sd03: 0px 2px 20px 0px rgba(0, 0, 0, 0.3);
-  --shadow-sd25: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+  /* spacing s-토큰 재도입 (2026-04-30): half-step(gap-0.5 등) 금지, 모든 spacing은 s-토큰 또는 Tailwind 네이티브 사용
+     radius r4~r9999 / shadow sd03·sd25 토큰은 폐기됨.
+     Radius/Shadow는 Tailwind 표준(rounded-md/lg, shadow-xs/sm/md/lg/xl) 사용. */
 
-  /* ── Font Size sub-tokens (font_size_*) ── */
+  /* ── Font Size atomic tokens ── */
   --text-fs10: 10px;
   --text-fs12: 12px;
   --text-fs13: 13px;
@@ -78,6 +61,17 @@
   --text-fs24: 24px;
   --text-fs34: 34px;
   --text-fs36: 36px;
+
+  /* ── Letter Spacing atomic — Tailwind: tracking-ls0 / tracking-ls050 / tracking-ls100 ── */
+  --tracking-ls0:   var(--letter-spacing-0);
+  --tracking-ls050: var(--letter-spacing-050);
+  --tracking-ls100: var(--letter-spacing-100);
+
+  /* ── Line Height atomic — Tailwind: leading-lh120 / leading-lh130 / leading-lh140 / leading-lh160 ── */
+  --leading-lh120: var(--line-height-120);
+  --leading-lh130: var(--line-height-130);
+  --leading-lh140: var(--line-height-140);
+  --leading-lh160: var(--line-height-160);
 
   /* ── shadcn Tailwind 유틸리티 브리지 ── */
   --color-background:               var(--background);
@@ -140,6 +134,7 @@
                 0 8px 16px -8px oklch(0.18 0.025 254 / 0.07);
 
   /* Fill */
+  --color-fill-muted:  var(--fill-muted);
   --color-fill-subtle: var(--fill-subtle);
   --color-fill-normal: var(--fill-normal);
   --color-fill-strong: var(--fill-strong);
@@ -158,6 +153,7 @@
 
   /* Surface — Figma bg_* 1:1 */
   --color-canvas-primary:    var(--bg-primary);
+  --color-canvas-secondary:  var(--bg-secondary);
   --color-canvas-tertiary:   var(--bg-tertiary);
   --color-canvas-quaternary: var(--bg-subtle);
 
@@ -168,9 +164,6 @@
   --color-content-quaternary: var(--text-quaternary);
   --color-content-assistive:  var(--text-assistive);
   --color-content-disabled:   var(--text-disabled);
-
-  /* Line — Figma border_* 1:1 */
-  --color-line-subtle:  var(--border-subtle);
 
   /* 4e: Inverse text — 흰 글자 (컬러/다크 배경 위) */
   --color-inverse-primary:   var(--common-100);
@@ -186,48 +179,51 @@
   --common-0:   oklch(0 0 0);
   --common-100: oklch(1 0 0);
 
-  /* Cool Neutral — 50단계, H=260 고정 (250 H버그 수정, 270 제거) */
-  --cool-neutral-50:  oklch(0.988 0.002 260);
-  --cool-neutral-100: oklch(0.971 0.004 260);
-  --cool-neutral-150: oklch(0.960 0.005 260);
-  --cool-neutral-200: oklch(0.940 0.006 260);
-  --cool-neutral-250: oklch(0.925 0.007 260);
-  --cool-neutral-300: oklch(0.910 0.008 260);
-  --cool-neutral-350: oklch(0.892 0.009 260);
-  --cool-neutral-400: oklch(0.870 0.009 260);
-  --cool-neutral-450: oklch(0.833 0.010 260);
-  --cool-neutral-500: oklch(0.790 0.012 260);
-  --cool-neutral-550: oklch(0.710 0.015 258);
-  --cool-neutral-600: oklch(0.620 0.020 256);
-  --cool-neutral-650: oklch(0.556 0.020 255);
-  --cool-neutral-700: oklch(0.490 0.018 254);
-  --cool-neutral-750: oklch(0.425 0.017 253);
-  --cool-neutral-800: oklch(0.360 0.015 252);
-  --cool-neutral-850: oklch(0.300 0.014 252);
-  --cool-neutral-900: oklch(0.240 0.012 252);
-  --cool-neutral-950: oklch(0.200 0.015 251);
-  --cool-neutral-990: oklch(0.155 0.018 250);
+  /* Cool Neutral — hex 앵커, 중간 단계 선형 보간 */
+  --cool-neutral-50:  #f9fafb; 
+  --cool-neutral-75:  #f6f7f9;  /* 보간 — 헤더·사이드바·콘텐츠 배경 (bg-tertiary) */
+  --cool-neutral-100: #f2f4f6; 
+  --cool-neutral-150: #eceef1;  /* 보간 */
+  --cool-neutral-200: #e5e8eb; 
+  --cool-neutral-250: #dbdfe3;  /* 보간 */
+  --cool-neutral-300: #d1d6db; 
+  --cool-neutral-350: #c1c7ce;  /* 보간 */
+  --cool-neutral-400: #b0b8c1; 
+  --cool-neutral-450: #a7afb9;  /* 보간 */
+  --cool-neutral-500: #9ea7b1;  /* 보간 */
+  --cool-neutral-550: #949ea9;  /* 보간 */
+  --cool-neutral-600: #8b95a1; 
+  --cool-neutral-650: #7b8692;  /* 보간 */
+  --cool-neutral-700: #6b7684; 
+  --cool-neutral-750: #5d6876;  /* 보간 */
+  --cool-neutral-800: #4e5968; 
+  --cool-neutral-850: #414b5a;  /* 보간 */
+  --cool-neutral-900: #333d4b; 
+  --cool-neutral-950: #262e3a;  /* 보간 */
+  --cool-neutral-990: #191f28; 
 
-  /* Blue — 시그니처 #3182F6 = blue-500, 50단계 */
-  --blue-50:  oklch(0.974 0.015 253);
-  --blue-100: oklch(0.958 0.028 253);
-  --blue-150: oklch(0.945 0.038 253);
-  --blue-200: oklch(0.942 0.040 253);
-  --blue-250: oklch(0.910 0.065 253);
-  --blue-300: oklch(0.875 0.090 253);
-  --blue-350: oklch(0.820 0.130 253);
-  --blue-400: oklch(0.745 0.165 254);
-  --blue-450: oklch(0.675 0.200 254);
-  --blue-500: oklch(0.588 0.228 254);
-  --blue-550: oklch(0.538 0.218 254);
-  --blue-600: oklch(0.490 0.205 254);
-  --blue-650: oklch(0.445 0.185 254);
-  --blue-700: oklch(0.400 0.165 254);
-  --blue-750: oklch(0.352 0.138 254);
-  --blue-800: oklch(0.310 0.120 254);
-  --blue-850: oklch(0.262 0.095 254);
-  --blue-900: oklch(0.220 0.075 254);
-  --blue-950: oklch(0.172 0.050 254);
+  /* Blue — #3182f6 = blue-500 기준 */
+  --blue-25:  #f4f9ff;  /* blue-50과 흰색 사이 — info bg soft */
+  --blue-50:  #e8f3ff; 
+  --blue-75:  #d8eaff;  /* 보간 (50↔100 중간) — primary-subtle-hover 용 */
+  --blue-100: #c9e2ff; 
+  --blue-150: #add2ff;  /* 보간 */
+  --blue-200: #90c2ff; 
+  --blue-250: #7ab5ff;  /* 보간 */
+  --blue-300: #64a8ff; 
+  --blue-350: #559efe;  /* 보간 */
+  --blue-400: #4593fc; 
+  --blue-450: #3b8bf9;  /* 보간 */
+  --blue-500: #3182f6;  /* 브랜드 컬러 */
+  --blue-550: #2a7af1;  /* 보간 */
+  --blue-600: #2272eb; 
+  --blue-650: #1f6be3;  /* 보간 */
+  --blue-700: #1b64da; 
+  --blue-750: #1a5ece;  /* 보간 */
+  --blue-800: #1957c2; 
+  --blue-850: #1951b4;  /* 보간 */
+  --blue-900: #194aa6; 
+  --blue-950: #193e90;  /* 보간 */
 
   /* Violet — 차트 blue→purple 스펙트럼, H=290, 50단계 (신규) */
   --violet-50:  oklch(0.975 0.018 290);
@@ -250,69 +246,48 @@
   --violet-900: oklch(0.232 0.090 290);
   --violet-950: oklch(0.180 0.060 290);
 
-  /* Red — 50단계 (H=22-28, red-550 순서 오류 수정) */
-  --red-50:  oklch(0.975 0.015 22);
-  --red-100: oklch(0.958 0.035 22);
-  --red-150: oklch(0.940 0.060 22);
-  --red-200: oklch(0.918 0.090 23);
-  --red-250: oklch(0.895 0.115 24);
-  --red-300: oklch(0.870 0.140 24);
-  --red-350: oklch(0.840 0.165 25);
-  --red-400: oklch(0.775 0.200 26);
-  --red-450: oklch(0.700 0.225 27);
-  --red-500: oklch(0.577 0.245 27);
-  --red-550: oklch(0.540 0.220 27);
-  --red-600: oklch(0.505 0.190 28);
-  --red-650: oklch(0.452 0.188 27);
-  --red-700: oklch(0.400 0.185 25);
-  --red-750: oklch(0.350 0.160 25);
-  --red-800: oklch(0.298 0.130 25);
-  --red-850: oklch(0.248 0.100 25);
-  --red-900: oklch(0.200 0.075 25);
-  --red-950: oklch(0.158 0.050 24);
+  /* Red — #f04452 = red-500 */
+  --red-50:  #ffeeee; 
+  --red-100: #ffd4d6; 
+  --red-150: #ffc2c5;  /* 보간 */
+  --red-200: #feafb4; 
+  --red-250: #fd9ca2;  /* 보간 */
+  --red-300: #fb8890; 
+  --red-350: #f97780;  /* 보간 */
+  --red-400: #f66570; 
+  --red-450: #f35561;  /* 보간 */
+  --red-500: #f04452;  /* destructive */
+  --red-550: #ea3746;  /* 보간 */
+  --red-600: #e42939; 
+  --red-650: #db2535;  /* 보간 */
+  --red-700: #d22030; 
+  --red-750: #c71e2d;  /* 보간 */
+  --red-800: #bc1b2a; 
+  --red-850: #b11a28;  /* 보간 */
+  --red-900: #a51926; 
+  --red-950: #981824;  /* 보간 */
 
-  /* Green — 50단계 (기존 앵커값 유지, 중간 단계 보간) */
-  --green-50:  oklch(0.972 0.025 152);
-  --green-100: oklch(0.956 0.042 152);
-  --green-150: oklch(0.940 0.060 152);
-  --green-200: oklch(0.922 0.078 152);
-  --green-250: oklch(0.904 0.084 152);
-  --green-300: oklch(0.870 0.090 152);
-  --green-350: oklch(0.715 0.127 149);
-  --green-400: oklch(0.560 0.164 145);
-  --green-450: oklch(0.527 0.137 150);
-  --green-500: oklch(0.700 0.165 155);
-  --green-550: oklch(0.664 0.168 152);
-  --green-600: oklch(0.627 0.170 149);
-  --green-650: oklch(0.524 0.150 149);
-  --green-700: oklch(0.420 0.130 148);
-  --green-750: oklch(0.370 0.118 148);
-  --green-800: oklch(0.320 0.105 148);
-  --green-850: oklch(0.270 0.090 148);
-  --green-900: oklch(0.220 0.073 148);
-  --green-950: oklch(0.175 0.055 148);
+  /* Green — #03b26c = green-500, 에메랄드 계열 */
+  --green-50:  #f0faf6; 
+  --green-100: #aeefd5; 
+  --green-150: #92e9c7;  /* 보간 */
+  --green-200: #76e4b8; 
+  --green-250: #5adca8;  /* 보간 */
+  --green-300: #3fd599; 
+  --green-350: #2acc8b;  /* 보간 */
+  --green-400: #15c47e; 
+  --green-450: #0cbb75;  /* 보간 */
+  --green-500: #03b26c;  /* success */
+  --green-550: #02a967;  /* 보간 */
+  --green-600: #02a262; 
+  --green-650: #02995d;  /* 보간 */
+  --green-700: #029359; 
+  --green-750: #028b54;  /* 보간 */
+  --green-800: #028450; 
+  --green-850: #027d4c;  /* 보간 */
+  --green-900: #027648; 
+  --green-950: #016e42;  /* 보간 */
 
-  /* Orange — 50단계 (기존 앵커값 유지, orange-390 레거시 보존) */
-  --orange-50:  oklch(0.976 0.025 72);
-  --orange-100: oklch(0.961 0.045 72);
-  --orange-150: oklch(0.946 0.065 72);
-  --orange-200: oklch(0.930 0.083 72);
-  --orange-250: oklch(0.912 0.092 72);
-  --orange-300: oklch(0.880 0.100 72);
-  --orange-350: oklch(0.843 0.128 72);
-  --orange-390: oklch(0.558 0.153 66);
-  --orange-400: oklch(0.810 0.143 72);
-  --orange-450: oklch(0.795 0.149 72);
-  --orange-500: oklch(0.780 0.155 72);
-  --orange-550: oklch(0.740 0.153 70);
-  --orange-600: oklch(0.660 0.153 67);
-  --orange-650: oklch(0.590 0.152 66);
-  --orange-700: oklch(0.520 0.145 60);
-  --orange-750: oklch(0.470 0.135 58);
-  --orange-800: oklch(0.415 0.122 56);
-  --orange-850: oklch(0.358 0.106 54);
-  --orange-900: oklch(0.300 0.086 53);
-  --orange-950: oklch(0.248 0.067 52);
 
   /* Amber — 50단계 (기존 앵커값 유지) */
   --amber-50:  oklch(0.987 0.021 95);
@@ -348,10 +323,39 @@
   --alpha-white-60: oklch(1 0 0 / 0.60);
   --alpha-white-80: oklch(1 0 0 / 0.80);
 
+  /* Alpha — 검정 오버레이 (딤처리·모달·오버레이) */
+  --alpha-black-02: rgba(0, 23, 51, 0.02);
+  --alpha-black-05: rgba(2, 32, 71, 0.05);
+  --alpha-black-10: rgba(0, 27, 55, 0.10);
+  --alpha-black-18: rgba(0, 29, 58, 0.18);
+  --alpha-black-30: rgba(0, 25, 54, 0.31);
+  --alpha-black-46: rgba(3, 24, 50, 0.46);
+  --alpha-black-58: rgba(0, 19, 43, 0.58);
+  --alpha-black-70: rgba(3, 18, 40, 0.70);
+  --alpha-black-80: rgba(0, 12, 30, 0.80);
+  --alpha-black-91: rgba(2, 9, 19, 0.91);
+
 
   /* ═══════════════════════════════════════════════════════════════════
      Layer 2 — Semantic Tokens (Figma 가이드 그대로)
      ═══════════════════════════════════════════════════════════════════ */
+
+  /* ── Typography Atomic — Layer 1 참조값 ── */
+  /* Font Weight: --font-weight-{value} */
+  --font-weight-400:  400;
+  --font-weight-500:  500;
+  --font-weight-600:  600;
+
+  /* Letter Spacing: --letter-spacing-{value} */
+  --letter-spacing-0:    0;
+  --letter-spacing-050: -0.5px;
+  --letter-spacing-100: -1px;
+
+  /* Line Height: --line-height-{value} */
+  --line-height-120: 1.2;
+  --line-height-130: 1.3;
+  --line-height-140: 1.4;
+  --line-height-160: 1.6;
 
   /* Text */
   --text-primary:    var(--cool-neutral-990);
@@ -364,7 +368,7 @@
   /* Background */
   --bg-primary:    var(--common-100);
   --bg-secondary:  var(--cool-neutral-50);
-  --bg-tertiary:   var(--cool-neutral-100);
+  --bg-tertiary:   var(--cool-neutral-75);   /* #f6f7f9 — 헤더·사이드바·콘텐츠 배경 통일 */
   --bg-subtle:     var(--cool-neutral-150);
 
   /* Border (불투명) */
@@ -378,6 +382,7 @@
   --divider-strong: var(--alpha-blue-16);
 
   /* Fill */
+  --fill-muted:  var(--cool-neutral-50);
   --fill-subtle: var(--cool-neutral-100);
   --fill-normal: var(--cool-neutral-150);
   --fill-strong: var(--cool-neutral-200);
@@ -393,8 +398,8 @@
   /* Status */
   --success-color:        var(--green-500);
   --success-fg-color:     var(--green-400);
-  --warning-color:        var(--orange-500);
-  --warning-fg-color:     var(--orange-390);
+  --warning-color:        var(--amber-500);
+  --warning-fg-color:     var(--amber-700);
   --error:                var(--red-500);
   --error-foreground:     var(--red-700);
 
@@ -408,15 +413,6 @@
   --badge-tint-neutral-bg: var(--bg-subtle);
   --badge-tint-neutral-fg: var(--text-assistive);
 
-  --badge-pill-success-fg:     var(--green-450);
-  --badge-pill-success-border: var(--green-200);
-  --badge-pill-warning-fg:     var(--amber-700);
-  --badge-pill-warning-border: var(--amber-200);
-  --badge-pill-danger-fg:      var(--red-600);
-  --badge-pill-danger-border:  var(--red-200);
-  --badge-pill-neutral-fg:     var(--text-assistive);
-  --badge-pill-neutral-border: var(--cool-neutral-300);
-
   /* Accent bg/fg (배지·태그) */
   --accent-bg-blue:    var(--blue-50);
   --accent-fg-blue:    var(--blue-700);
@@ -424,8 +420,6 @@
   --accent-fg-green:   var(--green-400);
   --accent-bg-red:     var(--red-50);
   --accent-fg-red:     var(--red-700);
-  --accent-bg-orange:  var(--orange-50);
-  --accent-fg-orange:  var(--orange-390);
   --accent-bg-neutral: var(--cool-neutral-150);
   --accent-fg-neutral: var(--cool-neutral-700);
 
@@ -457,10 +451,10 @@
   --popover-foreground:   var(--text-primary);
   --primary:              var(--blue-500);             /* 브랜드 블루 (shadcn 표준 복원) */
   --primary-foreground:   var(--common-100);           /* 흰 글자 on brand */
-  --primary-subtle:       var(--blue-100);             /* 선택/활성 틴트 배경 */
-  --primary-subtle-hover: var(--blue-200);             /* 선택 상태 hover */
+  --primary-subtle:       var(--blue-50);              /* 선택/활성 틴트 배경 (= blue-tint) */
+  --primary-subtle-hover: var(--blue-75);              /* 선택 상태 hover — 50↔100 중간 */
   --primary-hover:        var(--blue-550);             /* primary 버튼 hover bg */
-  --info-border:          var(--blue-200);             /* 안내 박스 보더 */
+  --info-border:          var(--blue-100);             /* 안내 박스 보더 (blue-100, blue-tint 배경 위에서 자연스러운 강도) */
   --destructive-subtle:       var(--red-50);           /* destructive 틴트 배경 */
   --destructive-subtle-hover: var(--red-100);          /* destructive 틴트 hover */
   --destructive-subtle-border: var(--red-200);         /* destructive focus 보더 */
@@ -509,10 +503,10 @@
 
   /* Sidebar */
   --sidebar:                    var(--bg-tertiary);
-  --sidebar-foreground:         var(--cool-neutral-700);
+  --sidebar-foreground:         var(--cool-neutral-800);  /* 한 단계 어둡게 (700 → 800) */
   --sidebar-primary:            var(--accent);
   --sidebar-primary-foreground: var(--bg-primary);
-  --sidebar-accent:             var(--fill-hover);
+  --sidebar-accent:             var(--alpha-black-05);
   --sidebar-accent-foreground:  var(--cool-neutral-950);
   --sidebar-border:             var(--bg-subtle);
   --sidebar-ring:               var(--accent);
@@ -555,66 +549,86 @@
   letter-spacing: -0.05em;
 }
 
+/* ─────────────────────────────────────────────────────────────────────
+   Typography Atomic Utility — 의미명 그대로 (디자이너↔개발자 공통어)
+   font-size-{N}            : font-size 직접 지정
+   font-weight-{name}       : font-weight (normal/medium/semibold)
+   font_letter_spacing-{N}  : letter-spacing
+   line-height-{N}          : line-height
+   기존 text-fs* / font-* / tracking-ls* / leading-lh* 토큰은 호환 위해 @theme inline 유지.
+   ───────────────────────────────────────────────────────────────────── */
+@utility font-size-10 { font-size: 10px; }
+@utility font-size-12 { font-size: 12px; }
+@utility font-size-13 { font-size: 13px; }
+@utility font-size-14 { font-size: 14px; }
+@utility font-size-16 { font-size: 16px; }
+@utility font-size-18 { font-size: 18px; }
+@utility font-size-20 { font-size: 20px; }
+@utility font-size-22 { font-size: 22px; }
+@utility font-size-24 { font-size: 24px; }
+@utility font-size-28 { font-size: 28px; }
+@utility font-size-34 { font-size: 34px; }
+@utility font-size-36 { font-size: 36px; }
+
+@utility font-weight-normal   { font-weight: 400; }
+@utility font-weight-medium   { font-weight: 500; }
+@utility font-weight-semibold { font-weight: 600; }
+@utility font-weight-bold     { font-weight: 700; }
+
+@utility font_letter_spacing-0   { letter-spacing: 0; }
+@utility font_letter_spacing-050 { letter-spacing: -0.5px; }
+@utility font_letter_spacing-100 { letter-spacing: -1px; }
+
+@utility line-height-120 { line-height: 1.2; }
+@utility line-height-130 { line-height: 1.3; }
+@utility line-height-140 { line-height: 1.4; }
+@utility line-height-160 { line-height: 1.6; }
+
 
 /* ─────────────────────────────────────────────────────────────────────
-   Typography Composite Tokens — Figma 1:1 (NEW, reference 100%)
-   레퍼런스: h1-bold ~ caption-underline (Pretendard semibold/medium/regular)
-   - letter_spacing m05 = -0.5px (모든 토큰 기본)
-   - letter_spacing m10 = -1px (reading 토큰)
-   - letter_spacing 0  = 0
-   주의: 위 LEGACY 클래스(text-heading-xl 등)와 별개로 추가됨
+   Border Utilities — 보더 색상 3단계
+   border-subtle:  cool-neutral-200, 카드·컨테이너 기본 보더 (가장 많이 사용)
+   border-border:  cool-neutral-300, shadcn 호환 보더 (Input/Select 기본)
+   border-strong:  cool-neutral-400, 강조 구분선
+   ───────────────────────────────────────────────────────────────────── */
+@utility border-subtle {
+  border-color: var(--border-subtle);
+}
+@utility border-strong {
+  border-color: var(--border-strong);
+}
+
+/* Alpha utilities (이미 @utility로 정의됨 — bg-alpha-black-*) */
+
+/* ─────────────────────────────────────────────────────────────────────
+   Typography Composite Tokens — CRM 실사용 기준 (Pretendard)
+   letter-spacing -0.5px 고정 / underline·reading 변형은 Tailwind 클래스 조합으로 대체
    ───────────────────────────────────────────────────────────────────── */
 @layer utilities {
 
-  /* === Heading === */
-  .text-h1-bold              { font-size: 36px; line-height: 46px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-h2-bold              { font-size: 34px; line-height: 40px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-h2                   { font-size: 34px; line-height: 40px; font-weight: 500; letter-spacing: -0.5px; }
-  .text-h3-bold              { font-size: 24px; line-height: 36px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-h3                   { font-size: 24px; line-height: 36px; font-weight: 500; letter-spacing: -0.5px; }
-  .text-h4                   { font-size: 22px; line-height: 32px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-h5-bold-underline    { font-size: 20px; line-height: 30px; font-weight: 600; letter-spacing: -0.5px; text-decoration: underline; }
-  .text-h5-bold              { font-size: 20px; line-height: 30px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-h5-medium            { font-size: 20px; line-height: 30px; font-weight: 500; letter-spacing: -0.5px; }
-  .text-h5                   { font-size: 20px; line-height: 30px; font-weight: 400; letter-spacing: -0.5px; }
+  /* === Heading (제목류) === */
+  .text-h2-bold  { font-size: 28px; line-height: 40px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-h3-bold  { font-size: 24px; line-height: 36px; font-weight: 600; letter-spacing: -0.8px; }
+  .text-h4       { font-size: 22px; line-height: 32px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-h5-bold  { font-size: 20px; line-height: 30px; font-weight: 600; letter-spacing: -0.5px; }
 
-  /* === Body 1 (18px) === */
-  .text-body1-bold           { font-size: 18px; line-height: 28px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-body1                { font-size: 18px; line-height: 28px; font-weight: 500; letter-spacing: -0.5px; }
+  /* === Body 3 (14px) — 버튼 default ★ === */
+  .text-body3-bold   { font-size: 14px; line-height: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body3-medium { font-size: 14px; line-height: 22px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-body3-normal { font-size: 14px; line-height: 22px; font-weight: 400; letter-spacing: -0.5px; }
 
-  /* === Body 2 (16px) === */
-  .text-body2-bold           { font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-body2-bold-underline { font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.5px; text-decoration: underline; }
-  .text-body2-medium         { font-size: 16px; line-height: 24px; font-weight: 500; letter-spacing: -0.5px; }
-  .text-body2-normal         { font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: -0.5px; }
-  .text-body2-reading        { font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: -1px; }
+  /* === Body 4 (13px) — 버튼 sm ★ / 테이블 셀 === */
+  .text-body4-bold   { font-size: 13px; line-height: 20px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body4-medium { font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-body4-normal { font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: -0.5px; }
 
-  /* === Body 3 (14px) === */
-  .text-body3-bold           { font-size: 14px; line-height: 22px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-body3-bold-underline { font-size: 14px; line-height: 22px; font-weight: 600; letter-spacing: -0.5px; text-decoration: underline; }
-  .text-body3-medium         { font-size: 14px; line-height: 22px; font-weight: 500; letter-spacing: -0.5px; }
-  .text-body3-underline      { font-size: 14px; line-height: 22px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
-  .text-body3-normal         { font-size: 14px; line-height: 22px; font-weight: 400; letter-spacing: -0.5px; }
-  .text-body3-reading        { font-size: 14px; line-height: 24px; font-weight: 400; letter-spacing: -1px; }
-
-  /* === Body 4 (13px) === */
-  .text-body4-bold           { font-size: 13px; line-height: 20px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-body4-medium         { font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: -0.5px; }
-  .text-body4-underline      { font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
-  .text-body4-normal         { font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: -0.5px; }
-  .text-body4-reading        { font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: -1px; }
-
-  /* === Body 5 (12px) === */
-  .text-body5-bold           { font-size: 12px; line-height: 20px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-body5-medium         { font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: -0.5px; }
-  .text-body5-underline      { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
-  .text-body5-normal         { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; }
-  .text-body5-reading        { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: -1px; }
+  /* === Body 5 (12px) — 버튼 xs ★ / 보조 정보 === */
+  .text-body5-bold   { font-size: 12px; line-height: 20px; font-weight: 600; letter-spacing: -0.5px; }
+  .text-body5-medium { font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: -0.5px; }
+  .text-body5-normal { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; }
 
   /* === Caption (10px) === */
-  .text-caption-bold         { font-size: 10px; line-height: 16px; font-weight: 600; letter-spacing: -0.5px; }
-  .text-caption              { font-size: 10px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; }
-  .text-caption-underline    { font-size: 10px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; text-decoration: underline; }
+  .text-caption  { font-size: 10px; line-height: 16px; font-weight: 400; letter-spacing: -0.5px; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -650,9 +664,7 @@
 
 /* 차트 그리드 선 */
 @utility stroke-chart-grid   { stroke: var(--chart-grid-stroke); }
-@utility border-destructive-subtle   { border-color: var(--destructive-subtle-border); }
-@utility bg-secondary    { background-color: var(--bg-secondary); }
-@utility bg-quaternary   { background-color: var(--bg-subtle); }
+/* bg-canvas-secondary / bg-canvas-quaternary 로 통일됨 — bg-secondary/quaternary @utility 제거 */
 
 /* === Foreground (button 위 텍스트 등) === */
 /* text-primary-foreground: @theme inline --color-primary-foreground 로 이동 */
@@ -661,23 +673,24 @@
 
 /* === Text colors (reference text_*) === */
 /* text-primary: @theme inline --color-primary 로 이동 (alpha modifier 지원) */
-@utility text-secondary  { color: var(--text-secondary); }
-@utility text-quaternary { color: var(--text-quaternary); }
-@utility text-assistive  { color: var(--text-assistive); }
-@utility text-disabled   { color: var(--text-disabled); }
+/* text-content-* 로 통일됨 — text-secondary/quaternary/assistive/disabled @utility 제거 */
 @utility text-accent     { color: var(--accent); }
 
 /* === Border colors (reference border_*) === */
 @utility border-primary  { border-color: var(--border-primary); }
-@utility border-subtle   { border-color: var(--border-subtle); }
+/* border-subtle: 위 line ~575에 정의됨 — 중복 제거 */
 
 /* === Divider (reference divider_*) === */
 @utility bg-divider-subtle { background-color: var(--divider-subtle); }
 @utility bg-divider-normal { background-color: var(--divider-normal); }
+@utility border-divider-subtle { border-color: var(--divider-subtle); }
+@utility border-divider-normal { border-color: var(--divider-normal); }
 
 /* === Fill (보조 카테고리) === */
+@utility bg-fill-muted  { background-color: var(--fill-muted); }
 @utility bg-fill-subtle { background-color: var(--fill-subtle); }
 @utility bg-fill-normal { background-color: var(--fill-normal); }
+@utility bg-fill-strong { background-color: var(--fill-strong); }
 @utility bg-fill-hover  { background-color: var(--fill-hover); }
 @utility bg-fill-filter { background-color: var(--fill-filter); }
 
@@ -687,26 +700,27 @@
      bg-blue-tint  → light blue (50)
      text-blue-tint → dark blue (700)
    ───────────────────────────────────────────────────────────────────── */
-@utility bg-blue-tint    { background-color: var(--blue-50); }
-@utility text-blue-tint  { color: var(--blue-700); }
+@utility bg-blue-tint      { background-color: var(--blue-50); }
+@utility bg-blue-tint-soft { background-color: var(--blue-25); }
+@utility text-blue-tint    { color: var(--blue-700); }
 
-@utility bg-green-tint     { background-color: var(--green-50); }
-@utility text-green-tint   { color: var(--green-450); }
-@utility border-green-tint { border-color: var(--badge-pill-success-border); }
+@utility bg-green-tint   { background-color: var(--green-50); }
+@utility text-green-tint { color: var(--green-450); }
 
 @utility bg-red-tint     { background-color: var(--red-50); }
 @utility text-red-tint   { color: var(--red-600); }
-@utility border-red-tint { border-color: var(--badge-pill-danger-border); }
 
-@utility bg-orange-tint  { background-color: var(--orange-50); }
+@utility bg-amber-tint   { background-color: var(--amber-50); }
+@utility text-amber-tint { color: var(--amber-700); }
 
-@utility bg-amber-tint     { background-color: var(--amber-50); }
-@utility text-amber-tint   { color: var(--amber-700); }
-@utility border-amber-tint { border-color: var(--badge-pill-warning-border); }
+@utility bg-neutral-tint   { background-color: var(--bg-subtle); }
+@utility text-neutral-tint { color: var(--text-assistive); }
 
-@utility bg-neutral-tint     { background-color: var(--bg-subtle); }
-@utility text-neutral-tint   { color: var(--text-assistive); }
-@utility border-neutral-tint { border-color: var(--badge-pill-neutral-border); }
+/* === Alpha Overlay Utilities (hover/overlay — 배경색 독립적 적용) === */
+@utility bg-alpha-black-02 { background-color: var(--alpha-black-02); }
+@utility bg-alpha-black-05 { background-color: var(--alpha-black-05); }
+@utility bg-alpha-black-10 { background-color: var(--alpha-black-10); }
+@utility bg-alpha-black-18 { background-color: var(--alpha-black-18); }
 
 /* ─────────────────────────────────────────────────────────────────────
    /design-system 페이지 탭 컨테이너

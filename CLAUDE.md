@@ -12,9 +12,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 > | `bg-primary` / `text-primary` | 브랜드 블루 (#3182F6) | shadcn 표준 |
 > | `bg-canvas-primary` | 흰 카드 배경 | Figma `bg_primary` |
 > | `text-content-primary` | 진한 글자 (#191F28) | Figma `text_primary` |
-> | `border-line-subtle` | 카드 보더 | Figma `border_subtle` |
-> | `bg-action` / `text-action` | 브랜드 블루 semantic alias | Figma `accent` |
-> | `bg-button-accent-primary` | 메인 액션 버튼 배경 | Figma 컴포넌트 토큰 |
+> | `text-content-assistive` | 힌트·플레이스홀더 (#8B95A1) | Figma `text_assistive` |
+> | `border-subtle` | 카드 보더 (cool-neutral-200) | Figma `border_subtle` |
+> | `bg-canvas-tertiary` | 페이지 배경 (cool-neutral-100) | Figma `bg_tertiary` |
 > | `text-inverse-primary` | 흰 글자 (브랜드 위) | Figma `text_inverse_primary` |
 >
 > **B2B 다중 브랜드**: `--primary` CSS 변수 한 줄만 바꾸면 모든 컴포넌트 자동 추종.
@@ -53,8 +53,6 @@ avatar, badge, breadcrumb, button, calendar, chart, checkbox, collapsible, comma
 
 **보험설계사 CRM** — 보닥 플래너 for KB라이프. **라이트 모드 전용** (다크모드 제거됨).
 
-**디자인 레퍼런스**: Amplitude (데이터 중심 B2B SaaS, 정보 밀도 높은 대시보드) + 토스증권 (한국 핀테크 감성, 여백, semibold 타이포, brand blue #3182F6, 카드 기반)
-
 ## 기술 스택
 
 - **Next.js 16** App Router, **React 19**, **TypeScript**
@@ -82,7 +80,7 @@ Layer 2 (Semantic):
 Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 ```
 
-**핵심 원칙**: shadcn `--primary` = brand blue (표준 그대로). Figma 토큰은 별도 prefix로 노출 (`bg-canvas-*`, `text-content-*`, `border-line-*` 등) → 이름 충돌 없음.
+**핵심 원칙**: shadcn `--primary` = brand blue (표준 그대로). Figma 토큰은 별도 prefix로 노출 (`bg-canvas-*`, `text-content-*`, `border-*` 등) → 이름 충돌 없음.
 
 **⚠️ alpha modifier 원칙**: semantic 토큰에 `/숫자` alpha modifier 금지. 반드시 named atomic 토큰을 참조해야 한다.
 - ❌ `bg-primary/10` → ✅ `bg-primary-subtle` (= `var(--blue-100)`)
@@ -102,10 +100,10 @@ Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 | `bg-canvas-tertiary` | cool-neutral-100 | Figma `bg_tertiary`, 페이지 배경 |
 | `bg-canvas-quaternary` | cool-neutral-150 | Figma `bg_quaternary`, 섹션·홀수행 |
 | `bg-muted` | cool-neutral-150 | shadcn 표준 hover/드롭다운 |
-| `bg-action` | brand blue | Figma `accent` semantic |
-| `bg-button-accent-primary` | brand blue | Figma 버튼 컴포넌트 토큰 |
-| `bg-button-accent-secondary` | brand blue 10% | Figma 버튼 보조 |
-| `bg-button-surface-neutral` | cool-neutral-50 | Figma 버튼 중립 |
+| `bg-primary-subtle` | blue-50 | 테이블 선택 행 · 사이드바 active 배경 |
+| `bg-primary-subtle-hover` | blue-75 | 사이드바 active 행 hover 상태 |
+| `bg-blue-tint` | blue-50 | info 배지 배경 (= primary-subtle과 동일값) |
+| `bg-blue-tint-soft` | blue-25 (#f4f9ff) | **가장 연한 info 박스 배경** (안내 노트 등) |
 
 ### 2. 텍스트색
 
@@ -130,23 +128,35 @@ Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 | 클래스 | 값 | 용도 |
 |---|---|---|
 | `border-primary` | brand blue | shadcn primary 보더 |
-| `border-line-subtle` | cool-neutral-200 | Figma `border_subtle`, 카드 보더 |
-| `border-line-primary` | cool-neutral-300 | Figma `border_primary` |
-| `border-line-strong` | cool-neutral-400 | Figma `border_strong` |
-| `border-action` | brand blue | Figma `border_accent` |
-| `border-border` | shadcn 표준, border-line-primary와 동일 | shadcn 호환 |
+| `border-subtle` | cool-neutral-200 | Figma `border_subtle`, 카드 보더 (가장 많이 사용) |
+| `border-border` | cool-neutral-300 | shadcn 표준, Figma `border_primary` |
+| `border-strong` | cool-neutral-400 | Figma `border_strong`, 강조 구분선 |
+| `border-info` | blue-100 | 안내 박스 보더 (`bg-blue-tint-soft` 위에서) |
+| `border-divider-subtle` | alpha-blue 4% | **테이블 셀 가로 보더** (행 라인) |
+| `border-divider-normal` | alpha-blue 8% | 강조 구분선 보더 |
 
 ### 4. 사용 금지
 
 ```tsx
-❌ bg-brand / text-brand          // reference에 없는 토큰
-❌ bg-surface-* / text-label-*    // 옛 prefix
-❌ border-line-* (옛 의미)         // 옛 prefix (현재는 신규 의미로 사용 OK — 위 표 참고)
-❌ var(--ds-*) / var(--atom-*)    // 옛 변수명
-❌ font-bold                      // → font-semibold
-❌ rounded-xl                     // → rounded-lg
-❌ dark: prefix                   // 다크모드 미지원
+❌ bg-brand / text-brand              // reference에 없는 토큰
+❌ bg-surface-* / text-label-*        // 옛 prefix
+❌ border-line-subtle/primary/strong  // 삭제된 옛 prefix → border-subtle/border/border-strong 사용
+❌ border-action                      // 삭제됨 → border-primary 사용
+❌ bg-action / bg-button-accent-*     // globals.css에 없음 → bg-primary 사용
+❌ var(--ds-*) / var(--atom-*)        // 옛 변수명
+❌ font-bold                          // → font-semibold
+❌ rounded-xl                         // → rounded-lg
+❌ dark: prefix                       // 다크모드 미지원
 ❌ bg-accent / text-accent / border-accent (옛 의미)  // 현재는 shadcn 표준 hover 의미 (서브틀 그레이)
+
+// ❌ 삭제된 단축 alias (모두 content/canvas prefix로 통일)
+❌ text-assistive    // → text-content-assistive
+❌ text-disabled     // → text-content-disabled
+❌ text-secondary    // → text-content-secondary
+❌ text-quaternary   // → text-content-quaternary
+❌ bg-secondary      // → bg-canvas-secondary
+❌ bg-quaternary     // → bg-canvas-quaternary
+❌ bg-tertiary       // → bg-canvas-tertiary (페이지 배경)
 ```
 
 ## B2B 다중 브랜드 — 브랜드별 컬러 커스터마이징
@@ -200,97 +210,113 @@ useEffect(() => {
 - `bg-blue-tint`/`text-blue-tint` 등 — info 배지용 파랑 (브랜드가 그린이어도 info=파랑)
 - `bg-success`/`bg-warning`/`bg-destructive` — 시맨틱 상태색
 
-## Reference 추가 토큰 (Border / Radius / Spacing / Shadow)
+## Spacing / Radius / Shadow / Border
 
-레퍼런스 디자인 시스템의 nominal 토큰을 그대로 노출:
+> 🔄 **s-토큰 재도입** (2026-04-30). half-step(`gap-0.5`, `gap-1.5` 등) 금지 — spacing은 항상 **s-토큰** 사용.
+> Radius/Shadow는 Tailwind 표준 그대로 (s-/r- 토큰 폐기 결정 그대로).
 
-> ⚠️ **현재 v1 상태**: 토큰만 globals.css에 정의됨. 컴포넌트는 아직 Tailwind 기본 스케일(`p-2`, `gap-4`, `rounded-md`)과 직접 픽셀(`text-[28px]`) 위주로 사용 중.
-> 신규 작업/리팩터 시 reference 토큰으로 점진 도입 권장. 강제 마이그레이션 X (Tailwind 기본도 4px 그리드라 시각 차이 없음).
+### Spacing — s-토큰 우선
+```tsx
+gap-s2 / p-s2     // 2px  — 미세 (배지 안 등)
+gap-s4 / p-s4     // 4px  — 아이콘↔텍스트 간격
+gap-s6 / p-s6     // 6px  — 작은 컴포넌트 패딩
+gap-s8 / p-s8     // 8px  — 타이트한 인라인
+gap-s10           // 10px
+gap-s12 / p-s12   // 12px — 배지 padding · 카드 ↔ 카드
+gap-s14 / p-s14   // 14px
+gap-s16 / p-s16   // 16px — 카드 간 gap · 필터↔테이블 mb
+gap-s20           // 20px — 카드 내부 세로 패딩
+gap-s24 / px-s24  // 24px — 페이지·카드 수평 패딩
+gap-s32           // 32px — 섹션 간 gap
+pt-s40            // 40px — 페이지 타이틀 상단
+gap-s48           // 48px
+gap-s60           // 60px
+gap-s64           // 64px
+```
+
+prefix(`p` / `m` / `gap` / `px` / `pt` 등) + s-토큰 자유 조합.
+
+**예외:** `pb-15` (60px, 콘텐츠 하단) 같은 기존 코드는 점진 마이그레이션. 새 코드는 항상 s-토큰.
+
+❌ `gap-0.5`, `gap-1.5`, `gap-2.5` 등 **half-step 금지** (4px 그리드 벗어남).
+
+### Radius — Tailwind 표준만 사용
+```tsx
+rounded-sm    // 2px — 체크박스
+rounded       // 4px — Tailwind default
+rounded-md    // 6px — 필터 컨트롤, 작은 버튼 (xs/icon-sm)
+rounded-lg    // 8px — 카드, 일반 버튼, 컨테이너 (가장 많이 사용)
+rounded-full  // 9999px — pill, avatar, dot
+```
+**`rounded-xl` (12px+) 금지** — Vega 스타일 상한선.
 
 ### Border Width
 ```tsx
 border-border05    // 0.5px (특수 케이스만)
-border-border10    // 1px (기본값, Tailwind border와 동일)
+border       // 1px (기본값)
 ```
-
-### Radius (`r4` ~ `r9999`)
-```tsx
-rounded-r4    // 4px — 버튼
-rounded-r6    // 6px
-rounded-r8    // 8px — 버튼
-rounded-r10   // 10px
-rounded-r12   // 12px — 버튼, 태그/배지
-rounded-r16   // 16px — 리스트, 버튼
-rounded-r20   // 20px — 모달
-rounded-r24   // 24px — 카드, 리스트
-rounded-r9999 // 9999px — pill
-```
-
-기존 `rounded-md` / `rounded-lg`도 계속 사용 가능 (shadcn 호환).
-
-### Spacing (`s2` ~ `s64`)
-```tsx
-p-s4  gap-s8  m-s16  px-s24  py-s12  ...
-// 사용 가능: s2, s4, s6, s8, s10, s12, s16, s20, s24, s28, s30, s32, s38, s40, s44, s48, s52, s56, s58, s64
-```
-
-기존 Tailwind 기본 스케일(`p-2`, `gap-4` 등)도 그대로 사용 가능 — 4px 그리드 동일.
 
 ### Shadow
 ```tsx
-shadow-sd03   // 0 2 20 rgba(0,0,0,0.3)
-shadow-sd25   // 0 4 20 rgba(0,0,0,0.25)
+shadow-xs   // 1px — 미세한 깊이감
+shadow-sm   // 3px — 카드, 필터 컨트롤
+shadow-md   // 8px — 드롭다운, 팝오버
+shadow-lg   // 16px — 모달, 오버레이
+shadow-xl   // 32px — DragOverlay, 플로팅 요소
 ```
+대부분의 컴포넌트는 `shadow-none` 사용 (카드는 border만, 필터 컨트롤도 shadow-none).
 
-## 타이포그래피 — Reference Composite 토큰
 
-**`font-bold` 절대 금지 — 항상 `font-semibold` 사용.**
+## 타이포그래피
 
-### 신규 (reference 1:1) — 사용 권장 (점진 도입)
+**`font-bold`는 atomic 토큰(`font-weight-bold`)으로만 허용. 일반적으로 `font-semibold` 사용.**
 
-> ⚠️ **현재 v1 상태**: globals.css에 정의됨. 컴포넌트는 아직 LEGACY `text-heading-xl/lg/md` 또는 직접 픽셀(`text-[28px] font-semibold`) 위주로 사용 중.
-> 신규 작업 시 아래 composite 토큰 사용 권장.
+### Composite 토큰 (Semantic) — 14개
+
+`font-size + line-height + font-weight + letter-spacing(-0.5px)` 한 클래스에 묶임.
 
 ```tsx
-text-h1-bold                              // 36/46 semibold
-text-h2-bold / text-h2                    // 34/40 semi/medium
-text-h3-bold / text-h3                    // 24/36 semi/medium
-text-h4                                   // 22/32 semibold
-text-h5-bold / text-h5-medium / text-h5   // 20/30
-text-body1-bold / text-body1              // 18/28
-text-body2-bold / text-body2-medium / text-body2-normal  // 16/24
-text-body3-bold / text-body3-medium / text-body3-normal  // 14/22
-text-body4-bold / text-body4-medium / text-body4-normal  // 13/18-20
-text-body5-bold / text-body5-medium / text-body5-normal  // 12/16-20
-text-caption / text-caption-bold / text-caption-underline // 10/16
+text-h2-bold    // 28/40/600 — 페이지 타이틀 (PageHeader 컴포넌트가 사용)
+text-h3-bold    // 24/36/600 — KPI 숫자, 섹션 큰 제목
+text-h4         // 22/32/600 — 모달 제목
+text-h5-bold    // 20/30/600 — 카드 타이틀
+
+text-body3-bold   / text-body3-medium   / text-body3-normal    // 14/22 — 600/500/400
+text-body4-bold   / text-body4-medium   / text-body4-normal    // 13/20-18 — 600/500/400
+text-body5-bold   / text-body5-medium   / text-body5-normal    // 12/20-16 — 600/500/400
+
+text-caption    // 10/16/400
 ```
 
-각 토큰은 font-size + line-height + font-weight + letter-spacing(-0.5px 기본) 모두 한 클래스에 묶여있음. `_underline` 서픽스는 `text-decoration: underline` 포함.
+### Atomic 토큰 — CSS 속성명 그대로 (디자이너↔개발자 공통어)
 
-### LEGACY (호환 유지, 점진 교체 권장)
+```tsx
+font-size-{N}            // font-size 직접 지정 (10/12/13/14/16/18/20/22/24/28/34/36)
+font-weight-{name}       // font-weight (normal/medium/semibold/bold)
+font_letter_spacing-{N}  // letter-spacing (0/050=-0.5px/100=-1px)
+line-height-{N}          // line-height (120/130/140/160)
+```
 
-`text-heading-xl/lg/md`, `text-body-md/sm`, `text-label-md/sm/xs`, `text-nav`, `text-caption`, `text-kpi`, `text-num-md/sm` — 기존 코드에서 동작. 새 작업은 위의 reference composite 토큰 사용.
+### 자주 쓰는 패턴 — 항상 토큰 우선
 
-### 자주 쓰는 패턴
+| 용도 | 클래스 | 비고 |
+|---|---|---|
+| 페이지 타이틀 | `<PageHeader title="..." subtitle="..." />` | 자동으로 text-h2-bold 적용 |
+| 카드 헤더 | `text-body3-bold text-content-primary` | 14/22/600 |
+| 본문 | `text-body3-normal text-content-secondary` | 14/22/400 |
+| 테이블 셀 | (`<TableCell>` 내장) `text-body4-normal` | 13/18/400, 자동 적용 |
+| 테이블 헤더 | (`<TableHead>` 내장) `text-body5-bold leading-none` | 12/20/600, 자동 적용 |
+| 툴바 카운트 (전체 N건) | `text-body5-medium text-content-assistive tabular-nums` | 12px — 모든 테이블 통일 |
+| KPI 숫자 | `text-h3-bold tabular-nums text-content-primary` | 24/36/600. 카드 wrapper: `pt-4 pb-3` |
+| KPI label | `text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap` | leading-none 의도라 직접 픽셀 유지 |
+| Caption (10px) | `text-caption` | 10/16/400 |
 
-- 페이지 타이틀: `text-[28px] font-semibold text-primary tracking-tight leading-tight` (reference에 28px 없어 직접 지정)
-- 카드 타이틀: `text-[20px] font-semibold text-primary tracking-tight`
-- 테이블 헤더: `text-[12px] font-medium text-assistive`
-- 테이블 셀: `text-[13px] text-primary`
-- KPI 숫자: `text-[24px] font-semibold tracking-tight text-primary leading-none tabular-nums`
+**11px / 15px / 16px / 18px 등** composite 없는 사이즈는 atomic 조합 사용:
+```tsx
+font-size-18 font-weight-bold font_letter_spacing-050  // 보닥 플래너 로고 패턴
+```
 
-### Typography composite 토큰 (`text-*`) vs 직접 픽셀 지정
-
-**권장**: 본문/설명 텍스트처럼 **표준 라인하이트가 적합**한 곳은 text-* 사용
-- 본문 16px: `text-body2-normal` (16/24/400)
-- 본문 14px: `text-body3-normal` (14/22/400)
-- 캡션 12px: `text-body5-medium` (12/16/500)
-
-**직접 픽셀 사용**: 페이지 타이틀, KPI 숫자처럼 **커스텀 line-height/tracking** 필요한 곳
-- text_h3_bold(24/36)과 KPI(24/leading-none) 충돌 → 직접 지정이 적절
-- 페이지 타이틀 28px → reference에 없어서 직접 지정
-
-→ 두 방식 혼용은 의도된 trade-off. 강제 통일 X.
+composite 토큰과 직접 픽셀 지정 혼용은 의도된 trade-off — 디자인 의도가 의미 있는 곳은 composite, 1회성·미세 조정은 직접 픽셀.
 
 # 🚨 신규 shadcn 컴포넌트 추가
 
@@ -299,8 +325,8 @@ text-caption / text-caption-bold / text-caption-underline // 10/16
 ## 필수 검증 (3단계)
 
 1. **`dark:` prefix 제거** — 라이트 모드 전용
-2. **`font-bold` → `font-semibold`** — 굵기 통일
-3. **`rounded-xl` → `rounded-lg`** — Vega 스타일 (`rounded-r20`/`rounded-r24`는 OK)
+2. **`font-bold` → `font-semibold`** — atomic 토큰(`font-weight-bold`)으로만 700 허용
+3. **`rounded-xl` → `rounded-lg`** — Vega 스타일 (12px+ 라운드 금지)
 
 ## 선택적 작업
 
@@ -344,35 +370,37 @@ grep "dark:\|font-bold\|rounded-xl" <new-file>   # 0건이어야 함
 그림자 없음, 보더만 사용. **`rounded-lg` (Vega 스타일, `rounded-xl` 금지)**:
 
 ```tsx
-<div className="bg-primary rounded-lg border border-subtle">
+<div className="bg-canvas-primary rounded-lg border border-subtle">
 ```
 
 ## KPI StatsSection 카드
 
-`ConsultingSection` 및 `AssignedDbTable`에서 사용하는 KPI 타일 패턴:
+`StatsSection`, `AssignedDbTable`, `AdminTable`, `PlannerTable`, `dashboard/page.tsx` 등에서 사용하는 KPI 타일 패턴:
 
 ```tsx
-<div className="bg-primary rounded-lg py-5 border border-subtle">
+<div className="bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle">
   <div className="flex items-stretch">
     {stats.map((stat, i) => (
       <div key={stat.label} className="flex-1 px-6 relative">
         {i > 0 && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />}
-        <p className="text-[12px] font-medium text-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">
+        <p className="text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap">
           {stat.label}
         </p>
         <div className="flex items-baseline gap-0.5">
-          <span className="text-[24px] font-semibold tracking-tight text-foreground leading-none tabular-nums">
-            {stat.value}
-          </span>
-          <span className="text-[24px] font-semibold tracking-tight text-foreground leading-none">
-            {stat.unit}
-          </span>
+          <span className="text-h3-bold tabular-nums text-content-primary">{stat.value}</span>
+          <span className="text-h3-bold tabular-nums text-content-primary">{stat.unit}</span>
         </div>
       </div>
     ))}
   </div>
 </div>
 ```
+
+**핵심 비율:**
+- 카드 wrapper: `pt-4 pb-3` (위 16px / 아래 12px) — 비대칭 (KPI 숫자 lh 36px 균형)
+- label: `mb-1.5` (6px), `leading-none` 강제 (라벨 박스 = 글자 높이)
+- value/unit: `text-h3-bold` (24/36/600/-0.5px), `tabular-nums`
+- 세로 구분선: `absolute h-12 w-px bg-divider-normal`
 
 ## 카드 내부 구분선
 
@@ -397,7 +425,7 @@ shadcn `Button` size variant를 그대로 사용. **`h-*`, `px-*` 수동 오버�
 
 ## 필터 컴포넌트 패턴
 
-필터 컨트롤은 **`bg-fill-filter` (= 흰색)** + **`border-subtle`** 통일. `bg-muted/60` 사용 금지 — 페이지 배경(`bg-tertiary`)과 대비가 거의 없어 필 영역이 안 보임.
+필터 컨트롤은 **`bg-fill-filter` (= 흰색)** + **`border-subtle`** 통일. `bg-muted/60` 사용 금지 — 페이지 배경(`bg-canvas-tertiary`)과 대비가 거의 없어 필 영역이 안 보임.
 
 순서: Select → Input → 검색 → 필터 초기화
 
@@ -465,22 +493,26 @@ layout.tsx
 
 ## 페이지 공통 패턴
 
-모든 페이지 공통 외곽 래퍼:
+모든 페이지 공통 외곽 래퍼 + `<PageHeader>` 컴포넌트 사용:
 
 ```tsx
-<div className="h-full overflow-y-auto overflow-x-hidden bg-tertiary scrollbar-hide flex flex-col min-h-full">
-  {/* 타이틀 영역 */}
-  <div className="px-6 pt-10 pb-6">
-    <h1 className="text-[28px] font-semibold text-primary tracking-tight leading-tight [text-wrap:balance]">페이지명</h1>
-    <p className="text-[14px] text-assistive mt-2">부제목</p>
-  </div>
+import { PageHeader } from "@/components/page-header"
+
+<div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
+  <PageHeader title="페이지명" subtitle="부제목" />
   {/* 콘텐츠 */}
   ...
   <Footer />
 </div>
 ```
 
-> 페이지에 따라 `bg-quaternary`를 outer wrapper에 쓰는 곳도 있음 (홈 대시보드 `/dashboard` 등 — 차트가 많아 약간 더 진한 배경 필요한 경우).
+`<PageHeader>` props:
+- `title` (string, 필수) — 페이지 제목, `text-h2-bold` 토큰 적용
+- `subtitle` (string, optional) — 부제, `text-[14px] text-content-assistive`
+- `bordered` (boolean, optional) — 하단 border-b 추가 (상세 페이지 등)
+- `actions` (ReactNode, optional) — 우측 액션 버튼 영역
+
+> ⚠️ **모든 페이지 배경 통일**: `bg-canvas-tertiary` (#f6f7f9). 홈 대시보드도 동일.
 
 **패턴 1 — BusinessTree + 필터 별도 + 테이블** (`/completed`, `/db/assigned`, `/db/unassigned`):
 ```tsx
@@ -636,7 +668,7 @@ import { Footer } from "@/components/footer"
 
 # 수정 시 주의사항
 
-**필터 컨트롤 fill** — 페이지 배경(`bg-tertiary`)과 대비를 위해 흰색 사용:
+**필터 컨트롤 fill** — 페이지 배경(`bg-canvas-tertiary`)과 대비를 위해 흰색 사용:
 - Input variant="filter" (`bg-fill-filter border-subtle`)
 - Select / multi-select 버튼: `bg-fill-filter border-subtle`
 

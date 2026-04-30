@@ -8,26 +8,22 @@ import { RolesTable } from "@/components/organization/roles-table"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { TitleObserver } from "@/components/title-observer"
+import { PageHeader } from "@/components/page-header"
 
 export default function RolesPage() {
   return (
     <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
 
-      {/* 타이틀 + 등록 버튼 */}
-      <div className="px-6 pt-10 pb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-[28px] font-semibold tracking-tight leading-tight [text-wrap:balance] text-content-primary">
-            직책·권한 설정
-          </h1>
-          <p className="text-[14px] text-content-assistive mt-2">
-            조직을 담당하는 직책 및 메뉴 권한을 부여합니다
-          </p>
-        </div>
-        <Button className="mt-2 gap-1.5">
-          <Plus className="h-4 w-4" />
-          등록하기
-        </Button>
-      </div>
+      <PageHeader
+        title="직책·권한 설정"
+        subtitle="조직을 담당하는 직책 및 메뉴 권한을 부여합니다"
+        actions={
+          <Button className="gap-1.5">
+            <Plus className="h-4 w-4" />
+            등록하기
+          </Button>
+        }
+      />
       <TitleObserver />
 
       {/* 필터 */}

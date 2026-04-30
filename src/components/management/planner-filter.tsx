@@ -13,27 +13,30 @@ export function PlannerFilter() {
       showPlanner={false}
       extraSelects={[
         {
+          label: "기수",
           defaultValue: "all-generation",
           options: [
-            { value: "all-generation", label: "기수 전체" },
+            { value: "all-generation", label: "전체" },
             { value: "1st", label: "1기" },
             { value: "2nd", label: "2기" },
             { value: "3rd", label: "3기" },
           ],
         },
         {
+          label: "소속",
           defaultValue: "all-org",
           options: [
-            { value: "all-org", label: "소속 전체" },
+            { value: "all-org", label: "전체" },
             { value: "hq", label: "본사" },
             { value: "div1", label: "사업단 1" },
             { value: "div2", label: "사업단 2" },
           ],
         },
         {
+          label: "직책",
           defaultValue: "all-position",
           options: [
-            { value: "all-position", label: "직책 전체" },
+            { value: "all-position", label: "전체" },
             { value: "ceo", label: "최고관리자" },
             { value: "director", label: "사업단장" },
             { value: "branch", label: "지점장" },
@@ -41,9 +44,10 @@ export function PlannerFilter() {
           ],
         },
         {
+          label: "활동상태",
           defaultValue: "all-activity",
           options: [
-            { value: "all-activity", label: "활동 상태 전체" },
+            { value: "all-activity", label: "전체" },
             { value: "active", label: "정상" },
             { value: "waiting", label: "대기" },
             { value: "suspended", label: "일시제한" },

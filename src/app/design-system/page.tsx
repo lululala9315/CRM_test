@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -28,217 +29,182 @@ import {
 import { SearchFilter } from "@/components/dashboard/search-filter"
 import { PageNumbers, PageSizeSelect } from "@/components/ui/pagination"
 import {
-  Search, Copy, Check,
+  Search, Copy, Check, User, Menu,
 } from "lucide-react"
 
-// ── 타입 ──────────────────────────────────────────────────────────────────
-type Token = {
-  name: string
-  cls?: string                 // Tailwind 클래스 오버라이드 (없으면 bg-[var(--name)])
-  hex: string                  // 설명 / hex / 참조 표기
+// ── Semantic Color 데이터 (CodeIt 스타일 테이블 레이아웃용) ──────────────
+type ColorEntry = {
+  token: string        // Tailwind 클래스명 (복사 대상)
+  cssVar: string       // CSS 변수 이름 (swatch 렌더링용)
+  hex: string          // hex 값 또는 참조 표기
+  desc: string         // 용도 설명
   kind?: "bg" | "text" | "border"
-  cssVar?: string              // swatch 렌더링에 쓸 CSS 변수 (name과 다를 때)
-  copyText?: string            // 클릭 시 복사할 텍스트 (없으면 var(--name))
+  subtle?: boolean     // 밝은 bg swatch에 테두리 추가
 }
-type TokenGroup = { group: string; tokens: Token[] }
+type SemanticGroup = { group: string; entries: ColorEntry[] }
 
-// ── Layer 1: Atomic Palette (직접 참조 금지 — Semantic 통해 사용) ─────────
+const SEMANTIC_COLORS: SemanticGroup[] = [
+  {
+    group: "Background",
+    entries: [
+      { token: "bg-canvas-primary",    cssVar: "bg-primary",    hex: "#ffffff", desc: "카드·모달 배경",        subtle: true },
+      { token: "bg-canvas-secondary",  cssVar: "bg-secondary",  hex: "#f9fafb", desc: "hover 미세 배경",        subtle: true },
+      { token: "bg-canvas-tertiary",   cssVar: "bg-tertiary",   hex: "#f2f4f6", desc: "페이지 기본 배경",       subtle: true },
+      { token: "bg-canvas-quaternary", cssVar: "bg-subtle",     hex: "#eceef1", desc: "구분·홀수행·섹션 구분",  subtle: true },
+    ],
+  },
+  {
+    group: "Fill",
+    entries: [
+      { token: "bg-fill-subtle",  cssVar: "fill-subtle",  hex: "#f2f4f6", desc: "테이블 헤더·서브행",    subtle: true },
+      { token: "bg-fill-normal",  cssVar: "fill-normal",  hex: "#eceef1", desc: "hover 배경",             subtle: true },
+      { token: "bg-fill-hover",   cssVar: "fill-hover",   hex: "#dbdfe3", desc: "pressed 상태",           subtle: true },
+      { token: "bg-fill-filter",  cssVar: "fill-filter",  hex: "#ffffff", desc: "필터 컨트롤 (페이지 배경 위 대비용)", subtle: true },
+      { token: "bg-fill-muted",   cssVar: "fill-muted",   hex: "#f9fafb", desc: "테이블 행 hover",        subtle: true },
+    ],
+  },
+  {
+    group: "Text",
+    entries: [
+      { token: "text-content-primary",    cssVar: "text-primary",    hex: "#191f28", desc: "제목·강조 텍스트",   kind: "text" },
+      { token: "text-content-secondary",  cssVar: "text-secondary",  hex: "#333d4b", desc: "본문 텍스트",        kind: "text" },
+      { token: "text-content-tertiary",   cssVar: "text-tertiary",   hex: "#4e5968", desc: "서브텍스트·설명",    kind: "text" },
+      { token: "text-content-quaternary", cssVar: "text-quaternary", hex: "#6b7684", desc: "보조 정보",          kind: "text" },
+      { token: "text-content-assistive",  cssVar: "text-assistive",  hex: "#8b95a1", desc: "placeholder·힌트",  kind: "text" },
+      { token: "text-content-disabled",   cssVar: "text-disabled",   hex: "#b0b8c1", desc: "비활성 텍스트",      kind: "text" },
+      { token: "text-inverse-primary",    cssVar: "common-100",      hex: "#ffffff", desc: "브랜드 버튼 위 흰 글자", kind: "text" },
+    ],
+  },
+  {
+    group: "Brand",
+    entries: [
+      { token: "bg-primary",              cssVar: "primary",              hex: "#3182f6", desc: "메인 액션 버튼·강조 배경" },
+      { token: "text-primary",            cssVar: "primary",              hex: "#3182f6", desc: "링크·브랜드 텍스트·아이콘", kind: "text" },
+      { token: "bg-primary-subtle",       cssVar: "primary-subtle",       hex: "#e8f3ff", desc: "사이드바·트리 선택 배경 (blue-50)", subtle: true },
+      { token: "bg-primary-subtle-hover", cssVar: "primary-subtle-hover", hex: "#d8eaff", desc: "선택 항목 hover (blue-75)", subtle: true },
+      { token: "bg-blue-tint",            cssVar: "blue-50",              hex: "#e8f3ff", desc: "테이블 선택 행·info 박스",  subtle: true },
+    ],
+  },
+  {
+    group: "Border",
+    entries: [
+      { token: "border-subtle", cssVar: "border-subtle", hex: "#e5e8eb", desc: "카드·컨테이너 기본 보더", kind: "border" },
+      { token: "border-border",      cssVar: "border",        hex: "#d1d6db", desc: "shadcn 호환 보더",         kind: "border" },
+      { token: "border-primary",     cssVar: "primary",       hex: "#3182f6", desc: "선택·포커스 상태 보더",    kind: "border" },
+    ],
+  },
+  {
+    group: "Alpha (overlay · divider)",
+    entries: [
+      { token: "bg-alpha-black-02", cssVar: "alpha-black-02", hex: "rgba 2%",  desc: "테이블 행 hover (가장 미세)",    subtle: true },
+      { token: "bg-alpha-black-05", cssVar: "alpha-black-05", hex: "rgba 5%",  desc: "사이드바 메뉴 hover · expanded", subtle: true },
+      { token: "bg-alpha-black-10", cssVar: "alpha-black-10", hex: "rgba 10%", desc: "팝오버 backdrop" },
+      { token: "bg-alpha-black-18", cssVar: "alpha-black-18", hex: "rgba 18%", desc: "모달 backdrop (옅은)" },
+      { token: "bg-divider-subtle", cssVar: "divider-subtle", hex: "alpha-blue 4%", desc: "카드 내 구분선 (가장 약)",  subtle: true },
+      { token: "bg-divider-normal", cssVar: "divider-normal", hex: "alpha-blue 8%", desc: "일반 구분선 · 강조 라인",   subtle: true },
+      { token: "border-divider-subtle", cssVar: "divider-subtle", hex: "alpha-blue 4%", desc: "테이블 셀 가로 보더 (행 라인)", kind: "border" },
+      { token: "border-divider-normal", cssVar: "divider-normal", hex: "alpha-blue 8%", desc: "구분선 보더 (강조 필요시)", kind: "border" },
+    ],
+  },
+  {
+    group: "Status",
+    entries: [
+      { token: "bg-success",      cssVar: "success",     hex: "#03b26c", desc: "성공 Solid (버튼·아이콘)" },
+      { token: "bg-warning",      cssVar: "warning",     hex: "#f59e0b", desc: "경고 Solid (버튼·아이콘)" },
+      { token: "bg-destructive",  cssVar: "destructive", hex: "#f04452", desc: "오류·삭제 Solid" },
+      { token: "bg-green-tint",   cssVar: "green-50",    hex: "#f0faf6", desc: "성공 Tint 배경 (배지·태그)",   subtle: true },
+      { token: "text-green-tint", cssVar: "green-450",   hex: "#0cbb75", desc: "성공 Tint 텍스트",             kind: "text" },
+      { token: "bg-amber-tint",   cssVar: "amber-50",    hex: "#fffbeb", desc: "경고 Tint 배경 (배지·태그)",   subtle: true },
+      { token: "text-amber-tint", cssVar: "amber-700",   hex: "#b45309", desc: "경고 Tint 텍스트",             kind: "text" },
+      { token: "bg-red-tint",     cssVar: "red-50",      hex: "#ffeeee", desc: "오류 Tint 배경 (배지·태그)",   subtle: true },
+      { token: "text-red-tint",   cssVar: "red-600",     hex: "#e42939", desc: "오류 Tint 텍스트",             kind: "text" },
+      { token: "text-blue-tint",  cssVar: "blue-700",    hex: "#1b64da", desc: "정보 Tint 텍스트 (info 배지)", kind: "text" },
+    ],
+  },
+]
 
-const ATOMIC_COOL_NEUTRAL: TokenGroup = {
-  group: "Cool Neutral",
-  tokens: [
-    { name: "cool-neutral-50",  hex: "→ bg-canvas-secondary" },
-    { name: "cool-neutral-100", hex: "→ bg-canvas-tertiary · fill-subtle" },
-    { name: "cool-neutral-150", hex: "→ bg-canvas-quaternary · fill-normal" },
-    { name: "cool-neutral-200", hex: "→ border-line-subtle · fill-strong" },
-    { name: "cool-neutral-250", hex: "→ fill-hover" },
-    { name: "cool-neutral-300", hex: "→ border-primary" },
-    { name: "cool-neutral-400", hex: "→ text-content-disabled" },
-    { name: "cool-neutral-600", hex: "→ text-content-assistive" },
-    { name: "cool-neutral-700", hex: "→ text-content-quaternary" },
-    { name: "cool-neutral-800", hex: "→ text-content-tertiary" },
-    { name: "cool-neutral-900", hex: "→ text-content-secondary" },
-    { name: "cool-neutral-990", hex: "→ text-content-primary · #191F28" },
-  ],
-}
+// ── Chart (Code 탭용) ──────────────────────────────────────────────────────
+const CHART_COLORS = [
+  { name: "chart-1", hex: "#3182f6",  note: "blue-500 · 주지표" },
+  { name: "chart-2", hex: "violet-500", note: "2순위" },
+  { name: "chart-3", hex: "violet-550", note: "3순위" },
+  { name: "chart-4", hex: "violet-600", note: "4순위" },
+  { name: "chart-5", hex: "violet-650", note: "보조지표" },
+]
 
-const ATOMIC_BLUE: TokenGroup = {
-  group: "Blue",
-  tokens: [
-    { name: "blue-50",  hex: "→ bg-blue-tint" },
-    { name: "blue-500", hex: "→ bg-primary · text-primary / 브랜드 / #3182F6" },
-    { name: "blue-700", hex: "→ text-blue-tint" },
-  ],
-}
-
-const ATOMIC_STATUS: TokenGroup = {
-  group: "Red / Green / Amber / Orange",
-  tokens: [
-    { name: "red-50",     hex: "→ bg-red-tint" },
-    { name: "red-500",    hex: "→ destructive / error" },
-    { name: "red-600",    hex: "→ text-red-tint" },
-    { name: "red-700",    hex: "→ (미사용 — semantic 토큰 없음)" },
-    { name: "green-50",   hex: "→ bg-green-tint" },
-    { name: "green-400",  hex: "→ text-success-foreground" },
-    { name: "green-500",  hex: "→ success" },
-    { name: "amber-50",   hex: "→ bg-amber-tint" },
-    { name: "amber-500",  hex: "→ warning" },
-    { name: "amber-700",  hex: "→ text-amber-tint · warning-foreground" },
-    { name: "orange-50",  hex: "→ bg-orange-tint" },
-    { name: "orange-390", hex: "→ warning-foreground" },
-    { name: "orange-500", hex: "→ warning (일부)" },
-  ],
-}
-
-// ── Layer 2: Semantic Tokens ───────────────────────────────────────────────
-
-const BG_GROUP: TokenGroup = {
-  group: "Surface — bg-canvas-*",
-  tokens: [
-    { name: "bg-canvas-primary",    cls: "bg-canvas-primary border border-line-subtle",    hex: "#FFFFFF · 카드/모달 배경" },
-    { name: "bg-canvas-tertiary",   cls: "bg-canvas-tertiary border border-line-subtle",   hex: "= cool-neutral-100 · 페이지 배경" },
-    { name: "bg-canvas-quaternary", cls: "bg-canvas-quaternary border border-line-subtle", hex: "= cool-neutral-150 · 구분·홀수행" },
-  ],
-}
-
-const TEXT_GROUP: TokenGroup = {
-  group: "Content — text-content-*",
-  tokens: [
-    { name: "text-content-primary",    kind: "text", cssVar: "text-primary",    hex: "= cool-neutral-990 · 타이틀",      copyText: "text-content-primary" },
-    { name: "text-content-secondary",  kind: "text", cssVar: "text-secondary",  hex: "= cool-neutral-900 · 본문",        copyText: "text-content-secondary" },
-    { name: "text-content-tertiary",   kind: "text", cssVar: "text-tertiary",   hex: "= cool-neutral-800 · 서브 텍스트", copyText: "text-content-tertiary" },
-    { name: "text-content-quaternary", kind: "text", cssVar: "text-quaternary", hex: "= cool-neutral-700 · 보조 정보",   copyText: "text-content-quaternary" },
-    { name: "text-content-assistive",  kind: "text", cssVar: "text-assistive",  hex: "= cool-neutral-600 · placeholder", copyText: "text-content-assistive" },
-    { name: "text-content-disabled",   kind: "text", cssVar: "text-disabled",   hex: "= cool-neutral-400 · 비활성",      copyText: "text-content-disabled" },
-    { name: "text-muted-foreground",   kind: "text", cssVar: "muted-foreground", hex: "shadcn 호환 — text-content-assistive와 동일값", copyText: "text-muted-foreground" },
-    { name: "text-primary",            kind: "text", cssVar: "primary",          hex: "= #3182F6 · 링크·브랜드 텍스트",   copyText: "text-primary" },
-    { name: "text-inverse-primary",    kind: "text", cssVar: "common-100",       hex: "흰색 · 다크 배경 위 (버튼 라벨)", copyText: "text-inverse-primary" },
-  ],
-}
-
-const BORDER_GROUP: TokenGroup = {
-  group: "Line — border-line-*",
-  tokens: [
-    { name: "border-line-subtle",  kind: "border", cssVar: "border-subtle",  hex: "= cool-neutral-200 · 카드 보더", copyText: "border-line-subtle" },
-    { name: "border-border",       kind: "border", hex: "= cool-neutral-300 (shadcn 호환)", cssVar: "border", copyText: "border-border" },
-    { name: "border-input",        kind: "border", hex: "= cool-neutral-300 (shadcn input)", cssVar: "input", copyText: "border-input" },
-    { name: "border-primary",       kind: "border", cssVar: "primary", hex: "= #3182F6 · 선택 상태", copyText: "border-primary" },
-  ],
-}
-
-const ACCENT_GROUP: TokenGroup = {
-  group: "Accent — 브랜드 블루 (#3182F6)",
-  tokens: [
-    { name: "accent",              cls: "bg-primary",                                 hex: "bg-primary · #3182F6",          copyText: "bg-primary" },
-    { name: "primary-subtle",       cls: "bg-primary-subtle border border-line-subtle",     hex: "bg-primary-subtle · 사이드바 선택·틴트", copyText: "bg-primary-subtle" },
-    { name: "blue-tint",            cls: "bg-blue-tint border border-line-subtle",           hex: "bg-blue-tint · 선택행·안내박스",  copyText: "bg-blue-tint" },
-    { name: "accent-foreground",   cls: "bg-accent-foreground border border-line-subtle", hex: "흰색 · text-inverse-primary",  copyText: "bg-accent-foreground" },
-  ],
-}
-
-const FILL_GROUP: TokenGroup = {
-  group: "Fill — bg-fill-*",
-  tokens: [
-    { name: "fill-subtle", cls: "bg-fill-subtle border border-line-subtle",  hex: "= cool-neutral-100" },
-    { name: "fill-normal", cls: "bg-fill-normal border border-line-subtle",  hex: "= cool-neutral-150" },
-    { name: "fill-hover",  cls: "bg-fill-hover border border-line-subtle",   hex: "= cool-neutral-250" },
-    { name: "fill-filter", cls: "bg-fill-filter border border-line-subtle",  hex: "= #FFF · 필터 컨트롤" },
-  ],
-}
-
-const DIVIDER_GROUP: TokenGroup = {
-  group: "Divider — bg-divider-* (alpha)",
-  tokens: [
-    { name: "divider-subtle", cls: "bg-divider-subtle", hex: "alpha 4% · 기본 행 구분" },
-    { name: "divider-normal", cls: "bg-divider-normal", hex: "alpha 8% · KPI 수직 구분선" },
-  ],
-}
-
-const STATUS_GROUP: TokenGroup = {
-  group: "Status — 상태색",
-  tokens: [
-    { name: "success",             cls: "bg-success",                             hex: "= green-500 · bg-success" },
-    { name: "success-foreground",  cls: "bg-success-foreground border border-line-subtle", hex: "= green-400 · text-success-foreground" },
-    { name: "warning",             cls: "bg-warning",                             hex: "= amber-500 · bg-warning" },
-    { name: "warning-foreground",  cls: "bg-warning-foreground",                  hex: "= orange-390 · text-warning-foreground" },
-    { name: "destructive",         cls: "bg-destructive",                         hex: "= red-500 · bg-destructive" },
-  ],
-}
-
-const TINT_GROUP: TokenGroup = {
-  group: "Tint — bg-*-tint / text-*-tint",
-  tokens: [
-    { name: "bg-blue-tint",    cls: "bg-blue-tint",                          hex: "= blue-50" },
-    { name: "text-blue-tint",  kind: "text", cssVar: "blue-700",             hex: "= blue-700", copyText: "text-blue-tint" },
-    { name: "bg-green-tint",   cls: "bg-green-tint",                         hex: "= green-50" },
-    { name: "text-green-tint", kind: "text", cssVar: "green-450",            hex: "= green-450", copyText: "text-green-tint" },
-    { name: "bg-red-tint",     cls: "bg-red-tint",                           hex: "= red-50" },
-    { name: "text-red-tint",   kind: "text", cssVar: "red-600",              hex: "= red-600", copyText: "text-red-tint" },
-    { name: "bg-orange-tint",  cls: "bg-orange-tint",                        hex: "= orange-50" },
-    { name: "bg-amber-tint",   cls: "bg-amber-tint",                         hex: "= amber-50" },
-    { name: "text-amber-tint", kind: "text", cssVar: "amber-700",            hex: "= amber-700", copyText: "text-amber-tint" },
-    { name: "bg-neutral-tint", cls: "bg-neutral-tint border border-line-subtle", hex: "= bg-subtle" },
-    { name: "text-neutral-tint", kind: "text", cssVar: "text-assistive",     hex: "= text-content-assistive", copyText: "text-neutral-tint" },
-  ],
-}
-
-const CHART_GROUP: TokenGroup = {
-  group: "Chart — Blue→Purple 5단계",
-  tokens: [
-    { name: "chart-1", cls: "bg-chart-1", hex: "oklch(0.845 0.143 165) · 주지표" },
-    { name: "chart-2", cls: "bg-chart-2", hex: "oklch(0.696 0.170 162)" },
-    { name: "chart-3", cls: "bg-chart-3", hex: "oklch(0.596 0.145 163)" },
-    { name: "chart-4", cls: "bg-chart-4", hex: "oklch(0.508 0.118 166)" },
-    { name: "chart-5", cls: "bg-chart-5", hex: "oklch(0.432 0.095 167) · 보조지표" },
-  ],
-}
+// ── 색상 팔레트 전체 스케일 ───────────────────────────────────────────────
+const PALETTE_FAMILIES = [
+  {
+    name: "Cool Neutral",
+    family: "cool-neutral",
+    steps: [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950],
+    semantic: { 50:"canvas-secondary", 100:"canvas-tertiary", 150:"canvas-quaternary", 200:"line-subtle", 250:"fill-hover", 300:"border", 400:"text-disabled", 600:"text-assistive", 700:"text-quaternary", 800:"text-tertiary", 900:"text-secondary" } as Record<number,string>,
+  },
+  {
+    name: "Blue",
+    family: "blue",
+    steps: [50,75,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950],
+    semantic: { 50:"blue-tint / primary-subtle", 75:"primary-subtle-hover", 350:"ring", 500:"primary / chart-1", 700:"text-blue-tint" } as Record<number,string>,
+  },
+  {
+    name: "Violet",
+    family: "violet",
+    steps: [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950],
+    semantic: { 500:"chart-2", 550:"chart-3", 600:"chart-4", 650:"chart-5" } as Record<number,string>,
+  },
+  {
+    name: "Red",
+    family: "red",
+    steps: [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850],
+    semantic: { 50:"red-tint", 500:"destructive", 600:"text-red-tint" } as Record<number,string>,
+  },
+  {
+    name: "Green",
+    family: "green",
+    steps: [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850],
+    semantic: { 50:"green-tint", 400:"success-fg", 500:"success" } as Record<number,string>,
+  },
+  {
+    name: "Amber",
+    family: "amber",
+    steps: [50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850],
+    semantic: { 50:"amber-tint", 500:"warning", 700:"text-amber-tint" } as Record<number,string>,
+  },
+  // Alpha 토큰은 atomic 색상이 아닌 의미 기반 (overlay/divider/selected) → Semantic 섹션에서 노출
+]
 
 // ── 라운드 ────────────────────────────────────────────────────────────────
+// Tailwind 네이티브 표준 사용. r-토큰(rounded-r4 등)은 폐기 (사용처 미미).
 const RADIUS_REFERENCE = [
-  { cls: "rounded-r4",    px: 4    },
-  { cls: "rounded-r6",    px: 6    },
-  { cls: "rounded-r8",    px: 8    },
-  { cls: "rounded-r10",   px: 10   },
-  { cls: "rounded-r12",   px: 12   },
-  { cls: "rounded-r16",   px: 16   },
-  { cls: "rounded-r20",   px: 20   },
-  { cls: "rounded-r24",   px: 24   },
-  { cls: "rounded-r9999", px: 9999 },
+  { cls: "rounded-sm",   px: 2    },
+  { cls: "rounded",      px: 4    },
+  { cls: "rounded-md",   px: 6    },
+  { cls: "rounded-lg",   px: 8    },
+  { cls: "rounded-full", px: 9999 },
 ]
 
 const RADIUS_RULES = [
-  { level: "카드 / 컨테이너",          cls: "rounded-r24",   note: "24px · 카드, 리스트" },
-  { level: "모달",                     cls: "rounded-r20",   note: "20px" },
-  { level: "리스트 행",                cls: "rounded-r16",   note: "16px" },
-  { level: "배지 · 태그",              cls: "rounded-r12",   note: "12px" },
-  { level: "버튼 · 입력 컨트롤 (h-9)", cls: "rounded-r8",    note: "8px (= rounded-lg alias)" },
-  { level: "pill",                     cls: "rounded-r9999", note: "9999px (= rounded-full alias)" },
-  { level: "❌ 금지",                   cls: "rounded-xl",    note: "사용 금지" },
+  { level: "카드 · 컨테이너",          cls: "rounded-lg",   note: "8px — 가장 많이 사용" },
+  { level: "버튼 (default/sm)",         cls: "rounded-lg",   note: "8px" },
+  { level: "필터 컨트롤 · 작은 버튼",   cls: "rounded-md",   note: "6px — h-8/h-6 컨트롤" },
+  { level: "체크박스 · 미세 라운드",    cls: "rounded-sm",   note: "2px" },
+  { level: "pill · 원형 (avatar/dot)",  cls: "rounded-full", note: "9999px" },
+  { level: "❌ 금지",                   cls: "rounded-xl",   note: "12px+ 라운드 사용 금지" },
 ]
 
 // ── 스페이싱 ──────────────────────────────────────────────────────────────
+// Tailwind 네이티브 4px 그리드 단일 사용. s-토큰은 폐기 (사실상 미사용 + 동일 px값).
+// 표는 px 값 중심: prefix(p/m/gap/px/pt 등)는 상황에 따라 자유 조합.
 const SPACING_SCALE = [
-  { px: 4,  s: "s4",  usage: "아이콘-텍스트 gap" },
-  { px: 8,  s: "s8",  usage: "인라인 gap" },
-  { px: 12, s: "s12", usage: "badge px · 소형 컨트롤" },
-  { px: 16, s: "s16", usage: "카드 간 gap · 필터↔테이블 mb" },
-  { px: 20, s: "s20", usage: "카드 내 section py" },
-  { px: 24, s: "s24", usage: "페이지 수평 px · 카드 내부 px" },
-  { px: 32, s: "s32", usage: "섹션 간 gap" },
-  { px: 40, s: "s40", usage: "페이지 타이틀 pt" },
-  { px: 60, s: "—",   usage: "콘텐츠 하단 pb-15 (Tailwind 네이티브)" },
-]
-
-const SPACING_PATTERNS = [
-  { label: "페이지 수평 패딩",     cls: "px-s24",        note: "24px — 모든 페이지 공통" },
-  { label: "타이틀 영역",          cls: "pt-s40 pb-s24", note: "40px top, 24px bottom" },
-  { label: "콘텐츠 하단",          cls: "pb-15",         note: "60px — Footer 위 여백 (Tailwind 네이티브)" },
-  { label: "카드 간 간격",         cls: "gap-s16",       note: "16px — flex-col gap" },
-  { label: "필터 ↔ 테이블",        cls: "mb-s16",        note: "16px — 필터 래퍼" },
-  { label: "툴바 ↔ 테이블",        cls: "gap-s2",        note: "2px — sticky 블록 내부" },
-  { label: "카드 내부 수평 패딩",   cls: "px-s24",        note: "24px — 카드 콘텐츠" },
-  { label: "카드 내부 구분선",      cls: "mx-s24 h-px",   note: "좌우 24px 인셋 필수" },
-  { label: "BusinessTree ↔ 본문",  cls: "gap-s12",       note: "12px" },
+  { px: 4,  key: "1",  usage: "아이콘 ↔ 텍스트 인라인 간격" },
+  { px: 8,  key: "2",  usage: "타이트한 인라인 gap" },
+  { px: 12, key: "3",  usage: "배지 padding · BusinessTree ↔ 본문 gap" },
+  { px: 16, key: "4",  usage: "카드 간 gap · 필터 ↔ 테이블 mb" },
+  { px: 20, key: "5",  usage: "카드 내부 세로 패딩 (py)" },
+  { px: 24, key: "6",  usage: "페이지·카드 수평 패딩 (px)" },
+  { px: 32, key: "8",  usage: "섹션 간 gap" },
+  { px: 40, key: "10", usage: "페이지 타이틀 상단 패딩 (pt)" },
+  { px: 60, key: "15", usage: "콘텐츠 하단 패딩 (pb-15)" },
 ]
 
 // ── 버튼 ──────────────────────────────────────────────────────────────────
@@ -254,7 +220,7 @@ const BUTTON_VARIANTS = [
 
 // 3 sizes — user 코드에서 사용
 const BUTTON_SIZES = [
-  { size: "xs" as const,      h: "h-6",    usage: "테이블 인라인 (승인/거절)" },
+  { size: "xs" as const,      h: "h-6 · 11px",    usage: "테이블 인라인 (승인/거절)" },
   { size: "sm" as const,      h: "h-8",    usage: "페이지네이션 / 보조 버튼" },
   { size: "default" as const, h: "h-9",    usage: "주요 액션 / 필터 컨트롤 (가장 흔함)" },
 ]
@@ -309,27 +275,42 @@ const SHADCN_REMOVED = [
 //   Patterns:    조합 패턴 (테이블/레이아웃)
 //   Code:        구현 참조 (차트/shadcn 현황)
 type TabId = "foundations" | "components" | "patterns" | "code"
-type TabSection = { id: string; label: string }
+type TabSubSection = { id: string; label: string }
+type TabSection = { id: string; label: string; sub?: TabSubSection[] }
 type Tab = { id: TabId; label: string; desc: string; sections: TabSection[] }
 
 const TABS: Tab[] = [
   {
     id: "foundations",
-    label: "Foundations",
+    label: "기초",
     desc: "디자인 토큰",
     sections: [
-      { id: "colors-atomic",   label: "색상 — Atomic" },
-      { id: "colors-semantic", label: "색상 — Semantic" },
-      { id: "typography",      label: "타이포그래피" },
-      { id: "radius",          label: "라운드" },
-      { id: "spacing",         label: "스페이싱" },
+      {
+        id: "colors", label: "색상",
+        sub: [
+          { id: "colors-palette",  label: "Atomic 팔레트" },
+          { id: "colors-semantic", label: "Semantic 토큰" },
+        ],
+      },
+      {
+        id: "typography", label: "타이포그래피",
+        sub: [
+          { id: "typography-atomic",    label: "Atomic 토큰" },
+          { id: "typography-composite", label: "Semantic 타이포" },
+        ],
+      },
+      { id: "radius",  label: "라운드" },
+      { id: "border",  label: "보더" },
+      { id: "shadow",  label: "그림자" },
+      { id: "spacing", label: "스페이싱" },
     ],
   },
   {
     id: "components",
-    label: "Components",
+    label: "컴포넌트",
     desc: "단일 UI 요소",
     sections: [
+      { id: "navigation", label: "내비게이션" },
       { id: "buttons",    label: "버튼" },
       { id: "badges",     label: "배지" },
       { id: "filters",    label: "필터 컨트롤" },
@@ -339,7 +320,7 @@ const TABS: Tab[] = [
   },
   {
     id: "patterns",
-    label: "Patterns",
+    label: "패턴",
     desc: "조합 패턴",
     sections: [
       { id: "tables", label: "테이블" },
@@ -348,7 +329,7 @@ const TABS: Tab[] = [
   },
   {
     id: "code",
-    label: "Code",
+    label: "코드",
     desc: "구현 참조",
     sections: [
       { id: "charts", label: "차트 팔레트" },
@@ -357,94 +338,116 @@ const TABS: Tab[] = [
   },
 ]
 
-const TOC = TABS.flatMap(t => t.sections)
 
-// ── 섹션 래퍼 ─────────────────────────────────────────────────────────────
-//   tab prop: 어느 탭에 속하는지 표시. 부모 컨테이너의 data-active-tab에 따라 표시/숨김
+// ── 섹션 래퍼 — 가독성 ↑ (h3 타이틀 + 충분한 여백) ─────────────────────────
 function Section({ id, title, desc, children, tab }: {
   id: string; title: string; desc?: string; children: React.ReactNode; tab: TabId
 }) {
   return (
     <section id={id} data-tab={tab} className="scroll-mt-24">
-      <div className="mb-5">
-        <h2 className="text-[18px] font-semibold tracking-tight text-content-primary leading-snug">{title}</h2>
-        {desc && <p className="text-[13px] text-content-assistive mt-1 leading-relaxed">{desc}</p>}
+      <div className="mb-s32 pb-s20 border-b border-subtle">
+        <h2 className="text-h2-bold tracking-tight text-content-primary [text-wrap:balance]">{title}</h2>
+        {desc && <p className="text-body3-normal text-content-tertiary mt-s8 leading-relaxed [text-wrap:pretty]">{desc}</p>}
       </div>
-      <div className="flex flex-col gap-6">{children}</div>
+      <div className="flex flex-col gap-s48">{children}</div>
     </section>
   )
 }
 
-// ── 서브 레이블 ───────────────────────────────────────────────────────────
+// ── 서브 레이블 — 명확한 섹션 헤더 (h5 사이즈) ───────────────────────────
 function SubLabel({ children, note }: { children: React.ReactNode; note?: string }) {
   return (
-    <div className="flex items-baseline gap-2 mb-3">
-      <p className="text-[12px] font-semibold text-content-primary tracking-tight uppercase">{children}</p>
-      {note && <span className="text-[11px] text-content-assistive normal-case">{note}</span>}
+    <div className="flex flex-col gap-s6 mb-s16">
+      <p className="text-h5-bold text-content-primary tracking-tight [text-wrap:balance]">{children}</p>
+      {note && <span className="text-body4-normal text-content-tertiary leading-relaxed">{note}</span>}
     </div>
   )
 }
 
-// ── 토큰 행 ───────────────────────────────────────────────────────────────
-function TokenRow({ name, cls, hex, kind = "bg", cssVar, copyText }: Token) {
-  const [copied, setCopied] = useState(false)
-  const varRef = cssVar ?? name
-  const textToCopy = copyText ?? `var(--${name})`
+// ── shadcn 출처 표시 — 어떤 shadcn 컴포넌트를 썼는지 + 공식 문서 링크 ────────
+function ShadcnRef({ components, sourceFile }: { components: string[]; sourceFile?: string }) {
+  return (
+    <div className="flex flex-wrap items-center gap-s8 mb-s12 px-s12 py-s8 rounded-md bg-canvas-quaternary border border-subtle">
+      <span className="text-body5-bold text-content-tertiary">shadcn:</span>
+      {components.map(c => (
+        <a
+          key={c}
+          href={`https://ui.shadcn.com/docs/components/${c}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-body5-medium text-primary hover:underline underline-offset-2 decoration-primary"
+        >
+          {c} ↗
+        </a>
+      ))}
+      {sourceFile && (
+        <>
+          <span className="text-content-disabled">·</span>
+          <code className="text-body5-normal text-content-assistive font-mono">{sourceFile}</code>
+        </>
+      )}
+    </div>
+  )
+}
 
+// ── Semantic Color Row ────────────────────────────────────────────────────
+function SemanticRow({ token, cssVar, hex, desc, kind = "bg", subtle }: ColorEntry) {
+  const [copied, setCopied] = useState(false)
   const copy = () => {
-    navigator.clipboard.writeText(textToCopy)
+    navigator.clipboard.writeText(token)
     setCopied(true)
     setTimeout(() => setCopied(false), 1200)
   }
 
-  const swatch = (() => {
-    if (kind === "text") {
-      return (
-        <div className="h-8 w-8 rounded-md shrink-0 bg-canvas-primary border border-line-subtle grid place-items-center">
-          <span style={{ color: `var(--${varRef})`, fontSize: 14, fontWeight: 600, lineHeight: 1 }}>Aa</span>
-        </div>
-      )
-    }
-    if (kind === "border") {
-      return <div className="h-8 w-8 rounded-md shrink-0 bg-canvas-primary" style={{ border: `2px solid var(--${varRef})` }} />
-    }
-    // bg: cls 있으면 Tailwind 클래스 사용, 없으면 inline style (동적 클래스는 Tailwind 스캐너 미감지)
-    if (cls) {
-      return <div className={`h-8 w-8 rounded-md shrink-0 ${cls}`} />
-    }
-    return (
-      <div className="h-8 w-8 rounded-md shrink-0 border border-line-subtle"
-           style={{ backgroundColor: `var(--${varRef})` }} />
-    )
-  })()
+  const swatch = kind === "text" ? (
+    <div className="h-12 w-16 rounded-md shrink-0 bg-canvas-primary border border-subtle grid place-items-center">
+      <span style={{ color: `var(--${cssVar})`, fontWeight: 700, fontSize: 20, lineHeight: 1 }}>Aa</span>
+    </div>
+  ) : kind === "border" ? (
+    <div className="h-12 w-16 rounded-md shrink-0 bg-canvas-primary" style={{ border: `3px solid var(--${cssVar})` }} />
+  ) : (
+    <div
+      className={`h-12 w-16 rounded-md shrink-0 ${subtle ? "border border-subtle" : ""}`}
+      style={{ backgroundColor: `var(--${cssVar})` }}
+    />
+  )
 
   return (
     <button
       onClick={copy}
-      title={`복사: ${textToCopy}`}
-      className="group flex items-center gap-3 px-3 py-2 rounded-md hover:bg-fill-normal transition-colors duration-150 text-left w-full"
+      className="group flex items-center gap-4 px-4 py-3 hover:bg-alpha-black-05 active:scale-[0.99] transition-[background-color,transform] duration-100 text-left w-full"
     >
       {swatch}
-      <div className="flex-1 min-w-0">
-        <p className="text-[12px] font-medium text-content-primary truncate">{name}</p>
+      {/* 토큰 정보 — 2줄 구조: 1줄 토큰명 / 2줄 cssVar · hex · 설명 */}
+      <div className="flex flex-col min-w-0 flex-1 gap-1">
+        <code className="text-body4-bold text-content-primary leading-none">{token}</code>
+        <div className="flex items-center gap-2 min-w-0">
+          <code className="text-[11px] text-content-disabled font-mono leading-none shrink-0">--{cssVar}</code>
+          <span className="text-content-disabled leading-none shrink-0">·</span>
+          <code className="text-[11px] font-mono text-content-tertiary leading-none shrink-0">{hex}</code>
+          <span className="text-content-disabled leading-none shrink-0">·</span>
+          <span className="text-[12px] text-content-tertiary leading-none min-w-0 truncate">{desc}</span>
+        </div>
       </div>
+      {/* Copy 항상 노출 */}
       {copied
-        ? <Check className="h-3.5 w-3.5 text-primary shrink-0" />
-        : <Copy className="h-3.5 w-3.5 text-content-disabled opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+        ? <Check className="h-4 w-4 text-primary shrink-0" />
+        : <Copy className="h-4 w-4 text-content-disabled opacity-40 group-hover:opacity-100 transition-opacity shrink-0" />
       }
     </button>
   )
 }
 
-// ── 토큰 그룹 카드 ────────────────────────────────────────────────────────
-function TokenGroupCard({ group, tokens }: TokenGroup) {
+// ── Semantic Section (그룹 래퍼) ──────────────────────────────────────────
+function SemanticSection({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
-      <div className="px-3 py-2 border-b border-divider-subtle bg-fill-subtle">
-        <p className="text-[11px] font-semibold text-content-primary">{group}</p>
+    <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+      {/* 그룹 레이블 — 좌측 4px 컬러 바 + 텍스트 */}
+      <div className="flex items-center gap-3 px-4 py-2.5 border-b border-subtle bg-canvas-quaternary">
+        <p className="text-[12px] font-semibold text-content-secondary tracking-tight">{label}</p>
       </div>
-      <div className="flex flex-col p-1">
-        {tokens.map(t => <TokenRow key={t.name} {...t} />)}
+      <div className="divide-y divide-divider-subtle">
+        {children}
       </div>
     </div>
   )
@@ -458,7 +461,7 @@ function PaginationDemo() {
     <div className="p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center gap-1">
-          <span className="text-[12px] text-content-assistive tabular-nums">총 143건</span>
+          <span className="text-body5-normal text-content-assistive tabular-nums">총 143건</span>
           <PageSizeSelect
             value={pageSize}
             onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
@@ -482,18 +485,18 @@ function TypoRow({ token, size, weight, lh, ls = "-0.5px", sample, cls, tag }: {
 }) {
   const wLabel = weight === "600" ? "semibold" : weight === "500" ? "medium" : "regular"
   return (
-    <div className="flex items-start gap-4 py-3 border-b border-divider-subtle last:border-b-0">
-      <div className="w-64 shrink-0 pt-0.5">
+    <div className="flex items-center gap-4 px-4 py-3 border-b border-divider-subtle last:border-b-0">
+      <div className="w-56 shrink-0">
         <div className="flex items-center gap-1.5 mb-0.5">
-          <p className="text-[12px] font-medium text-content-primary">{token}</p>
+          <code className="text-[11px] font-semibold text-primary bg-primary-subtle px-1.5 py-0.5 rounded leading-none">{token}</code>
           {tag === "underline" && (
-            <span className="text-[9px] bg-primary-subtle text-primary rounded px-1 py-px leading-none font-medium">underline</span>
+            <span className="text-[9px] bg-fill-normal text-content-tertiary rounded px-1 py-px leading-none font-medium">underline</span>
           )}
           {tag === "reading" && (
             <span className="text-[9px] bg-fill-normal text-content-tertiary rounded px-1 py-px leading-none font-medium">reading</span>
           )}
         </div>
-        <p className="text-[11px] text-content-assistive tabular-nums">{size} · {wLabel} · lh {lh} · ls {ls}</p>
+        <p className="text-[10px] text-content-disabled tabular-nums mt-0.5">{size} / {wLabel} / lh {lh} / ls {ls}</p>
       </div>
       <p className={`${cls ?? token} flex-1 min-w-0 text-content-primary overflow-hidden`}>{sample}</p>
     </div>
@@ -510,13 +513,80 @@ function ControlSample({ label, children }: { label: string; children: React.Rea
   )
 }
 
+// ── 색상 팔레트 스트립 ────────────────────────────────────────────────────
+// 클릭하면 CSS 변수명 복사. semantic 연결 스텝은 step 숫자를 파란색으로 표시.
+function ColorPalette({ name, family, steps, semantic }: {
+  name: string; family: string; steps: number[]
+  semantic?: Record<number, string>
+}) {
+  const [copiedVar, setCopiedVar] = useState<string | null>(null)
+
+  const handleCopy = (cssVar: string) => {
+    navigator.clipboard.writeText(cssVar)
+    setCopiedVar(cssVar)
+    setTimeout(() => setCopiedVar(null), 1200)
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <p className="text-[11px] font-semibold text-content-secondary tracking-tight">{name}</p>
+      <div className="flex gap-px">
+        {steps.map((step, i) => {
+          const label = semantic?.[step]
+          const isFirst = i === 0
+          const isLast = i === steps.length - 1
+          // alpha-* 토큰은 step을 zero-pad (alpha-black-02 등)
+          const stepStr = family.startsWith("alpha-") ? String(step).padStart(2, "0") : String(step)
+          const cssVar = `--${family}-${stepStr}`
+          const isCopied = copiedVar === cssVar
+          return (
+            <button
+              key={step}
+              className="flex-1 flex flex-col gap-1 group active:scale-[0.96] transition-transform duration-100"
+              onClick={() => handleCopy(cssVar)}
+              title={label ? `${cssVar}\n→ ${label}\n클릭하면 복사` : `${cssVar}\n클릭하면 복사`}
+            >
+              <div
+                className={cn(
+                  "h-20 relative",
+                  isFirst && "rounded-l-md",
+                  isLast && "rounded-r-md",
+                  // alpha 토큰: 흰색 배경 위에 알파 색상 → 실제 사용 컨텍스트와 가까움
+                  family.startsWith("alpha-") && "bg-canvas-primary"
+                )}
+                style={{ backgroundColor: family.startsWith("alpha-") ? undefined : `var(--${family}-${stepStr})` }}
+              >
+                {family.startsWith("alpha-") && (
+                  <div className="absolute inset-0" style={{ backgroundColor: `var(--${family}-${stepStr})` }} />
+                )}
+                {/* 복사 완료 오버레이 */}
+                {isCopied && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/25 rounded-[inherit]">
+                    <Check className="h-3 w-3 text-white drop-shadow" />
+                  </div>
+                )}
+              </div>
+              <p
+                className={`text-caption tabular-nums text-center ${label ? "text-primary font-semibold" : "text-content-disabled"}`}
+              >
+                {step}
+              </p>
+            </button>
+          )
+        })}
+      </div>
+      <p className="text-[10px] text-content-disabled mt-1">클릭하면 CSS 변수명 복사 (예: --{family}-500) · 파란 숫자 = 시맨틱 토큰 연결</p>
+    </div>
+  )
+}
+
 // ── DS Migration 테이블 ────────────────────────────────────────────────────
 // shadcn 원본 토큰 → 이 프로젝트 토큰 매핑을 시각화
 function MigrationTable({ rows }: {
   rows: { from: string; to: string; reason: string }[]
 }) {
   return (
-    <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+    <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
       <table className="w-full text-[12px]">
         <thead>
           <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -548,10 +618,12 @@ export default function DesignSystemPage() {
   const [activeTab, setActiveTab] = useState<TabId>("foundations")
   const [activeId, setActiveId] = useState<string>(TABS[0].sections[0].id)
 
-  // 현재 탭의 섹션만 IntersectionObserver 추적
+  // 현재 탭의 섹션 + 서브섹션 모두 IntersectionObserver 추적
   useEffect(() => {
     const currentSections = TABS.find(t => t.id === activeTab)?.sections ?? []
     if (currentSections.length === 0) return
+
+    const allIds = currentSections.flatMap(s => [s.id, ...(s.sub?.map(sub => sub.id) ?? [])])
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -561,8 +633,8 @@ export default function DesignSystemPage() {
       },
       { rootMargin: "-20% 0% -60% 0%", threshold: 0 }
     )
-    currentSections.forEach(s => {
-      const el = document.getElementById(s.id)
+    allIds.forEach(id => {
+      const el = document.getElementById(id)
       if (el) observer.observe(el)
     })
     return () => observer.disconnect()
@@ -593,13 +665,13 @@ export default function DesignSystemPage() {
       </div>
 
       {/* 탭 네비게이션 — sticky */}
-      <div className="sticky top-0 z-20 bg-canvas-tertiary/95 backdrop-blur-sm border-b border-line-subtle">
+      <div className="sticky top-0 z-20 bg-canvas-tertiary/95 backdrop-blur-sm border-b border-subtle">
         <div className="px-6 flex items-end gap-1">
           {TABS.map(t => (
             <button
               key={t.id}
               onClick={() => handleTabChange(t.id)}
-              className={`px-4 pt-3 pb-2.5 -mb-px border-b-2 transition-all duration-150 ${
+              className={`px-4 pt-3 pb-2.5 -mb-px border-b-2 active:scale-[0.97] transition-[border-color,color,background-color,transform] duration-150 ${
                 activeTab === t.id
                   ? "border-primary text-content-primary"
                   : "border-transparent text-content-assistive hover:text-content-primary hover:bg-fill-subtle"
@@ -613,86 +685,96 @@ export default function DesignSystemPage() {
 
       <div className="flex gap-8 px-6 pt-8 pb-20">
 
-        {/* 사이드 nav — 현재 탭의 섹션만 */}
-        <aside className="w-[160px] shrink-0 sticky top-24 self-start">
+        {/* 사이드 nav — 현재 탭의 섹션 + 서브섹션 */}
+        <aside className="w-[180px] shrink-0 sticky top-24 self-start">
           <p className="text-[10px] font-semibold text-content-disabled uppercase tracking-wider mb-2">{currentTab.label}</p>
-          <nav className="flex flex-col gap-0.5">
-            {currentTab.sections.map((item, i) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className={`flex items-center gap-2 text-[12px] rounded-md px-2 py-1.5 transition-colors duration-120 ${
-                  activeId === item.id
-                    ? "bg-primary-subtle text-primary font-semibold"
-                    : "text-content-assistive hover:text-content-primary hover:bg-fill-normal"
-                }`}
-              >
-                {item.label}
-              </a>
-            ))}
+          <nav className="flex flex-col gap-px">
+            {currentTab.sections.map((item) => {
+              const isParentActive = activeId === item.id || item.sub?.some(s => s.id === activeId)
+              return (
+                <div key={item.id}>
+                  {/* 섹션 상위 항목 — 활성 시 좌측 vertical bar + bg + bold */}
+                  <a
+                    href={`#${item.id}`}
+                    className={`relative flex items-center text-[13px] rounded-md pl-3 pr-2 py-1.5 transition-colors duration-120 ${
+                      isParentActive
+                        ? "text-primary font-semibold bg-primary-subtle"
+                        : "text-content-tertiary font-medium hover:text-content-primary hover:bg-alpha-black-05"
+                    }`}
+                  >
+                    {isParentActive && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-primary" />
+                    )}
+                    {item.label}
+                  </a>
+                  {/* 서브섹션 — 활성 부모일 때만 표시 */}
+                  {item.sub && isParentActive && (
+                    <div className="ml-3 mt-0.5 mb-1 pl-2 border-l border-subtle flex flex-col gap-px">
+                      {item.sub.map(sub => (
+                        <a
+                          key={sub.id}
+                          href={`#${sub.id}`}
+                          className={`text-[11px] rounded px-1.5 py-1 transition-colors duration-120 ${
+                            activeId === sub.id
+                              ? "text-primary font-semibold bg-primary-subtle"
+                              : "text-content-assistive hover:text-content-primary hover:bg-alpha-black-05"
+                          }`}
+                        >
+                          {sub.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </nav>
         </aside>
 
         {/* 본문 — 현재 탭만 보이게 (CSS는 globals.css 하단 .ds-tab-container 룰 참고) */}
-        <div className="ds-tab-container flex-1 min-w-0 flex flex-col gap-12" data-active-tab={activeTab}>
+        <div className="ds-tab-container flex-1 min-w-0 max-w-[1280px] flex flex-col gap-s64" data-active-tab={activeTab}>
 
-          {/* 01. Atomic Palette */}
+          {/* 색상 — 팔레트 + Semantic 통합 */}
           <Section
             tab="foundations"
-            id="colors-atomic"
-            title="색상 — Atomic Palette"
+            id="colors"
+            title="색상"
+            desc="Atomic 팔레트(전체 스케일) → Semantic 토큰(컴포넌트 실사용) 2단계 구조. 파란 숫자 = Semantic 연결 스텝."
           >
-            <div>
-              <SubLabel>Cool Neutral</SubLabel>
-              <div className="grid grid-cols-1 gap-2">
-                <TokenGroupCard {...ATOMIC_COOL_NEUTRAL} />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <SubLabel>Blue</SubLabel>
-                <TokenGroupCard {...ATOMIC_BLUE} />
-              </div>
-              <div>
-                <SubLabel>Red / Green / Amber / Orange</SubLabel>
-                <TokenGroupCard {...ATOMIC_STATUS} />
-              </div>
-            </div>
-          </Section>
-
-          {/* 02. Semantic Tokens */}
-          <Section
-            tab="foundations"
-            id="colors-semantic"
-            title="색상 — Semantic Tokens"
-          >
-            {/* Semantic Sync 안내 */}
-            <div className="rounded-lg border border-line-subtle bg-canvas-quaternary p-4 flex flex-col gap-3">
-              <div>
-                <p className="text-[12px] font-semibold text-content-primary mb-1">Semantic Sync — Figma 1:1 토큰 (마이그레이션 완료)</p>
-                <p className="text-[11px] text-content-assistive">bg-canvas-* / text-content-* / border-line-* 는 Figma 토큰명 직접 사용. shadcn 표준과 충돌 없음.</p>
-              </div>
+            {/* Atomic Palette 스트립 — 카드 없이 직접 노출 */}
+            <div id="colors-palette" className="scroll-mt-24 flex flex-col gap-4">
+              <SubLabel note="컴포넌트에서 직접 사용 금지 — 시맨틱 토큰을 통해서만 참조">전체 팔레트</SubLabel>
+              {PALETTE_FAMILIES.map(f => (
+                <ColorPalette key={f.family} name={f.name} family={f.family} steps={f.steps} semantic={f.semantic} />
+              ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <TokenGroupCard {...BG_GROUP} />
-              <TokenGroupCard {...BORDER_GROUP} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <TokenGroupCard {...TEXT_GROUP} />
-              <div className="flex flex-col gap-3">
-                <TokenGroupCard {...ACCENT_GROUP} />
-                <TokenGroupCard {...FILL_GROUP} />
-                <TokenGroupCard {...DIVIDER_GROUP} />
+            {/* Semantic Colors */}
+            <div id="colors-semantic" className="scroll-mt-24">
+              <SubLabel note="클릭하면 Tailwind 클래스명 복사">시맨틱 토큰</SubLabel>
+              {/* 컬럼 헤더 — 새 SemanticRow 구조 (3 영역) */}
+              <div className="flex items-center gap-4 px-4 py-3 mb-2 rounded-lg border border-subtle bg-canvas-quaternary">
+                <div className="h-12 w-16 rounded-md bg-primary shrink-0" />
+                <div className="flex flex-col flex-1 gap-1 min-w-0">
+                  <code className="text-body4-bold text-content-primary leading-none">bg-primary</code>
+                  <div className="flex items-center gap-2">
+                    <code className="text-[11px] text-content-disabled font-mono leading-none">--primary</code>
+                    <span className="text-content-disabled leading-none">·</span>
+                    <code className="text-[11px] font-mono text-content-tertiary leading-none">#3182f6</code>
+                    <span className="text-content-disabled leading-none">·</span>
+                    <span className="text-[12px] text-content-tertiary leading-none">메인 액션 버튼 · 강조 배경</span>
+                  </div>
+                </div>
+                <Copy className="h-4 w-4 text-content-disabled shrink-0" />
               </div>
-            </div>
-
-            <TokenGroupCard {...STATUS_GROUP} />
-
-            <div>
-              <SubLabel>Tint & Badge 색상</SubLabel>
-              <TokenGroupCard {...TINT_GROUP} />
+              <p className="text-[11px] text-content-assistive mb-2 px-1">↑ 컬럼 구조 예시 (실제 토큰 카드 구조와 동일) · 토큰 카드 클릭 시 클래스명 복사</p>
+              <div className="flex flex-col gap-2">
+                {SEMANTIC_COLORS.map(group => (
+                  <SemanticSection key={group.group} label={group.group}>
+                    {group.entries.map(e => <SemanticRow key={e.token + e.cssVar} {...e} />)}
+                  </SemanticSection>
+                ))}
+              </div>
             </div>
           </Section>
 
@@ -702,65 +784,187 @@ export default function DesignSystemPage() {
             id="typography"
             title="타이포그래피"
           >
-            <div>
-              <SubLabel>Reference Composite Tokens</SubLabel>
-              <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
-                <TypoRow token="text-h1-bold"      size="36px" weight="600" lh="46px" sample="보닥 플래너 for KB라이프" />
-                <TypoRow token="text-h2-bold"      size="34px" weight="600" lh="40px" sample="상담 진행 고객" />
-                <TypoRow token="text-h2"           size="34px" weight="500" lh="40px" sample="상담 진행 고객" />
-                <TypoRow token="text-h3-bold"      size="24px" weight="600" lh="36px" sample="재배정 타입 설정" />
-                <TypoRow token="text-h3"           size="24px" weight="500" lh="36px" sample="재배정 타입 설정" />
-                <TypoRow token="text-h4"           size="22px" weight="600" lh="32px" sample="배정 완료 DB" />
-                <TypoRow token="text-h5-bold"             size="20px" weight="600" lh="30px" sample="설계사 검색" />
-                <TypoRow token="text-h5-bold-underline"   size="20px" weight="600" lh="30px" sample="설계사 검색" tag="underline" />
-                <TypoRow token="text-h5-medium"           size="20px" weight="500" lh="30px" sample="설계사 검색" />
-                <TypoRow token="text-h5"                  size="20px" weight="400" lh="30px" sample="설계사 검색" />
-                <TypoRow token="text-body1-bold"          size="18px" weight="600" lh="28px" sample="고객명 · 담당 설계사" />
-                <TypoRow token="text-body1"               size="18px" weight="500" lh="28px" sample="고객명 · 담당 설계사" />
-                <TypoRow token="text-body2_bold"          size="16px" weight="600" lh="24px" sample="배정된 고객의 상담 상태를 관리합니다" />
-                <TypoRow token="text-body2_bold_underline" size="16px" weight="600" lh="24px" sample="배정된 고객의 상담 상태를 관리합니다" tag="underline" />
-                <TypoRow token="text-body2_medium"        size="16px" weight="500" lh="24px" sample="배정된 고객의 상담 상태를 관리합니다" />
-                <TypoRow token="text-body2_normal"        size="16px" weight="400" lh="24px" sample="배정된 고객의 상담 상태를 관리합니다" />
-                <TypoRow token="text-body2_reading"       size="16px" weight="400" lh="24px" ls="-1px" sample="배정된 고객의 상담 상태를 관리합니다" tag="reading" />
-                <TypoRow token="text-body3_bold"          size="14px" weight="600" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" />
-                <TypoRow token="text-body3_bold_underline" size="14px" weight="600" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" tag="underline" />
-                <TypoRow token="text-body3_medium"        size="14px" weight="500" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" />
-                <TypoRow token="text-body3_normal"        size="14px" weight="400" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" />
-                <TypoRow token="text-body3_underline"     size="14px" weight="400" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" tag="underline" />
-                <TypoRow token="text-body3_reading"       size="14px" weight="400" lh="24px" ls="-1px" sample="이민혁 · 010-1111-1111 · 2026.01.01" tag="reading" />
-                <TypoRow token="text-body4_bold"          size="13px" weight="600" lh="20px" sample="정상 · 계약 예정 · 상담 종료" />
-                <TypoRow token="text-body4_medium"        size="13px" weight="500" lh="18px" sample="정상 · 계약 예정 · 상담 종료" />
-                <TypoRow token="text-body4_normal"        size="13px" weight="400" lh="18px" sample="정상 · 계약 예정 · 상담 종료" />
-                <TypoRow token="text-body4_underline"     size="13px" weight="400" lh="18px" sample="정상 · 계약 예정 · 상담 종료" tag="underline" />
-                <TypoRow token="text-body4_reading"       size="13px" weight="400" lh="18px" ls="-1px" sample="정상 · 계약 예정 · 상담 종료" tag="reading" />
-                <TypoRow token="text-body5_bold"          size="12px" weight="600" lh="20px" sample="담당 설계사 · 상태" />
-                <TypoRow token="text-body5_medium"        size="12px" weight="500" lh="16px" sample="담당 설계사 · 상태" />
-                <TypoRow token="text-body5_normal"        size="12px" weight="400" lh="16px" sample="담당 설계사 · 상태" />
-                <TypoRow token="text-body5_underline"     size="12px" weight="400" lh="16px" sample="담당 설계사 · 상태" tag="underline" />
-                <TypoRow token="text-body5_reading"       size="12px" weight="400" lh="16px" ls="-1px" sample="담당 설계사 · 상태" tag="reading" />
-                <TypoRow token="text-caption_bold"        size="10px" weight="600" lh="16px" sample="레이블 · 구분" />
-                <TypoRow token="text-caption"             size="10px" weight="400" lh="16px" sample="레이블 · 구분" />
-                <TypoRow token="text-caption_underline"   size="10px" weight="400" lh="16px" sample="레이블 · 구분" tag="underline" />
+            {/* Atomic Tokens — Font Size / Weight / Tracking / Leading */}
+            <div id="typography-atomic" className="scroll-mt-24 flex flex-col gap-6">
+
+              {/* Font Size */}
+              <div>
+                <SubLabel note="Tailwind: font-size-10 ~ font-size-36">font-size</SubLabel>
+                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                  {/* 컬럼 헤더 */}
+                  <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-24 shrink-0">미리보기</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-52 shrink-0">클래스</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-10 shrink-0">px</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight flex-1">용도</span>
+                  </div>
+                  <div className="divide-y divide-divider-subtle">
+                    {[
+                      { token: "font-size-10", px: 10, usage: "레이블, 배지 텍스트" },
+                      { token: "font-size-12", px: 12, usage: "툴바, 보조 정보" },
+                      { token: "font-size-13", px: 13, usage: "테이블 셀, 필터 값" },
+                      { token: "font-size-14", px: 14, usage: "버튼 기본, 본문" },
+                      { token: "font-size-16", px: 16, usage: "카드 제목, 중요 텍스트" },
+                      { token: "font-size-18", px: 18, usage: "섹션 제목" },
+                      { token: "font-size-20", px: 20, usage: "카드 타이틀 (h5)" },
+                      { token: "font-size-22", px: 22, usage: "모달 제목 (h4)" },
+                      { token: "font-size-24", px: 24, usage: "페이지 소제목 (h3)" },
+                      { token: "font-size-28", px: 28, usage: "페이지 타이틀 (h2)" },
+                      { token: "font-size-34", px: 34, usage: "대형 타이틀" },
+                      { token: "font-size-36", px: 36, usage: "히어로 텍스트 (h1)" },
+                    ].map(({ token, px, usage }) => (
+                      <div key={token} className="flex items-center gap-4 px-4 py-2">
+                        <div className="w-24 shrink-0 overflow-hidden">
+                          <span className="text-content-primary font-medium leading-none block" style={{ fontSize: `${px}px` }}>Aa</span>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0 w-52">
+                          <code className="text-[12px] font-semibold text-primary bg-primary-subtle px-1.5 py-0.5 rounded">{token}</code>
+                        </div>
+                        <span className="text-[11px] font-semibold text-content-tertiary tabular-nums w-10 shrink-0">{px}px</span>
+                        <span className="text-body5-normal text-content-assistive">{usage}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Font Weight */}
+              <div>
+                <SubLabel note="Tailwind: font-weight-normal / font-weight-medium / font-weight-semibold">font-weight</SubLabel>
+                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                  {/* 컬럼 헤더 */}
+                  <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-48 shrink-0">미리보기</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-52 shrink-0">클래스</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-8 shrink-0">값</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight flex-1">용도</span>
+                  </div>
+                  <div className="divide-y divide-divider-subtle">
+                    {[
+                      { value: 400, cls: "font-weight-normal",   note: "본문, 보조 텍스트, placeholder" },
+                      { value: 500, cls: "font-weight-medium",   note: "버튼 라벨, 필터 값, 테이블 헤더" },
+                      { value: 600, cls: "font-weight-semibold", note: "타이틀, 강조, KPI 수치 — 이 프로젝트 주력 굵기" },
+                    ].map(w => (
+                      <div key={w.value} className="flex items-center gap-4 px-4 py-3">
+                        <span className={`${w.cls} text-content-primary text-[16px] w-48 shrink-0`} style={{ letterSpacing: "-0.5px" }}>
+                          보닥 플래너 Bonydak
+                        </span>
+                        <div className="flex items-center gap-2 shrink-0 w-52">
+                          <code className="text-[11px] font-semibold text-primary bg-primary-subtle px-1.5 py-0.5 rounded">{w.cls}</code>
+                        </div>
+                        <span className="text-[11px] font-semibold text-content-tertiary tabular-nums w-8 shrink-0">{w.value}</span>
+                        <span className="text-body5-normal text-content-assistive">{w.note}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Letter Spacing */}
+              <div>
+                <SubLabel note="Tailwind: font_letter_spacing-0 / font_letter_spacing-050 / font_letter_spacing-100">font_letter_spacing</SubLabel>
+                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                  {/* 컬럼 헤더 */}
+                  <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-48 shrink-0">미리보기</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-52 shrink-0">클래스</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-12 shrink-0">값</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight flex-1">용도</span>
+                  </div>
+                  <div className="divide-y divide-divider-subtle">
+                    {[
+                      { value: "0",      tw: "font_letter_spacing-0",   note: "shadcn 기본 — 이 프로젝트에서 거의 미사용" },
+                      { value: "-0.5px", tw: "font_letter_spacing-050", note: "composite 토큰 기본값 — 대부분의 UI 텍스트" },
+                      { value: "-1px",   tw: "font_letter_spacing-100", note: "긴 본문 가독성용" },
+                    ].map(item => (
+                      <div key={item.value} className="flex items-center gap-4 px-4 py-3">
+                        <span className="text-content-primary text-[16px] font-medium w-48 shrink-0" style={{ letterSpacing: item.value }}>
+                          보닥 플래너 Bonydak
+                        </span>
+                        <div className="flex items-center gap-2 shrink-0 w-52">
+                          <code className="text-[11px] font-semibold text-primary bg-primary-subtle px-1.5 py-0.5 rounded">{item.tw}</code>
+                        </div>
+                        <code className="text-[11px] font-semibold text-content-tertiary tabular-nums w-12 shrink-0 font-mono">{item.value}</code>
+                        <span className="text-body5-normal text-content-assistive">{item.note}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Line Height */}
+              <div>
+                <SubLabel note="Tailwind: line-height-120 ~ line-height-160">line-height</SubLabel>
+                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                  {/* 컬럼 헤더 */}
+                  <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-48 shrink-0">미리보기</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-52 shrink-0">클래스</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-8 shrink-0">값</span>
+                    <span className="text-[11px] font-semibold text-content-tertiary tracking-tight flex-1">용도</span>
+                  </div>
+                  <div className="divide-y divide-divider-subtle">
+                    {[
+                      { value: 1.2, tw: "line-height-120", note: "제목류 — 헤딩, 강조 숫자" },
+                      { value: 1.3, tw: "line-height-130", note: "서브타이틀" },
+                      { value: 1.4, tw: "line-height-140", note: "버튼, 배지, 짧은 레이블" },
+                      { value: 1.6, tw: "line-height-160", note: "본문 — composite 토큰 기본 행간" },
+                    ].map(item => (
+                      <div key={item.value} className="flex items-center gap-4 px-4 py-3">
+                        <div className="w-48 shrink-0">
+                          <span className="text-content-primary text-[13px] font-medium block" style={{ lineHeight: item.value, letterSpacing: "-0.5px" }}>
+                            보닥 플래너<br/>Bonydak Planner
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0 w-52">
+                          <code className="text-[11px] font-semibold text-primary bg-primary-subtle px-1.5 py-0.5 rounded">{item.tw}</code>
+                        </div>
+                        <code className="text-[11px] font-semibold text-content-tertiary tabular-nums w-8 shrink-0 font-mono">{item.value}</code>
+                        <span className="text-body5-normal text-content-assistive">{item.note}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div id="typography-composite" className="scroll-mt-24">
+              <SubLabel note="font-size / line-height / font-weight / letter-spacing 하나로 묶인 Semantic 클래스 — text-h* / text-body* / text-caption">Semantic 타이포 토큰</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <TypoRow token="text-h3-bold"    size="24px" weight="600" lh="36px" sample="재배정 타입 설정 — 상담 관리" />
+                <TypoRow token="text-h4"         size="22px" weight="600" lh="32px" sample="배정 완료 DB" />
+                <TypoRow token="text-h5-bold"    size="20px" weight="600" lh="30px" sample="설계사 검색" />
+                <TypoRow token="text-body3-bold"   size="14px" weight="600" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" />
+                <TypoRow token="text-body3-medium" size="14px" weight="500" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" />
+                <TypoRow token="text-body3-normal" size="14px" weight="400" lh="22px" sample="이민혁 · 010-1111-1111 · 2026.01.01" />
+                <TypoRow token="text-body4-bold"   size="13px" weight="600" lh="20px" sample="정상 · 계약 예정 · 상담 종료" />
+                <TypoRow token="text-body4-medium" size="13px" weight="500" lh="18px" sample="정상 · 계약 예정 · 상담 종료" />
+                <TypoRow token="text-body4-normal" size="13px" weight="400" lh="18px" sample="정상 · 계약 예정 · 상담 종료" />
+                <TypoRow token="text-body5-bold"   size="12px" weight="600" lh="20px" sample="담당 설계사 · 상태" />
+                <TypoRow token="text-body5-medium" size="12px" weight="500" lh="16px" sample="담당 설계사 · 상태" />
+                <TypoRow token="text-body5-normal" size="12px" weight="400" lh="16px" sample="담당 설계사 · 상태" />
+                <TypoRow token="text-caption"      size="10px" weight="400" lh="16px" sample="레이블 · 구분" />
               </div>
             </div>
 
           </Section>
 
-          {/* 04. 라운드 계층 */}
-          <Section tab="foundations" id="radius" title="라운드 계층">
+          {/* 04. 라운드 */}
+          <Section tab="foundations" id="radius" title="라운드">
 
             <div>
-              <SubLabel>Reference 토큰 시각화</SubLabel>
-              <div className="flex flex-wrap items-end gap-4">
+              <SubLabel>토큰 시각화</SubLabel>
+              <div className="flex flex-wrap items-end gap-6">
                 {RADIUS_REFERENCE.map(r => (
-                  <div key={r.cls} className="flex flex-col items-center gap-2">
+                  <div key={r.cls} className="flex flex-col items-center gap-2.5">
                     <div
-                      className="w-12 h-12 bg-primary-subtle border border-info"
+                      className="w-20 h-20 bg-primary-subtle border border-subtle"
                       style={{ borderRadius: r.px >= 9999 ? "9999px" : `${r.px}px` }}
                     />
                     <div className="text-center">
-                      <code className="text-[10px] text-primary block">{r.cls}</code>
-                      <p className="text-[10px] text-content-assistive">{r.px >= 9999 ? "pill" : `${r.px}px`}</p>
+                      <code className="text-body5-medium text-primary block">{r.cls}</code>
+                      <p className="text-caption text-content-assistive tabular-nums mt-0.5">{r.px >= 9999 ? "pill" : `${r.px}px`}</p>
                     </div>
                   </div>
                 ))}
@@ -769,7 +973,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>사용 계층 규칙</SubLabel>
-              <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -794,35 +998,67 @@ export default function DesignSystemPage() {
                 </table>
               </div>
             </div>
+          </Section>
+
+          {/* 05. Border */}
+          <Section tab="foundations" id="border" title="Border">
 
             <div>
-              <SubLabel>Border Width</SubLabel>
+              <SubLabel>보더 굵기</SubLabel>
               <div className="flex gap-6 flex-wrap items-end">
-                <div className="flex flex-col gap-2">
-                  <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">border-border05</code>
-                  <div className="h-10 w-28 rounded-md bg-canvas-primary" style={{ border: "0.5px solid var(--border-subtle)" }} />
-                  <p className="text-[11px] text-content-assistive">0.5px · 특수 케이스</p>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">border / border-border10</code>
-                  <div className="h-10 w-28 rounded-md bg-canvas-primary border border-line-subtle" />
-                  <p className="text-[11px] text-content-assistive">1px · 기본 (Tailwind border)</p>
-                </div>
+                {[
+                  { cls: "border-border05", px: "0.5px", note: "특수 케이스 — 얇은 구분이 필요한 경우", style: "0.5px solid var(--border-subtle)" },
+                  { cls: "border",          px: "1px",   note: "기본값 — Tailwind 표준 (border-border10 동일)", style: undefined },
+                ].map(b => (
+                  <div key={b.cls} className="flex flex-col gap-2">
+                    <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">{b.cls}</code>
+                    <div
+                      className={`h-16 w-32 rounded-md bg-canvas-primary ${b.style ? "" : "border border-subtle"}`}
+                      style={b.style ? { border: b.style } : undefined}
+                    />
+                    <p className="text-[11px] font-semibold text-content-tertiary">{b.px}</p>
+                    <p className="text-[11px] text-content-assistive max-w-[128px]">{b.note}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div>
-              <SubLabel>Shadow</SubLabel>
+              <SubLabel note="border-subtle / border-border / border-primary">보더 색상</SubLabel>
               <div className="flex gap-6 flex-wrap items-end">
+                {[
+                  { cls: "border-subtle",  cssVar: "--border-subtle",  hex: "#e5e8eb", note: "카드·컨테이너 기본 보더 (cool-neutral-200)" },
+                  { cls: "border-border",  cssVar: "--border",         hex: "#d1d6db", note: "shadcn 호환 보더 (cool-neutral-300)" },
+                  { cls: "border-primary", cssVar: "--primary",        hex: "#3182f6", note: "선택·포커스 상태" },
+                ].map(b => (
+                  <div key={b.cls} className="flex flex-col gap-2">
+                    <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">{b.cls}</code>
+                    <div className="h-16 w-32 rounded-md bg-canvas-primary" style={{ border: `2px solid var(${b.cssVar})` }} />
+                    <code className="text-[10px] font-mono text-content-assistive bg-fill-normal px-1.5 py-0.5 rounded w-fit">{b.hex}</code>
+                    <p className="text-[11px] text-content-assistive max-w-[128px]">{b.note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Section>
+
+          {/* 06. Shadow */}
+          <Section tab="foundations" id="shadow" title="Shadow">
+
+            <div>
+              <SubLabel>그림자 스케일</SubLabel>
+              <div className="flex gap-8 flex-wrap items-end">
                 {[
                   { cls: "shadow-xs",  note: "필터 컨트롤 · 소형 팝업" },
                   { cls: "shadow-sm",  note: "카드 팝업 · select" },
                   { cls: "shadow-md",  note: "모달 · 사이드바" },
+                  { cls: "shadow-lg",  note: "대형 팝오버" },
+                  { cls: "shadow-xl",  note: "드래그 중 카드" },
                 ].map(s => (
                   <div key={s.cls} className="flex flex-col gap-2">
                     <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded w-fit">{s.cls}</code>
-                    <div className={`h-10 w-28 rounded-md bg-canvas-primary ${s.cls}`} />
-                    <p className="text-[11px] text-content-assistive">{s.note}</p>
+                    <div className={`h-16 w-32 rounded-lg bg-canvas-primary ${s.cls}`} />
+                    <p className="text-[11px] text-content-assistive max-w-[128px]">{s.note}</p>
                   </div>
                 ))}
               </div>
@@ -833,14 +1069,14 @@ export default function DesignSystemPage() {
           <Section tab="foundations" id="spacing" title="스페이싱">
 
             <div>
-              <SubLabel>스케일 시각화</SubLabel>
+              <SubLabel note="Tailwind 네이티브 4px 그리드. 1 = 4px / 2 = 8px / 4 = 16px / 6 = 24px ...">토큰 스케일</SubLabel>
               <div className="flex items-end gap-3 flex-wrap">
                 {SPACING_SCALE.map(s => (
                   <div key={s.px} className="flex flex-col items-center gap-1.5">
-                    <div className="w-8 bg-primary-subtle border border-info rounded-sm" style={{ height: `${s.px}px` }} />
+                    <div className="w-10 bg-primary-subtle border border-subtle rounded-sm" style={{ height: `${Math.min(s.px, 60)}px` }} />
                     <div className="text-center">
                       <p className="text-[11px] font-semibold text-content-primary tabular-nums">{s.px}px</p>
-                      <p className="text-[10px] text-primary">{s.s}</p>
+                      <code className="text-[10px] text-primary block">{s.key}</code>
                     </div>
                   </div>
                 ))}
@@ -848,28 +1084,205 @@ export default function DesignSystemPage() {
             </div>
 
             <div>
-              <SubLabel>주요 사용 패턴</SubLabel>
-              <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+              <SubLabel note="Tailwind 네이티브 4px 그리드 — prefix(p / m / gap / px / pt 등)는 상황에 따라 자유 조합">사용 패턴</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="border-b border-divider-normal bg-fill-subtle">
-                      <th className="text-left py-2 px-3 font-semibold text-content-assistive w-44">용도</th>
-                      <th className="text-left py-2 px-3 font-semibold text-content-assistive w-36">클래스</th>
-                      <th className="text-left py-2 px-3 font-semibold text-content-assistive">설명</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-16">px</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-24">Tailwind 키</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary">사용 패턴</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {SPACING_PATTERNS.map(p => (
-                      <tr key={p.label} className="border-t border-divider-subtle">
-                        <td className="py-2.5 px-3 font-medium text-content-primary">{p.label}</td>
+                    {SPACING_SCALE.map(s => (
+                      <tr key={s.px} className="border-t border-divider-subtle">
+                        <td className="py-2.5 px-3 font-semibold tabular-nums text-content-primary">{s.px}</td>
                         <td className="py-2.5 px-3">
-                          <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{p.cls}</code>
+                          <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{s.key}</code>
                         </td>
-                        <td className="py-2.5 px-3 text-content-assistive">{p.note}</td>
+                        <td className="py-2.5 px-3 text-content-secondary">{s.usage}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </Section>
+
+          {/* 05-N. 내비게이션 */}
+          <Section
+            tab="components"
+            id="navigation"
+            title="내비게이션"
+            desc="앱 사이드바 + 상단 헤더 구조 목업. 실제 컴포넌트는 app-sidebar.tsx / header.tsx 참고."
+          >
+            {/* 사이드바 */}
+            <div>
+              <SubLabel note="app-sidebar.tsx — collapsible icon 모드">사이드바</SubLabel>
+              <ShadcnRef components={["sidebar", "collapsible"]} sourceFile="src/components/app-sidebar.tsx" />
+              <div className="flex gap-4 items-start">
+                {/* 목업 — collapsible 구조 */}
+                <div
+                  className="rounded-lg border border-subtle bg-canvas-tertiary overflow-hidden shrink-0"
+                  style={{ width: 160 }}
+                >
+                  {/* 로고 영역 */}
+                  <div className="px-3 py-3 border-b border-subtle bg-canvas-primary flex items-center gap-2">
+                    <div className="h-6 w-6 rounded-md bg-primary shrink-0" />
+                    <span className="text-[13px] font-semibold text-content-primary truncate">보닥 플래너</span>
+                  </div>
+                  {/* 배정 고객 관리 — 확장됨 */}
+                  <div className="px-2 pt-3 pb-1">
+                    {/* 그룹 트리거 */}
+                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1.5 mb-0.5 text-content-tertiary">
+                      <div className="h-3 w-3 rounded-sm bg-primary shrink-0" />
+                      <span className="text-[12px] truncate flex-1">배정 고객 관리</span>
+                      <svg width="10" height="10" viewBox="0 0 10 10" className="shrink-0 text-content-disabled" fill="none"><path d="M2.5 4L5 6.5L7.5 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                    {/* 서브메뉴 — 확장 상태 */}
+                    <div className="ml-4 flex flex-col gap-0.5">
+                      {[
+                        { label: "상담 진행 고객", active: true },
+                        { label: "계약 예정 고객", active: false },
+                        { label: "상담 종료 고객", active: false },
+                      ].map(item => (
+                        <div
+                          key={item.label}
+                          className={`flex items-center rounded-md px-2 py-1.5 ${
+                            item.active
+                              ? "bg-primary-subtle text-primary font-semibold"
+                              : "text-content-tertiary"
+                          }`}
+                        >
+                          <span className="text-[11px] truncate">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* DB 배정 관리 — 접힘 */}
+                  <div className="px-2 pb-1">
+                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1.5 mb-0.5 text-content-tertiary">
+                      <div className="h-3 w-3 rounded-sm bg-fill-normal shrink-0" />
+                      <span className="text-[12px] truncate flex-1">DB 배정 관리</span>
+                      <svg width="10" height="10" viewBox="0 0 10 10" className="shrink-0 text-content-disabled" fill="none"><path d="M4 2.5L6.5 5L4 7.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                  </div>
+                  {/* 배정 설정 관리 — 접힘 */}
+                  <div className="px-2 pb-1">
+                    <div className="flex items-center gap-1.5 rounded-md px-2 py-1.5 mb-0.5 text-content-tertiary">
+                      <div className="h-3 w-3 rounded-sm bg-fill-normal shrink-0" />
+                      <span className="text-[12px] truncate flex-1">배정 설정 관리</span>
+                      <svg width="10" height="10" viewBox="0 0 10 10" className="shrink-0 text-content-disabled" fill="none"><path d="M4 2.5L6.5 5L4 7.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                  </div>
+                  {/* 하단 */}
+                  <div className="px-2 pt-1 pb-3 mt-1 border-t border-subtle">
+                    {["마이페이지", "설정"].map(label => (
+                      <div key={label} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-content-quaternary">
+                        <span className="text-[12px]">{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* 토큰 설명 */}
+                <div className="flex-1 min-w-0">
+                  <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                    <table className="w-full text-[12px]">
+                      <thead>
+                        <tr className="border-b border-divider-normal bg-fill-subtle">
+                          <th className="text-left py-2 px-3 font-semibold text-content-assistive">상태</th>
+                          <th className="text-left py-2 px-3 font-semibold text-content-assistive">클래스</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { state: "활성 서브메뉴",           cls: "bg-primary-subtle text-primary font-semibold  (= blue-50 #e8f3ff)" },
+                          { state: "비활성 서브메뉴",          cls: "text-content-quaternary hover:bg-alpha-black-05" },
+                          { state: "그룹 트리거 (활성 자식)",  cls: "text-content-quaternary — 아이콘만 활성 표시" },
+                          { state: "hover 오버레이",           cls: "bg-alpha-black-05 (5% 불투명 다크 오버레이)" },
+                          { state: "컨테이너",                 cls: "w-[160px] bg-canvas-tertiary border-r border-subtle" },
+                        ].map(r => (
+                          <tr key={r.state} className="border-t border-divider-subtle">
+                            <td className="py-2.5 px-3 text-content-primary font-medium whitespace-nowrap">{r.state}</td>
+                            <td className="py-2.5 px-3">
+                              <code className="text-[10px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{r.cls}</code>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 헤더 */}
+            <div>
+              <SubLabel note="header.tsx — h-12 / bg-canvas-tertiary / border-b border-divider-normal">헤더</SubLabel>
+              <ShadcnRef components={["sidebar", "button", "avatar"]} sourceFile="src/components/header.tsx" />
+              <div className="flex flex-col gap-4">
+                {/* 목업 — 실제 header.tsx와 동기화 (h-12, bg-canvas-tertiary, border-divider-normal) */}
+                <div className="rounded-lg border border-subtle overflow-hidden">
+                  <div className="h-12 flex items-center justify-between border-b border-divider-normal bg-canvas-tertiary">
+                    {/* 좌: 토글 + 보닥 플래너 + 구분선 + KB라이프 로고 */}
+                    <div className="flex items-center">
+                      {/* 사이드바 아이콘 컬럼 너비(4rem) 안에 토글 */}
+                      <div className="flex w-16 shrink-0 items-center justify-center">
+                        <button className="h-8 w-8 rounded-md flex items-center justify-center text-content-quaternary hover:bg-canvas-quaternary transition-colors">
+                          <Menu className="h-4 w-4" strokeWidth={2} />
+                        </button>
+                      </div>
+                      <span className="font-size-16 font-weight-bold font_letter_spacing-050 text-sidebar-foreground mr-2">보닥 플래너</span>
+                      <div className="h-4 w-px bg-border shrink-0 mr-2" />
+                      <span className="text-[10px] text-content-disabled font-medium">[KB라이프 SVG · h:16px]</span>
+                    </div>
+                    {/* 우: 세션 + 연장 + 구분선 + 프로필 */}
+                    <div className="flex items-center gap-2 pr-4">
+                      <span className="font-medium text-xs tabular-nums tracking-tighter text-content-assistive">세션 10:00</span>
+                      <Button variant="outline" size="xs" className="text-xs">연장</Button>
+                      <div className="h-4 w-px bg-border mx-0.5 shrink-0" />
+                      <div className="h-7 w-7 rounded-full bg-canvas-quaternary flex items-center justify-center cursor-pointer">
+                        <User className="h-3.5 w-3.5 text-content-assistive" />
+                      </div>
+                      <div className="h-7 w-7 rounded-full bg-primary-subtle border border-primary flex items-center justify-center ml-1">
+                        <User className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                    </div>
+                  </div>
+                  {/* 내용 플레이스홀더 */}
+                  <div className="h-16 flex items-center justify-center bg-canvas-tertiary">
+                    <p className="text-body5-normal text-content-assistive">페이지 콘텐츠</p>
+                  </div>
+                </div>
+                {/* 토큰 */}
+                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                  <table className="w-full text-[12px]">
+                    <thead>
+                      <tr className="border-b border-divider-normal bg-fill-subtle">
+                        <th className="text-left py-2 px-3 font-semibold text-content-assistive">속성</th>
+                        <th className="text-left py-2 px-3 font-semibold text-content-assistive">값</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { attr: "높이",        val: "h-12 (48px)" },
+                        { attr: "배경",        val: "bg-canvas-tertiary" },
+                        { attr: "하단 선",     val: "border-b border-divider-normal" },
+                        { attr: "좌측 영역",   val: "토글(w-16) + 보닥 플래너 + 구분선 + KB라이프 SVG" },
+                        { attr: "우측 영역",   val: "세션 + 연장 Button + 구분선 + Avatar(h-7)" },
+                        { attr: "shadcn 컴포넌트", val: "useSidebar / Button / Avatar / AvatarFallback" },
+                      ].map(r => (
+                        <tr key={r.attr} className="border-t border-divider-subtle">
+                          <td className="py-2.5 px-3 text-content-primary font-medium">{r.attr}</td>
+                          <td className="py-2.5 px-3">
+                            <code className="text-[10px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{r.val}</code>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </Section>
@@ -879,14 +1292,14 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>기본 카드</SubLabel>
-              <div className="bg-canvas-primary rounded-lg border border-line-subtle">
+              <div className="bg-canvas-primary rounded-lg border border-subtle">
                 <div className="px-6 pt-5 pb-3">
-                  <p className="text-[14px] font-semibold text-content-primary">카드 타이틀</p>
-                  <p className="text-[12px] text-content-assistive mt-0.5">bg-canvas-primary · rounded-lg · border-line-subtle</p>
+                  <p className="text-body3-bold text-content-primary">카드 타이틀</p>
+                  <p className="text-body5-normal text-content-assistive mt-0.5">bg-canvas-primary · rounded-lg · border-subtle</p>
                 </div>
                 <div className="mx-6 h-px bg-divider-subtle" />
                 <div className="px-6 py-4">
-                  <p className="text-[13px] text-content-secondary">
+                  <p className="text-body4-normal text-content-secondary">
                     내부 구분선:{" "}
                     <code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">mx-6 h-px bg-divider-subtle</code>
                     {" "}— 좌우 mx-6 인셋 필수
@@ -897,7 +1310,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>KPI 타일 카드</SubLabel>
-              <div className="bg-canvas-primary rounded-lg py-5 border border-line-subtle">
+              <div className="bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle">
                 <div className="flex items-stretch">
                   {[
                     { label: "전체", value: "100", unit: "명" },
@@ -907,10 +1320,10 @@ export default function DesignSystemPage() {
                   ].map((stat, i) => (
                     <div key={stat.label} className="flex-1 px-6 relative">
                       {i > 0 && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />}
-                      <p className="text-[12px] font-medium text-content-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">{stat.label}</p>
+                      <p className="text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap">{stat.label}</p>
                       <div className="flex items-baseline gap-0.5">
-                        <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{stat.value}</span>
-                        <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{stat.unit}</span>
+                        <span className="text-h3-bold tabular-nums text-content-primary">{stat.value}</span>
+                        <span className="text-h3-bold tabular-nums text-content-primary">{stat.unit}</span>
                       </div>
                     </div>
                   ))}
@@ -927,8 +1340,8 @@ export default function DesignSystemPage() {
           <Section tab="components" id="buttons" title="버튼">
 
             <div>
-              <SubLabel>Variant × Size 매트릭스</SubLabel>
-              <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+              <SubLabel>변형 × 크기 매트릭스</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-[12px]">
                     <thead>
@@ -964,11 +1377,26 @@ export default function DesignSystemPage() {
             </div>
 
             <div>
+              <SubLabel>아이콘 + 텍스트 조합</SubLabel>
+              <div className="flex flex-wrap gap-3 items-end p-4 bg-canvas-primary rounded-lg border border-subtle">
+                {BUTTON_VARIANTS.map(v => (
+                  <Button key={v.label} variant={v.variant}>
+                    <Search />
+                    버튼
+                  </Button>
+                ))}
+              </div>
+              <p className="text-[11px] text-content-assistive mt-1.5">
+                아이콘은 버튼 텍스트 앞에 배치. data-[icon=inline-start] 자동 좌측 패딩 조정.
+              </p>
+            </div>
+
+            <div>
               <SubLabel>아이콘 버튼 사이즈</SubLabel>
               <div className="flex items-end gap-4">
                 {ICON_SIZES.map(s => (
                   <div key={s.size} className="flex flex-col items-center gap-2">
-                    <Button variant="outline" size={s.size} className="border-line-subtle">
+                    <Button variant="outline" size={s.size} className="border-subtle">
                       <Search />
                     </Button>
                     <div className="text-center">
@@ -981,8 +1409,8 @@ export default function DesignSystemPage() {
             </div>
 
             <div>
-              <SubLabel>DS Migration — shadcn → 이 프로젝트</SubLabel>
-              <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+              <SubLabel>shadcn 마이그레이션</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-[11px]">
                     <thead>
@@ -1038,9 +1466,10 @@ export default function DesignSystemPage() {
               <SubLabel>SearchFilter 라이브 데모</SubLabel>
               <SearchFilter
                 extraSelects={[{
+                  label: "상태",
                   defaultValue: "all",
                   options: [
-                    { value: "all", label: "상태 전체" },
+                    { value: "all", label: "전체" },
                     { value: "active", label: "진행중" },
                     { value: "done", label: "완료" },
                   ],
@@ -1051,12 +1480,12 @@ export default function DesignSystemPage() {
             <div>
               <SubLabel>개별 컨트롤 패턴</SubLabel>
               <div className="grid grid-cols-3 gap-4">
-                <ControlSample label="Select — size='sm' border-line-subtle bg-fill-filter">
+                <ControlSample label="Select — size='sm' border-subtle bg-fill-filter">
                   <Select defaultValue="all">
-                    <SelectTrigger size="sm" className="border-line-subtle bg-fill-filter gap-1.5 text-content-primary">
+                    <SelectTrigger size="sm" className="border-subtle bg-fill-filter gap-1.5 text-content-primary">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="rounded-md border-line-subtle text-[13px]">
+                    <SelectContent className="rounded-md border-subtle text-body4-normal">
                       <SelectItem value="all">상태 전체</SelectItem>
                       <SelectItem value="active">진행중</SelectItem>
                     </SelectContent>
@@ -1076,18 +1505,18 @@ export default function DesignSystemPage() {
               </div>
               <p className="text-[11px] text-content-assistive mt-2">
                 컨트롤 공통:{" "}
-                <code className="text-[11px] bg-primary-subtle text-primary px-1 py-0.5 rounded">bg-fill-filter border-line-subtle shadow-none rounded-md h-8</code>
+                <code className="text-[11px] bg-primary-subtle text-primary px-1 py-0.5 rounded">bg-fill-filter border-subtle shadow-none rounded-md h-8</code>
                 {" "}· 초기화는 아이콘 버튼 금지
               </p>
             </div>
 
             <div>
-              <SubLabel>DS Migration — Input / Select</SubLabel>
+              <SubLabel>Input / Select 마이그레이션</SubLabel>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <p className="text-[11px] font-semibold text-content-primary mb-2">Input</p>
                   <MigrationTable rows={[
-                    { from: "border-input (1px, border-line-primary)",  to: 'variant="filter" → border-line-subtle',     reason: "필터용 연한 보더" },
+                    { from: "border-input (1px, border-border)",       to: 'variant="filter" → border-subtle',     reason: "필터용 연한 보더" },
                     { from: "bg-transparent",                      to: 'variant="filter" → bg-fill-filter',   reason: "페이지 bg-canvas-tertiary 위 대비" },
                     { from: "text-content-assistive (placeholder)", to: "placeholder:text-content-assistive",          reason: "assistive = 우리 시스템 placeholder 토큰" },
                   ]} />
@@ -1096,7 +1525,7 @@ export default function DesignSystemPage() {
                   <p className="text-[11px] font-semibold text-content-primary mb-2">Select</p>
                   <MigrationTable rows={[
                     { from: "bg-primary (shadcn 서브틀 hover)",     to: "hover:bg-blue-tint + border-info + text-primary", reason: "brand 컬러 명시적 hover — named atomic 참조 (alpha modifier 금지)" },
-                    { from: "bg-popover border-border (Content)",  to: "border-line-subtle className 추가",        reason: "필터용 보더를 subtle로 오버라이드" },
+                    { from: "bg-popover border-border (Content)",  to: "border-subtle className 추가",        reason: "필터용 보더를 subtle로 오버라이드" },
                     { from: "bg-background (Trigger 기본)",        to: "bg-fill-filter className 추가",       reason: "필터용 흰 배경 명시" },
                   ]} />
                 </div>
@@ -1111,10 +1540,10 @@ export default function DesignSystemPage() {
                     title: "패턴 A — 카드 헤더 내부",
                     pages: "/ (홈) · /pending",
                     sketch: (
-                      <div className="rounded-md border border-line-subtle bg-canvas-primary">
+                      <div className="rounded-md border border-subtle bg-canvas-primary">
                         <div className="px-3 py-2 flex items-center justify-between border-b border-divider-subtle">
                           <p className="text-[11px] font-semibold text-content-primary">카드 타이틀</p>
-                          <div className="h-6 w-20 rounded bg-fill-filter border border-line-subtle" />
+                          <div className="h-6 w-20 rounded bg-fill-filter border border-subtle" />
                         </div>
                         <div className="h-12 flex items-center justify-center">
                           <p className="text-[11px] text-content-assistive">테이블</p>
@@ -1127,18 +1556,18 @@ export default function DesignSystemPage() {
                     pages: "/completed · /db/* · /management/*",
                     sketch: (
                       <div className="flex flex-col gap-2">
-                        <div className="rounded-md border border-line-subtle bg-canvas-primary px-3 py-2 flex gap-2">
-                          <div className="h-6 w-16 rounded bg-fill-filter border border-line-subtle" />
-                          <div className="h-6 w-20 rounded bg-fill-filter border border-line-subtle" />
+                        <div className="rounded-md border border-subtle bg-canvas-primary px-3 py-2 flex gap-2">
+                          <div className="h-6 w-16 rounded bg-fill-filter border border-subtle" />
+                          <div className="h-6 w-20 rounded bg-fill-filter border border-subtle" />
                         </div>
-                        <div className="rounded-md border border-line-subtle bg-canvas-primary h-12 flex items-center justify-center">
+                        <div className="rounded-md border border-subtle bg-canvas-primary h-12 flex items-center justify-center">
                           <p className="text-[11px] text-content-assistive">테이블</p>
                         </div>
                       </div>
                     ),
                   },
                 ].map(p => (
-                  <div key={p.title} className="rounded-lg border border-line-subtle bg-canvas-primary p-3">
+                  <div key={p.title} className="rounded-lg border border-subtle bg-canvas-primary p-3">
                     <p className="text-[11px] font-semibold text-content-primary mb-2">{p.title}</p>
                     {p.sketch}
                     <p className="text-[10px] text-content-assistive mt-2">{p.pages}</p>
@@ -1150,7 +1579,7 @@ export default function DesignSystemPage() {
 
           {/* 09. 테이블 */}
           <Section tab="patterns" id="tables" title="테이블">
-            <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="border-b border-divider-normal hover:bg-transparent">
@@ -1171,14 +1600,14 @@ export default function DesignSystemPage() {
                       <TableCell className="text-left">본사 &gt; 사업단 1 &gt; 지점 1</TableCell>
                       <TableCell className="text-left num-cell">2026.01.01</TableCell>
                       <TableCell className="text-left">
-                        <Badge variant="pill-success">정상</Badge>
+                        <Badge variant="tint-success">정상</Badge>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
-            <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
               <table className="w-full text-[12px]">
                 <thead>
                   <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1211,85 +1640,38 @@ export default function DesignSystemPage() {
 
           {/* 10. 배지 */}
           <Section tab="components" id="badges" title="배지">
-            <div className="grid grid-cols-3 gap-6">
-              <div>
-                <SubLabel>pill — 활성·진행 상태</SubLabel>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="pill-success">정상</Badge>
-                  <Badge variant="pill-warning">일시제한</Badge>
-                  <Badge variant="pill-danger">실패</Badge>
-                  <Badge variant="pill-neutral">대기</Badge>
-                </div>
-                <div className="mt-3 flex flex-col gap-1">
-                  {[
-                    { v: "pill-success", desc: "border-green-600/30" },
-                    { v: "pill-warning", desc: "border-amber-500/40" },
-                    { v: "pill-danger",  desc: "border-red-500/40" },
-                    { v: "pill-neutral", desc: "border-muted-foreground/25" },
-                  ].map(b => (
-                    <div key={b.v} className="flex items-center gap-2">
-                      <code className="text-[10px] text-primary">{b.v}</code>
-                      <span className="text-[10px] text-content-assistive">{b.desc}</span>
-                    </div>
-                  ))}
-                </div>
+            <div>
+              <SubLabel>태그 배지 — 상태·분류 (tint 스타일)</SubLabel>
+              <div className="flex flex-wrap gap-2 mb-3">
+                <Badge variant="tint-success">계약 완료</Badge>
+                <Badge variant="tint-warning">상담 거절</Badge>
+                <Badge variant="tint-danger">실패</Badge>
+                <Badge variant="tint-blue">진행 예정</Badge>
+                <Badge variant="tint-neutral">종료</Badge>
+                <Badge variant="tint-muted">보류</Badge>
               </div>
-              <div>
-                <SubLabel>tint — 종결·분류 상태</SubLabel>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="tint-success">계약 완료</Badge>
-                  <Badge variant="tint-warning">상담 거절</Badge>
-                  <Badge variant="tint-danger">실패</Badge>
-                  <Badge variant="tint-neutral">종료</Badge>
-                  <Badge variant="tint-blue">진행 예정</Badge>
-                  <Badge variant="tint-muted">보류</Badge>
-                </div>
-                <div className="mt-3 flex flex-col gap-1">
-                  {[
-                    { v: "tint-success", desc: "green-50 / green-450" },
-                    { v: "tint-warning", desc: "amber-50 / amber-700" },
-                    { v: "tint-danger",  desc: "red-50 / red-600" },
-                    { v: "tint-neutral", desc: "bg-subtle / text-content-assistive" },
-                    { v: "tint-blue",    desc: "accent-bg-blue / accent-fg-blue" },
-                    { v: "tint-muted",   desc: "bg-canvas-quaternary / text-content-quaternary" },
-                  ].map(b => (
-                    <div key={b.v} className="flex items-center gap-2">
-                      <code className="text-[10px] text-primary">{b.v}</code>
-                      <span className="text-[10px] text-content-assistive">{b.desc}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="flex flex-col gap-1">
+                {[
+                  { v: "tint-success", desc: "green-50 bg / green-450 text — 성공·완료" },
+                  { v: "tint-warning", desc: "amber-50 bg / amber-700 text — 경고·거절" },
+                  { v: "tint-danger",  desc: "red-50 bg / red-600 text — 실패·긴급" },
+                  { v: "tint-blue",    desc: "blue-50 bg / blue-700 text — 진행·신규" },
+                  { v: "tint-neutral", desc: "bg-subtle / text-content-assistive — 종료·보류" },
+                  { v: "tint-muted",   desc: "bg-canvas-quaternary / text-content-quaternary" },
+                ].map(b => (
+                  <div key={b.v} className="flex items-center gap-2">
+                    <code className="text-[10px] text-primary w-24 shrink-0">{b.v}</code>
+                    <span className="text-[10px] text-content-assistive">{b.desc}</span>
+                  </div>
+                ))}
               </div>
-              <div>
-                <SubLabel>tag — 컴팩트 태그</SubLabel>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="tint-danger">긴급</Badge>
-                  <Badge variant="tint-blue">신규</Badge>
-                  <Badge variant="tint-success">완료</Badge>
-                  <Badge variant="tint-neutral">보류</Badge>
-                  <Badge variant="tag-dark">VIP</Badge>
-                </div>
-                <p className="text-[10px] text-content-assistive mt-2">칸반 태그는 <code className="text-primary">tint-*</code> variant 우선 사용. <code className="text-content-assistive">tag-dark</code>(다크 강조)만 별도 유지.</p>
-                <div className="mt-2 flex flex-col gap-1">
-                  {[
-                    { v: "tint-danger",  desc: "긴급 · 실패" },
-                    { v: "tint-blue",    desc: "신규 · 진행 예정" },
-                    { v: "tint-success", desc: "완료 · 계약" },
-                    { v: "tint-warning", desc: "주의 · 거절" },
-                    { v: "tint-neutral", desc: "보류 · 종료" },
-                    { v: "tag-dark",     desc: "VIP · 다크 강조 전용" },
-                  ].map(b => (
-                    <div key={b.v} className="flex items-center gap-2">
-                      <code className="text-[10px] text-primary">{b.v}</code>
-                      <span className="text-[10px] text-content-assistive">{b.desc}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <p className="text-[11px] text-content-assistive mt-2">
+                <span className="text-content-primary font-medium">pill-* variants 제거</span> — tint-* (= tag) 스타일로 통일. 칸반 태그도 tint-* 사용.
+              </p>
             </div>
 
             <div>
-              <SubLabel>Base Variant</SubLabel>
+              <SubLabel>기본 변형 (shadcn 표준)</SubLabel>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="default">default (bg-primary)</Badge>
                 <Badge variant="secondary">secondary</Badge>
@@ -1301,23 +1683,22 @@ export default function DesignSystemPage() {
             </div>
 
             <div>
-              <SubLabel>DS Migration — shadcn → 이 프로젝트</SubLabel>
+              <SubLabel>shadcn 마이그레이션</SubLabel>
               <MigrationTable rows={[
                 { from: "bg-canvas-primary text-inverse-primary (default variant)", to: "bg-primary text-inverse-primary",                     reason: "primary SWAP — brand badge = accent" },
-                { from: "—",                                                    to: "pill-* variants 추가",                                  reason: "활성/진행 상태용 outline pill (shadcn에 없음)" },
-                { from: "—",                                                    to: "tint-* variants 추가",                                  reason: "종결/분류용 배경 fill (badge-tint-* 전용 토큰)" },
-                { from: "—",                                                    to: "bg-badge-tint-success-bg / text-badge-tint-success-fg", reason: "시맨틱 배지 색상 — globals.css에 전용 변수로 분리" },
-                { from: "bg-primary text-inverse-primary (shadcn secondary)", to: "bg-canvas-secondary text-secondary-foreground",               reason: "shadcn secondary = 우리 accent와 다른 값" },
+                { from: "—",                                                        to: "tint-* variants 추가",                                  reason: "종결/분류용 배경 fill (badge-tint-* 전용 토큰)" },
+                { from: "—",                                                        to: "bg-badge-tint-success-bg / text-badge-tint-success-fg", reason: "시맨틱 배지 색상 — globals.css에 전용 변수로 분리" },
+                { from: "bg-primary text-inverse-primary (shadcn secondary)",       to: "bg-canvas-secondary text-secondary-foreground",          reason: "shadcn secondary = 우리 accent와 다른 값" },
               ]} />
             </div>
           </Section>
 
           {/* 11. 페이지네이션 */}
           <Section tab="components" id="pagination" title="페이지네이션">
-            <div className="rounded-lg border border-line-subtle bg-canvas-primary">
+            <div className="rounded-lg border border-subtle bg-canvas-primary">
               <PaginationDemo />
             </div>
-            <div className="rounded-lg border border-line-subtle bg-canvas-primary overflow-hidden">
+            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
               <table className="w-full text-[12px]">
                 <thead>
                   <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1342,28 +1723,28 @@ export default function DesignSystemPage() {
 
           {/* 12. 차트 */}
           <Section tab="code" id="charts" title="차트 팔레트">
-            <div className="flex gap-3 items-end">
-              {[
-                { name: "chart-1", note: "1순위 · 주지표" },
-                { name: "chart-2", note: "2순위" },
-                { name: "chart-3", note: "3순위" },
-                { name: "chart-4", note: "4순위" },
-                { name: "chart-5", note: "5순위 · 보조지표" },
-              ].map((c, i) => (
-                <div key={c.name} className="flex flex-col items-center gap-1.5 flex-1">
-                  <div
-                    className={`w-full rounded-md bg-[var(--${c.name})]`}
-                    style={{ height: `${56 - i * 4}px` }}
-                  />
-                  <code className="text-[10px] text-primary text-center">{c.name}</code>
-                  <p className="text-[10px] text-content-assistive text-center">{c.note}</p>
-                </div>
-              ))}
+            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="flex gap-4 items-end px-6 py-5">
+                {CHART_COLORS.map((c, i) => (
+                  <div key={c.name} className="flex flex-col items-center gap-2 flex-1">
+                    <div
+                      className="w-full rounded-md"
+                      style={{ height: `${60 - i * 6}px`, backgroundColor: `var(--${c.name})` }}
+                    />
+                    <div className="text-center">
+                      <code className="text-[11px] font-medium text-primary block">{c.name}</code>
+                      <p className="text-[10px] text-content-assistive">{c.note}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="px-6 py-3 border-t border-divider-subtle bg-fill-subtle">
+                <p className="text-[11px] text-content-assistive">
+                  chart-1 = blue-500 (#3182f6) · chart-2~5 = violet-500/550/600/650 ·
+                  Area 차트 3선: chart-1 / chart-3 / chart-5 순서
+                </p>
+              </div>
             </div>
-            <p className="text-[11px] text-content-assistive">
-              Area 차트 3선: chart-1(시도율) / chart-3(성공율) / chart-5(유효율) ·
-              바 차트: chart-1 → chart-5 순서
-            </p>
           </Section>
 
           {/* 13. 레이아웃 */}
@@ -1380,15 +1761,15 @@ export default function DesignSystemPage() {
   </div>
 </div>`,
                 sketch: (
-                  <div className="bg-canvas-tertiary rounded-md border border-line-subtle p-2 flex gap-2 h-28">
-                    <div className="w-16 bg-fill-subtle rounded border border-line-subtle flex items-center justify-center shrink-0">
+                  <div className="bg-canvas-tertiary rounded-md border border-subtle p-2 flex gap-2 h-28">
+                    <div className="w-16 bg-fill-subtle rounded border border-subtle flex items-center justify-center shrink-0">
                       <p className="text-[9px] text-content-assistive font-medium">Tree</p>
                     </div>
                     <div className="flex-1 flex flex-col gap-1.5">
-                      <div className="h-7 bg-canvas-primary rounded border border-line-subtle flex items-center px-2">
+                      <div className="h-7 bg-canvas-primary rounded border border-subtle flex items-center px-2">
                         <p className="text-[9px] text-content-assistive">필터 (mb-4)</p>
                       </div>
-                      <div className="flex-1 bg-canvas-primary rounded border border-line-subtle flex items-center px-2">
+                      <div className="flex-1 bg-canvas-primary rounded border border-subtle flex items-center px-2">
                         <p className="text-[9px] text-content-assistive">테이블</p>
                       </div>
                     </div>
@@ -1405,15 +1786,15 @@ export default function DesignSystemPage() {
   </div>
 </div>`,
                 sketch: (
-                  <div className="bg-canvas-tertiary rounded-md border border-line-subtle p-2 flex gap-2 h-28">
-                    <div className="w-16 bg-fill-subtle rounded border border-line-subtle flex items-center justify-center shrink-0">
+                  <div className="bg-canvas-tertiary rounded-md border border-subtle p-2 flex gap-2 h-28">
+                    <div className="w-16 bg-fill-subtle rounded border border-subtle flex items-center justify-center shrink-0">
                       <p className="text-[9px] text-content-assistive font-medium">Tree</p>
                     </div>
                     <div className="flex-1 flex flex-col gap-1.5">
-                      <div className="flex-1 bg-canvas-primary rounded border border-line-subtle flex items-center px-2">
+                      <div className="flex-1 bg-canvas-primary rounded border border-subtle flex items-center px-2">
                         <p className="text-[9px] text-content-assistive">카드 1 (KPI/필터 내장)</p>
                       </div>
-                      <div className="flex-1 bg-canvas-primary rounded border border-line-subtle flex items-center px-2">
+                      <div className="flex-1 bg-canvas-primary rounded border border-subtle flex items-center px-2">
                         <p className="text-[9px] text-content-assistive">카드 2</p>
                       </div>
                     </div>
@@ -1427,8 +1808,8 @@ export default function DesignSystemPage() {
   <XxxTable />
 </div>`,
                 sketch: (
-                  <div className="bg-canvas-tertiary rounded-md border border-line-subtle p-2 h-20">
-                    <div className="h-full bg-canvas-primary rounded border border-line-subtle flex items-center px-2">
+                  <div className="bg-canvas-tertiary rounded-md border border-subtle p-2 h-20">
+                    <div className="h-full bg-canvas-primary rounded border border-subtle flex items-center px-2">
                       <p className="text-[9px] text-content-assistive">테이블 또는 설정 카드 (전체 너비)</p>
                     </div>
                   </div>
@@ -1439,7 +1820,7 @@ export default function DesignSystemPage() {
                 <SubLabel note={p.pages}>{p.title}</SubLabel>
                 <div className="grid grid-cols-2 gap-3">
                   {p.sketch}
-                  <div className="rounded-lg border border-line-subtle bg-canvas-primary p-3 overflow-x-auto">
+                  <div className="rounded-lg border border-subtle bg-canvas-primary p-3 overflow-x-auto">
                     <pre className="text-[10px] text-content-tertiary font-mono leading-relaxed">{p.code}</pre>
                   </div>
                 </div>
@@ -1461,8 +1842,8 @@ export default function DesignSystemPage() {
                     key={c.name}
                     className={`flex items-center justify-between rounded-lg border px-3 py-2 ${
                       c.note === "설치됨 (미사용)"
-                        ? "border-line-subtle bg-fill-subtle"
-                        : "border-line-subtle bg-canvas-primary"
+                        ? "border-subtle bg-fill-subtle"
+                        : "border-subtle bg-canvas-primary"
                     }`}
                   >
                     <div>
@@ -1488,14 +1869,13 @@ export default function DesignSystemPage() {
               </div>
             </div>
 
-            <div className="rounded-lg border border-line-subtle bg-fill-subtle p-4">
+            <div className="rounded-lg border border-subtle bg-fill-subtle p-4">
               <p className="text-[12px] font-semibold text-content-primary mb-1">새 컴포넌트 추가 후 필수 작업</p>
               <code className="text-[12px] text-content-secondary font-mono">npx shadcn@latest add [component]</code>
               <div className="mt-3 flex flex-col gap-1">
                 {[
                   "bg-canvas-primary → bg-primary (액션 버튼 색상)",
                   "bg-primary → bg-muted (서브틀 hover)",
-                  "font-bold → font-semibold",
                   "rounded-xl → rounded-lg",
                   "dark:* 클래스 전부 제거",
                   "data-[state=checked]:bg-canvas-primary → data-[state=checked]:bg-primary",

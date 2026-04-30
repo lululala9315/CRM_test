@@ -27,6 +27,7 @@ type SearchFilterProps = {
   showPlanner?: boolean
   // 추가 셀렉트 필터 목록 (사유 등)
   extraSelects?: {
+    label: string
     defaultValue: string
     options: FilterSelectOption[]
   }[]
@@ -80,6 +81,7 @@ export function SearchFilter({ showPlanner = true, extraSelects, extraElements, 
       {extraSelects?.map((filter, i) => (
         <ExtraSelect
           key={i}
+          label={filter.label}
           value={extraValues[i] ?? filter.defaultValue}
           onValueChange={v =>
             setExtraValues(prev => prev.map((ev, idx) => (idx === i ? v : ev)))
@@ -108,22 +110,28 @@ export function SearchFilter({ showPlanner = true, extraSelects, extraElements, 
   )
 }
 
-// 추가 셀렉트 — 부모에서 value/onValueChange 받아 controlled로 동작
+// 추가 셀렉트 — 부모에서 label/value/onValueChange 받아 controlled로 동작
 function ExtraSelect({
+  label,
   value,
   onValueChange,
   options,
 }: {
+  label: string
   value: string
   onValueChange: (v: string) => void
   options: FilterSelectOption[]
 }) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger size="sm" className="min-w-[110px] border-line-subtle bg-fill-filter gap-1.5 text-content-primary">
-        <SelectValue />
+      <SelectTrigger size="sm" className="min-w-[130px] border-subtle bg-fill-filter text-content-primary">
+        <span className="flex items-center gap-1 min-w-0 flex-1">
+          <span className="text-content-assistive shrink-0">{label}</span>
+          <span className="text-content-disabled shrink-0">·</span>
+          <SelectValue />
+        </span>
       </SelectTrigger>
-      <SelectContent className="rounded-md border-line-subtle text-[13px]">
+      <SelectContent position="popper" sideOffset={4} className="rounded-md border-subtle text-[13px]">
         {options.map((opt) => (
           <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
         ))}

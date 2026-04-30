@@ -18,39 +18,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { MOCK_CUSTOMERS } from "@/lib/mock-customers"
 
 // --- 목업 데이터 ---
-type Row = {
-  no: number
-  name: string
-  gender: string
-  birth: string
-  phone: string
-  region: string
-  assignedAt: string
-  firstCall: string | null
-  lastCall: string | null
-  callTry: string | null
-  callSuccess: string | null
-  validCall: string | null
-  planner: string
-}
+const PLANNERS = ["김홍도", "신윤복", "정선", "안견", "이중섭", "박수근", "장욱진", "천경자", "이응노", "남관"]
 
-const MOCK_ROWS: Row[] = Array.from({ length: 50 }, (_, i) => ({
-  no: 50 - i,
-  name: "이*혁",
-  gender: "남성",
-  birth: "1981.11.27 (40세)",
-  phone: "0507-1111-1111",
-  region: "서울특별시",
-  assignedAt: "2026.01.01 00:00",
-  firstCall: i % 3 === 1 ? null : "2026.01.01 00:00",
-  lastCall: i % 3 === 1 ? null : "2026.01.01 00:00",
-  callTry: i % 3 === 1 ? null : "10회",
-  callSuccess: i % 3 === 1 ? null : "10회",
-  validCall: i % 2 === 0 ? "10회" : null,
-  planner: "김홍도",
-}))
+const MOCK_ROWS = MOCK_CUSTOMERS.map((c, i) => {
+  // 배정일자: 분산
+  const aDay = ((i * 5) % 28) + 1
+  const aHour = String(((i * 13) % 24)).padStart(2, "0")
+  const aMin = String(((i * 19) % 60)).padStart(2, "0")
+  const assignedAt = `2026.${String((((i * 3) % 4) + 1)).padStart(2, "0")}.${String(aDay).padStart(2, "0")} ${aHour}:${aMin}`
+
+  // 통화 일자/횟수: 분산 + 일부 null
+  const noCall = i % 5 === 1
+  const cDay = ((i * 11) % 28) + 1
+  const cHour = String(((i * 7) % 24)).padStart(2, "0")
+  const cMin = String(((i * 23) % 60)).padStart(2, "0")
+  const callDate = `2026.${String((((i * 3) % 4) + 1)).padStart(2, "0")}.${String(cDay).padStart(2, "0")} ${cHour}:${cMin}`
+
+  const tryCount = noCall ? null : `${1 + (i * 7) % 30}회`
+  const successCount = noCall ? null : `${(i * 3) % 15}회`
+  const valid = i % 2 === 0 && !noCall ? `${1 + (i * 5) % 12}회` : null
+
+  return {
+    ...c,
+    assignedAt,
+    firstCall: noCall ? null : callDate,
+    lastCall: noCall ? null : callDate,
+    callTry: tryCount,
+    callSuccess: successCount,
+    validCall: valid,
+    planner: PLANNERS[i % PLANNERS.length],
+  }
+})
 
 export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[] } = {}) {
   const [selectedIds, setSelectedIds] = useState<number[]>([])
@@ -80,7 +81,7 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
     <div className="flex flex-col gap-8">
 
       {/* KPI 타일 카드 */}
-      <div className="bg-canvas-primary rounded-lg py-5 border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle">
         <div className="flex items-stretch">
           {STAT_TILES.map((stat, i) => (
             <div
@@ -90,14 +91,14 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
               {i > 0 && (
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />
               )}
-              <p className="text-[12px] font-medium text-content-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">
+              <p className="text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap">
                 {stat.label}
               </p>
               <div className="flex items-baseline gap-0.5">
-                <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">
+                <span className="text-h3-bold tabular-nums text-content-primary">
                   {stat.value}
                 </span>
-                <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">
+                <span className="text-h3-bold tabular-nums text-content-primary">
                   {stat.unit}
                 </span>
               </div>
@@ -107,33 +108,37 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
       </div>
 
       {/* 툴바 + 테이블 + 페이지네이션 */}
-      <div className="sticky top-3 z-[5] flex flex-col gap-0.5">
+      <div className="flex flex-col gap-0.5">
 
       {/* 툴바 */}
-      <div className="bg-canvas-tertiary flex items-center justify-between py-1">
-        <span className="text-[13px] font-medium text-content-assistive tabular-nums">
-          {selectedIds.length > 0
-            ? `${selectedIds.length}건 선택`
-            : `전체 ${MOCK_ROWS.length}건`
-          }
+      <div className="sticky top-3 z-20 bg-canvas-tertiary flex h-10 items-center justify-between">
+        <span className="text-body4-medium text-content-tertiary tabular-nums">
+          {selectedIds.length > 0 ? (
+            <>
+              <span className="text-primary font-semibold">{selectedIds.length}</span>건 선택
+            </>
+          ) : (
+            `전체 ${MOCK_ROWS.length}건`
+          )}
         </span>
         <div className="flex items-center gap-1">
           <PageSizeSelect
             value={pageSize}
             onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
           />
-          <Button>
-            선택 재배정
-          </Button>
+          {selectedIds.length > 0 && (
+            <Button size="sm">
+              선택 재배정
+            </Button>
+          )}
         </div>
       </div>
 
       {/* 테이블 카드 */}
-      <div className="bg-canvas-primary rounded-lg overflow-hidden border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg border border-subtle">
 
-        <div className="overflow-auto max-h-[calc(100svh-10rem)]">
           <Table>
-            <TableHeader className="sticky top-0 z-10">
+            <TableHeader className="sticky top-[44px] z-30 bg-canvas-primary">
               <TableRow className="border-b border-divider-normal hover:bg-transparent">
                 <TableHead className="text-left h-10 w-10 !pl-3 !pr-1">
                   <Checkbox
@@ -142,10 +147,10 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
                       if (el) (el as HTMLButtonElement & { indeterminate?: boolean }).indeterminate = someSelected
                     }}
                     onCheckedChange={toggleAll}
-                    className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                 </TableHead>
-                <TableHead className="text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
+                <TableHead className="!text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">이름</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-16">성별</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">생년월일</TableHead>
@@ -165,7 +170,7 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
               {displayedRows.map((row) => (
                 <TableRow
                   key={row.no}
-                  className={`cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
+                  className={`cursor-pointer border-divider-subtle${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
                   data-state={selectedIds.includes(row.no) ? "selected" : undefined}
                   onClick={() => console.log("open detail", row.no)}
                 >
@@ -177,7 +182,7 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
                       checked={selectedIds.includes(row.no)}
                       onCheckedChange={() => toggleRow(row.no)}
                       disabled={disabledRowKeys.includes(row.no)}
-                      className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
                   </TableCell>
                   <TableCell className="text-center num-cell">{row.no}</TableCell>
@@ -194,7 +199,7 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
                   <TableCell className="text-left num-cell">{row.validCall ?? <span className="text-content-disabled">-</span>}</TableCell>
                   <TableCell className="text-left">{row.planner}</TableCell>
                   <TableCell className="text-left !pr-5" onClick={(e) => e.stopPropagation()}>
-                    <button className="text-[13px] text-content-secondary font-medium hover:underline underline-offset-2 transition-colors active:scale-[0.97]">
+                    <button className="text-body4-normal text-content-secondary font-medium hover:underline underline-offset-2 transition-colors active:scale-[0.97]">
                       확인
                     </button>
                   </TableCell>
@@ -202,14 +207,13 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
               ))}
               {MOCK_ROWS.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={15} className="py-16 text-[13px] text-content-disabled text-center">
+                  <TableCell colSpan={15} className="py-16 text-body4-normal text-content-disabled text-center">
                     데이터가 없습니다
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </div>
 
       </div>
 

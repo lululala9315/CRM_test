@@ -10,13 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { PageNumbers, PageSizeSelect } from "@/components/ui/pagination"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Table,
   TableBody,
   TableCell,
@@ -24,27 +17,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { ArrowUpDown } from "lucide-react"
+import { MOCK_CUSTOMERS } from "@/lib/mock-customers"
 
 // --- 목업 데이터 ---
-type Row = {
-  no: number
-  name: string
-  gender: string
-  birth: string
-  phone: string
-  region: string
-  requestedAt: string
-}
-
-const MOCK_ROWS: Row[] = Array.from({ length: 50 }, (_, i) => ({
-  no: 50 - i,
-  name: "이*혁",
-  gender: "남성",
-  birth: "1981.11.27 (40세)",
-  phone: "0507-1111-1111",
-  region: "서울특별시",
-  requestedAt: "2026.01.01  00:00",
-}))
+const MOCK_ROWS = MOCK_CUSTOMERS.map((c, i) => {
+  // 요청일자: 인덱스 기반으로 분산 (1~30일)
+  const day = ((i * 7) % 30) + 1
+  const hour = String(((i * 13) % 24)).padStart(2, "0")
+  const minute = String(((i * 17) % 60)).padStart(2, "0")
+  return {
+    ...c,
+    requestedAt: `2026.${String((((i * 5) % 4) + 1)).padStart(2, "0")}.${String(day).padStart(2, "0")}  ${hour}:${minute}`,
+  }
+})
 
 export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[] } = {}) {
   const [selectedIds, setSelectedIds] = useState<number[]>([])
@@ -53,7 +39,9 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
   const [currentPage, setCurrentPage] = useState(1)
   const pageSizeNum = parseInt(pageSize)
   const totalPages = Math.ceil(MOCK_ROWS.length / pageSizeNum)
-  const displayedRows = MOCK_ROWS.slice((currentPage - 1) * pageSizeNum, currentPage * pageSizeNum)
+  // 정렬: 최신순 = no DESC (큰 번호 = 최근), 오래된순 = no ASC
+  const sortedRows = [...MOCK_ROWS].sort((a, b) => sortOrder === "latest" ? b.no - a.no : a.no - b.no)
+  const displayedRows = sortedRows.slice((currentPage - 1) * pageSizeNum, currentPage * pageSizeNum)
 
   const allSelected = displayedRows.length > 0 && displayedRows.every(r => selectedIds.includes(r.no))
   const someSelected = displayedRows.some(r => selectedIds.includes(r.no)) && !allSelected
@@ -64,42 +52,47 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
   )
 
   return (
-    <div className="sticky top-3 z-[5] flex flex-col gap-0.5">
+    <div className="flex flex-col gap-0.5">
 
       {/* 툴바 */}
-      <div className="bg-canvas-tertiary flex items-center justify-between py-1">
-        <span className="text-[13px] font-medium text-content-assistive tabular-nums">
-          {selectedIds.length > 0
-            ? `${selectedIds.length}건 선택`
-            : `전체 ${MOCK_ROWS.length}건`
-          }
+      <div className="sticky top-3 z-20 bg-canvas-tertiary flex h-10 items-center justify-between">
+        <span className="text-body4-medium text-content-tertiary tabular-nums">
+          {selectedIds.length > 0 ? (
+            <>
+              <span className="text-primary font-semibold">{selectedIds.length}</span>건 선택
+            </>
+          ) : (
+            `전체 ${MOCK_ROWS.length}건`
+          )}
         </span>
         <div className="flex items-center gap-1">
-          <Select value={sortOrder} onValueChange={(v) => { setSortOrder(v); setCurrentPage(1) }}>
-            <SelectTrigger className="h-7 px-2 py-0 border-transparent bg-transparent shadow-none gap-1 !text-[12px] text-content-assistive hover:bg-fill-subtle hover:text-content-primary rounded-md">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="rounded-md border-line-subtle text-[13px]">
-              <SelectItem value="latest">최신순</SelectItem>
-              <SelectItem value="oldest">오래된순</SelectItem>
-            </SelectContent>
-          </Select>
+          {selectedIds.length === 0 && (
+            <button
+              type="button"
+              onClick={() => { setSortOrder(prev => prev === "latest" ? "oldest" : "latest"); setCurrentPage(1) }}
+              className="h-7 pl-2 pr-1.5 inline-flex items-center gap-1 rounded-md text-[13px] font-medium text-content-tertiary hover:bg-fill-subtle hover:text-content-primary transition-colors"
+            >
+              {sortOrder === "latest" ? "최신순" : "오래된순"}
+              <ArrowUpDown className="size-3.5" />
+            </button>
+          )}
           <PageSizeSelect
             value={pageSize}
             onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
           />
-          <Button>
-            선택 재배정
-          </Button>
+          {selectedIds.length > 0 && (
+            <Button size="sm">
+              선택 재배정
+            </Button>
+          )}
         </div>
       </div>
 
       {/* 테이블 카드 */}
-      <div className="bg-canvas-primary rounded-lg overflow-hidden border border-line-subtle">
+      <div className="bg-canvas-primary rounded-lg border border-subtle">
 
-        <div className="overflow-auto max-h-[calc(100svh-10rem)]">
           <Table>
-            <TableHeader className="sticky top-0 z-10">
+            <TableHeader className="sticky top-[44px] z-30 bg-canvas-primary">
               <TableRow className="border-b border-divider-normal hover:bg-transparent">
                 <TableHead className="text-left h-10 w-10 !pl-3 !pr-1">
                   <Checkbox
@@ -108,10 +101,10 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
                       if (el) (el as HTMLButtonElement & { indeterminate?: boolean }).indeterminate = someSelected
                     }}
                     onCheckedChange={toggleAll}
-                    className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                    className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                 </TableHead>
-                <TableHead className="text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
+                <TableHead className="!text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">이름</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-16">성별</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">생년월일</TableHead>
@@ -125,7 +118,7 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
               {displayedRows.map((row) => (
                 <TableRow
                   key={row.no}
-                  className={`cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
+                  className={`cursor-pointer border-divider-subtle${disabledRowKeys.includes(row.no) ? " opacity-40 pointer-events-none select-none" : ""}`}
                   data-state={selectedIds.includes(row.no) ? "selected" : undefined}
                   onClick={() => console.log("open detail", row.no)}
                 >
@@ -137,7 +130,7 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
                       checked={selectedIds.includes(row.no)}
                       onCheckedChange={() => toggleRow(row.no)}
                       disabled={disabledRowKeys.includes(row.no)}
-                      className="h-4 w-4 rounded-sm border-line-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      className="h-4 w-4 rounded-sm border-subtle data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
                   </TableCell>
                   <TableCell className="text-center num-cell">{row.no}</TableCell>
@@ -148,7 +141,7 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
                   <TableCell className="text-left">{row.region}</TableCell>
                   <TableCell className="text-left num-cell">{row.requestedAt}</TableCell>
                   <TableCell className="text-left !pr-5" onClick={(e) => e.stopPropagation()}>
-                    <button className="text-[13px] text-content-secondary font-medium hover:underline underline-offset-2 transition-colors active:scale-[0.97]">
+                    <button className="text-body4-normal text-content-secondary font-medium hover:underline underline-offset-2 transition-colors active:scale-[0.97]">
                       확인
                     </button>
                   </TableCell>
@@ -156,14 +149,13 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
               ))}
               {MOCK_ROWS.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-16 text-[13px] text-content-disabled text-center">
+                  <TableCell colSpan={9} className="py-16 text-body4-normal text-content-disabled text-center">
                     데이터가 없습니다
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </div>
 
       </div>
 

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보닥 플래너 for KB라이프 — 프로젝트 & 디자인 시스템</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card-bg: #ffffff;
+    --border: #e5e8eb;
+    --border-strong: #d1d6db;
+    --text-primary: #191f28;
+    --text-secondary: #333d4b;
+    --text-tertiary: #6b7684;
+    --text-assistive: #8b95a1;
+    --brand: #3182f6;
+    --brand-subtle: #e8f3ff;
+    --success: #03b26c;
+    --error: #f04452;
+    --code-bg: #f9fafb;
+  }
+  * { box-sizing: border-box; }
+  html { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+  body { margin: 0; background: var(--bg); color: var(--text-primary); font-size: 14px; line-height: 1.6; padding: 32px 16px 64px; }
+  .wrap { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+  .hero { display: flex; flex-direction: column; gap: 12px; }
+  h1 { font-size: 28px; line-height: 40px; font-weight: 600; letter-spacing: -0.5px; margin: 0; }
+  h2 { font-size: 20px; line-height: 30px; font-weight: 600; letter-spacing: -0.5px; margin: 0 0 12px; }
+  h3 { font-size: 14px; font-weight: 600; letter-spacing: -0.3px; margin: 0 0 8px; }
+  p { margin: 0; }
+  .sub { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; font-size: 12px; background: var(--card-bg); color: var(--text-secondary); border: 1px solid var(--border); }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+  .layer { border-radius: 8px; padding: 16px; border: 1px solid var(--border); }
+  .layer.l1 { background: #f6f7f9; }
+  .layer.l2 { background: #ffffff; }
+  .layer.l3 { background: #e8f3ff; }
+  .layer-num { font-size: 11px; letter-spacing: 0.08em; color: var(--text-tertiary); text-transform: uppercase; }
+  .layer-title { font-size: 15px; font-weight: 600; margin: 4px 0 6px; letter-spacing: -0.3px; }
+  .layer-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 8px; }
+  .code, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; }
+  pre.code { background: var(--code-bg); border-radius: 6px; padding: 10px 12px; line-height: 1.6; overflow-x: auto; margin: 0; color: var(--text-secondary); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; padding: 0 8px 8px; border-bottom: 1px solid var(--border-strong); }
+  td { padding: 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: 0; }
+  .sw { display: inline-block; width: 56px; height: 28px; border-radius: 6px; border: 1px solid var(--border); vertical-align: middle; }
+  .sw-text { font-size: 14px; font-weight: 500; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; color: var(--text-primary); }
+  .mono-sub { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; color: var(--text-tertiary); }
+  .typo-row { display: grid; grid-template-columns: 1fr 220px; gap: 16px; align-items: baseline; padding: 10px 4px; border-bottom: 1px solid var(--border); }
+  .typo-row:last-child { border-bottom: 0; }
+  .do { border-left: 3px solid var(--success); background: #f0faf6; padding: 14px 16px; border-radius: 6px; }
+  .dont { border-left: 3px solid var(--error); background: #ffeeee; padding: 14px 16px; border-radius: 6px; }
+  .cheat-title { font-size: 12px; font-weight: 600; margin: 0 0 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .cheat-list { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; line-height: 1.9; margin: 0; white-space: pre; color: #1a3a2a; }
+  .dont .cheat-list { color: #5a1620; }
+  .arch-flow { display: grid; grid-template-columns: 1fr 24px 1fr 24px 1fr; align-items: stretch; gap: 0; }
+  @media (max-width: 720px) { .arch-flow { grid-template-columns: 1fr; gap: 8px; } .arch-arrow { display: none; } }
+  .arch-arrow { display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 16px; }
+  .brand-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  @media (max-width: 720px) { .brand-strip { grid-template-columns: 1fr 1fr; } }
+  .brand-card { border-radius: 8px; padding: 14px; color: white; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; line-height: 1.6; }
+  .meta-grid { display: grid; grid-template-columns: 100px 1fr; gap: 8px 16px; font-size: 13px; line-height: 1.7; }
+  .meta-key { color: var(--text-tertiary); }
+  .footer-note { font-size: 12px; color: var(--text-tertiary); text-align: center; padding-top: 12px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="hero">
+    <h1>보닥 플래너 for KB라이프 — 보험설계사 CRM</h1>
+    <p class="sub">B2B SaaS · 라이트 모드 전용 · 한 빌드로 여러 테넌트 대응</p>
+    <div class="pill-row">
+      <span class="pill">Next.js 16 (App Router)</span>
+      <span class="pill">React 19</span>
+      <span class="pill">TypeScript</span>
+      <span class="pill">Tailwind v4 (no config)</span>
+      <span class="pill">shadcn/ui · radix-vega</span>
+      <span class="pill">Pretendard</span>
+      <span class="pill">@dnd-kit</span>
+    </div>
+    <div class="card">
+      <div class="meta-grid">
+        <span class="meta-key">주요 화면</span><span>상담 칸반 · 계약/상담 종료 · 배정/미배정 DB · DB 분배현황 · 운영자/설계사 관리 · 조직 · 자동배정/회수</span>
+        <span class="meta-key">레이아웃</span><span>Sidebar + Header + (BusinessTree 좌측 + 콘텐츠 우측 3패턴)</span>
+        <span class="meta-key">컨셉</span><span>데이터 중심 대시보드 · 카드 기반 · 여백 · semibold 타이포 · 브랜드 블루 #3182F6</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>shadcn/ui 채택 — Semantic Sync 전략</h2>
+    <p class="sub" style="margin-bottom:12px;">UI 컴포넌트는 shadcn/ui (style: radix-vega) 베이스. shadcn 표준 토큰 의미를 보존하면서 Figma 디자인 토큰을 별도 prefix로 노출 → 신규 shadcn 컴포넌트는 수정 거의 없이 그대로 작동.</p>
+    <div class="card">
+      <pre class="code">shadcn 표준          Figma 1:1 노출
+───────────          ──────────────
+bg-primary           bg-canvas-primary
+text-primary         text-content-primary
+border-border        border-subtle</pre>
+      <p class="sub" style="margin-top:12px;"><strong style="font-weight:600;">검증 3단계만 거치면 끝</strong> — <code>font-bold</code> → <code>font-semibold</code>, <code>rounded-xl</code> → <code>rounded-lg</code>, <code>dark:</code> prefix 제거.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>디자인 토큰 — 3-Layer 구조</h2>
+    <div class="arch-flow">
+      <div class="layer l1">
+        <div class="layer-num">Layer 1 · Atomic</div>
+        <div class="layer-title">Value Palette</div>
+        <p class="layer-desc">Figma 변수 1:1 — 직접 참조 금지</p>
+        <pre class="code">--blue-500: #3182f6
+--cool-neutral-990: #191f28
+--red-500: #f04452
+--green-500: #03b26c</pre>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="layer l2">
+        <div class="layer-num">Layer 2 · Semantic</div>
+        <div class="layer-title">의미 토큰</div>
+        <p class="layer-desc">shadcn 표준 + Figma 토큰 병행</p>
+        <pre class="code">--primary: var(--blue-500)
+--bg-primary: var(--common-100)
+--text-primary: var(--cool-neutral-990)
+--border-subtle: var(--cool-neutral-200)</pre>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="layer l3">
+        <div class="layer-num">Layer 3 · Bridge</div>
+        <div class="layer-title">Tailwind 클래스</div>
+        <p class="layer-desc">@theme inline + @utility로 노출</p>
+        <pre class="code">bg-primary
+bg-canvas-primary
+text-content-primary
+border-subtle</pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>색상 토큰 — Figma ↔ Tailwind 매핑</h2>
+
+    <div class="card" style="margin-bottom:12px;">
+      <h3>Background · 배경</h3>
+      <table>
+        <thead><tr><th style="width:80px;">색</th><th>Figma</th><th>Tailwind</th><th style="width:96px;">HEX</th></tr></thead>
+        <tbody>
+          <tr><td><span class="sw" style="background:#3182f6;"></span></td><td class="mono">brand</td><td class="mono">bg-primary</td><td class="mono-sub">#3182F6</td></tr>
+          <tr><td><span class="sw" style="background:#FFFFFF;"></span></td><td class="mono">bg_primary</td><td class="mono">bg-canvas-primary</td><td class="mono-sub">#FFFFFF</td></tr>
+          <tr><td><span class="sw" style="background:#f9fafb;"></span></td><td class="mono">bg_secondary</td><td class="mono">bg-canvas-secondary</td><td class="mono-sub">#F9FAFB</td></tr>
+          <tr><td><span class="sw" style="background:#f6f7f9;"></span></td><td class="mono">bg_tertiary</td><td class="mono">bg-canvas-tertiary</td><td class="mono-sub">#F6F7F9</td></tr>
+          <tr><td><span class="sw" style="background:#eceef1;"></span></td><td class="mono">bg_subtle</td><td class="mono">bg-canvas-quaternary</td><td class="mono-sub">#ECEEF1</td></tr>
+          <tr><td><span class="sw" style="background:#e8f3ff;"></span></td><td class="mono">primary_subtle</td><td class="mono">bg-primary-subtle</td><td class="mono-sub">#E8F3FF</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;">
+      <h3>Text · 텍스트</h3>
+      <table>
+        <thead><tr><th style="width:120px;">샘플</th><th>Figma</th><th>Tailwind</th><th style="width:96px;">HEX</th></tr></thead>
+        <tbody>
+          <tr><td class="sw-text" style="color:#191F28;">진한 본문 Aa</td><td class="mono">text_primary</td><td class="mono">text-content-primary</td><td class="mono-sub">#191F28</td></tr>
+          <tr><td class="sw-text" style="color:#333d4b;">본문 Aa</td><td class="mono">text_secondary</td><td class="mono">text-content-secondary</td><td class="mono-sub">#333D4B</td></tr>
+          <tr><td class="sw-text" style="color:#6b7684;">서브 Aa</td><td class="mono">text_quaternary</td><td class="mono">text-content-quaternary</td><td class="mono-sub">#6B7684</td></tr>
+          <tr><td class="sw-text" style="color:#8b95a1;">힌트 Aa</td><td class="mono">text_assistive</td><td class="mono">text-content-assistive</td><td class="mono-sub">#8B95A1</td></tr>
+          <tr><td class="sw-text" style="color:#3182f6;">링크 Aa</td><td class="mono">text_accent</td><td class="mono">text-primary</td><td class="mono-sub">#3182F6</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Border · 보더</h3>
+        <table>
+          <tbody>
+            <tr><td><span class="sw" style="background:transparent; border-color:#e5e8eb;"></span></td><td class="mono">border-subtle</td><td class="mono-sub">#E5E8EB</td></tr>
+            <tr><td><span class="sw" style="background:transparent; border-color:#d1d6db;"></span></td><td class="mono">border-border</td><td class="mono-sub">#D1D6DB</td></tr>
+            <tr><td><span class="sw" style="background:transparent; border-color:#b0b8c1;"></span></td><td class="mono">border-strong</td><td class="mono-sub">#B0B8C1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Status · 상태</h3>
+        <table>
+          <tbody>
+            <tr><td><span class="sw" style="background:#03b26c;"></span></td><td class="mono">bg-success</td><td class="mono-sub">#03B26C</td></tr>
+            <tr><td><span class="sw" style="background:#f04452;"></span></td><td class="mono">bg-destructive</td><td class="mono-sub">#F04452</td></tr>
+            <tr><td><span class="sw" style="background:#e8f3ff;"></span></td><td class="mono">bg-blue-tint</td><td class="mono-sub">#E8F3FF</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>B2B 다중 브랜드 — `--primary` 한 줄로 분기</h2>
+    <p class="sub" style="margin-bottom:12px;">Button · Badge · 사이드바 selected · 링크 · 체크박스/라디오 · focus ring · 캘린더 — 모두 자동 추종.</p>
+    <div class="brand-strip">
+      <div class="brand-card" style="background:#3182f6;">[data-brand="default"]<br>--primary: #3182F6</div>
+      <div class="brand-card" style="background:#03b26c;">[data-brand="green"]<br>--primary: #03B26C</div>
+      <div class="brand-card" style="background:#d97706;">[data-brand="orange"]<br>--primary: oklch(0.65 .20 45)</div>
+      <div class="brand-card" style="background:#7c3aed;">[data-brand="violet"]<br>--primary: var(--violet-500)</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Typography — Pretendard, semibold 600 기본</h2>
+    <p class="sub" style="margin-bottom:12px;">composite 토큰(<code>text-h2-bold</code> 등)이 size + line-height + weight + letter-spacing(-0.5px)을 한 클래스에 묶음.</p>
+    <div class="card">
+      <div class="typo-row"><div style="font-size:28px; line-height:40px; font-weight:600; letter-spacing:-0.5px; color:#191F28;">페이지 타이틀</div><span class="mono-sub">text-h2-bold · 28/40/600</span></div>
+      <div class="typo-row"><div style="font-size:24px; line-height:36px; font-weight:600; letter-spacing:-0.5px; color:#191F28;">KPI 숫자 1,284</div><span class="mono-sub">text-h3-bold · 24/36/600</span></div>
+      <div class="typo-row"><div style="font-size:20px; line-height:30px; font-weight:600; letter-spacing:-0.5px; color:#191F28;">카드 타이틀</div><span class="mono-sub">text-h5-bold · 20/30/600</span></div>
+      <div class="typo-row"><div style="font-size:14px; line-height:22px; font-weight:600; letter-spacing:-0.5px; color:#191F28;">카드 헤더 / 본문 강조</div><span class="mono-sub">text-body3-bold · 14/22/600</span></div>
+      <div class="typo-row"><div style="font-size:14px; line-height:22px; font-weight:400; letter-spacing:-0.5px; color:#191F28;">기본 본문 텍스트입니다</div><span class="mono-sub">text-body3-normal · 14/22/400</span></div>
+      <div class="typo-row"><div style="font-size:13px; line-height:18px; font-weight:400; letter-spacing:-0.5px; color:#191F28;">테이블 셀 자동 적용</div><span class="mono-sub">text-body4-normal · 13/18/400</span></div>
+      <div class="typo-row"><div style="font-size:12px; line-height:16px; font-weight:500; letter-spacing:-0.5px; color:#8b95a1;">툴바 카운트 · 12px</div><span class="mono-sub">text-body5-medium · 12/16/500</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>한 눈에 보는 규칙 — Do / Don't</h2>
+    <div class="grid-2">
+      <div class="do">
+        <p class="cheat-title" style="color:#03764a;">DO — 권장</p>
+        <pre class="cheat-list">font-semibold        (weight 600)
+rounded-lg           (8px, Vega 상한)
+bg-canvas-primary    (흰 카드)
+bg-canvas-tertiary   (페이지 배경)
+text-content-primary (진한 본문)
+border-subtle        (카드 보더 · 가장 多)
+bg-primary-subtle    (선택/활성 틴트)
+&lt;Button&gt;             (variant default)</pre>
+      </div>
+      <div class="dont">
+        <p class="cheat-title" style="color:#a52131;">DON'T — 금지</p>
+        <pre class="cheat-list">font-bold            → font-semibold
+rounded-xl           → rounded-lg
+dark: prefix         → 라이트 전용
+bg-primary/10        → bg-primary-subtle
+ring-ring/50         → ring-ring-glow
+border-line-subtle   → border-subtle
+bg-secondary         → bg-canvas-secondary
+text-assistive       → text-content-assistive</pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>신규 합류자 체크리스트</h2>
+    <div class="card">
+      <h3>설치 & 실행</h3>
+      <pre class="code">npm install
+npm run dev -- -p 3001                     # 항상 3001 포트
+# http://localhost:3001/design-system      # 토큰 swatch 확인</pre>
+      <h3 style="margin-top:16px;">작업 시작 전 읽기</h3>
+      <ol style="margin:0; padding-left:20px; color:var(--text-secondary); line-height:1.8;">
+        <li><code>CLAUDE.md</code> — 프로젝트 룰 + 토큰 가이드 + 컴포넌트 패턴</li>
+        <li><code>docs/design-system.md</code> — Figma ↔ 코드 매핑 풀버전</li>
+        <li><code>src/app/globals.css</code> — 토큰 정의 원본</li>
+        <li><code>/design-system</code> 페이지 — 토큰 시각 확인</li>
+      </ol>
+      <h3 style="margin-top:16px;">PR 전 검증</h3>
+      <pre class="code">grep -r "dark:\|font-bold\|rounded-xl" src/   # 0건이어야 함
+npm run lint
+npm run build</pre>
+    </div>
+  </section>
+
+  <p class="footer-note">마지막 갱신: 2026-04-29 · 상세 디자인 토큰 docs/design-system.md · 상세 컴포넌트 룰 CLAUDE.md</p>
+</div>
+</body>
+</html>

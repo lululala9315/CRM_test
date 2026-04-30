@@ -21,7 +21,7 @@ function SectionHeader({ title }: { title: string }) {
 // --- 공통: 테이블 래퍼 ---
 function InfoTable({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-canvas-primary rounded-lg border border-line-subtle overflow-hidden">
+    <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
       {children}
     </div>
   )
@@ -64,21 +64,21 @@ export function MypageSettings() {
 
           <InfoRow label="이름">
             <span className="text-[14px] text-content-primary">이민혁</span>
-            <Button variant="outline" size="sm" className="border-line-subtle text-[13px]">
+            <Button variant="outline" size="sm" className="border-subtle text-[13px]">
               실명수정
             </Button>
           </InfoRow>
 
           <InfoRow label="휴대폰 번호 (메인)">
             <span className="text-[14px] text-content-primary tabular-nums">010-4659-1516</span>
-            <Button variant="outline" size="sm" className="border-line-subtle text-[13px]">
+            <Button variant="outline" size="sm" className="border-subtle text-[13px]">
               변경
             </Button>
           </InfoRow>
 
           <InfoRow label="휴대폰 번호 (보조)">
             <span className="text-[14px] text-content-primary tabular-nums">010-4659-1516</span>
-            <Button variant="outline" size="sm" className="border-line-subtle text-[13px]">
+            <Button variant="outline" size="sm" className="border-subtle text-[13px]">
               변경
             </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-md text-content-disabled hover:text-destructive hover:bg-red-tint">

@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
 
 // 목업 설계사 목록 — 실제로는 API에서 가져올 데이터
 const PLANNERS = [
-  { value: "all", label: "담당 설계사 전체" },
+  { value: "all", label: "전체" },
   { value: "hong", label: "홍길동" },
   { value: "kim-cs", label: "김철수" },
   { value: "lee-yh", label: "이영희" },
@@ -50,20 +50,24 @@ export function PlannerCombobox({ value: controlledValue, onValueChange }: Plann
     setOpen(false)
   }
 
-  const selectedLabel = PLANNERS.find(p => p.value === selected)?.label ?? "담당 설계사 전체"
+  const selectedLabel = PLANNERS.find(p => p.value === selected)?.label ?? "전체"
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="flex h-8 items-center justify-between gap-1.5 rounded-md border border-line-subtle bg-fill-filter px-2.5 text-[13px] text-content-primary shadow-none transition-[color,background-color,border-color] min-w-[170px] hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow"
+          className="flex h-8 items-center justify-between gap-1.5 rounded-md border border-subtle bg-fill-filter px-2.5 text-[13px] text-content-primary shadow-none transition-[color,background-color,border-color] min-w-[170px] hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow"
         >
-          <span className="truncate">{selectedLabel}</span>
+          <span className="flex items-center gap-1 min-w-0 flex-1">
+            <span className="text-content-assistive shrink-0">담당설계사</span>
+            <span className="text-content-disabled shrink-0">·</span>
+            <span className="truncate">{selectedLabel}</span>
+          </span>
           <ChevronDown className="h-3.5 w-3.5 shrink-0 text-content-assistive" />
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[220px] p-0 rounded-md border-line-subtle"
+        className="w-[220px] p-0 rounded-md border-subtle"
         align="start"
         sideOffset={4}
       >

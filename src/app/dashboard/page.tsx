@@ -1,7 +1,7 @@
 "use client"
 
 /**
- * 역할: 홈 대시보드 — Amplitude + 토스증권 스타일 KPI/차트 뷰
+ * 역할: 홈 대시보드 — KPI/차트 뷰
  * 주요 기능: KPI 타일 행 · 통화율 AreaChart · 리드타임/미대응 BarChart
  * 참고: shadcn ChartContainer + ChartTooltipContent 사용, muted 톤 팔레트
  */
@@ -15,7 +15,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { BusinessTree } from "@/components/business-tree"
-import { Footer } from "@/components/footer"
+import { PageHeader } from "@/components/page-header"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   ChartContainer,
@@ -93,7 +93,7 @@ const noResponseData = [
   { name: "10일~",  value:  7, color: C.b5 },
 ]
 
-// ─── 카드 헤더 (Amplitude 패턴: title/subtitle + legend, border-b 구분) ─────
+// ─── 카드 헤더 (title/subtitle + legend, border-b 구분) ─────
 
 function CardHeader({
   title, subtitle, legend,
@@ -103,11 +103,11 @@ function CardHeader({
   legend?: { label: string; color: string }[]
 }) {
   return (
-    <div className="px-5 py-4 border-b border-line-subtle flex items-center justify-between">
+    <div className="px-5 py-4 border-b border-subtle flex items-center justify-between">
       <div>
-        <h3 className="text-[14px] font-semibold text-content-primary tracking-tight">{title}</h3>
+        <h3 className="text-body3-bold text-content-primary tracking-tight">{title}</h3>
         {subtitle && (
-          <p className="text-[12px] text-content-assistive mt-0.5 leading-none">{subtitle}</p>
+          <p className="text-body5-normal text-content-assistive mt-0.5 leading-none">{subtitle}</p>
         )}
       </div>
       {legend && (
@@ -153,17 +153,9 @@ export default function DashboardPage() {
   const noResponseTotal = noResponseData.reduce((s, d) => s + d.value, 0)
 
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-quaternary scrollbar-hide flex flex-col min-h-full">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
 
-      {/* 타이틀 */}
-      <div className="px-6 pt-10 pb-6">
-        <h1 className="text-[28px] font-semibold text-content-primary tracking-tight leading-tight [text-wrap:balance]">
-          홈 대시보드
-        </h1>
-        <p className="text-[14px] text-content-assistive mt-2">
-          조직별 배정·통화 성과를 기간 기준으로 확인합니다
-        </p>
-      </div>
+      <PageHeader title="홈 대시보드" subtitle="조직별 배정·통화 성과를 기간 기준으로 확인합니다" />
 
       {/* 콘텐츠 */}
       <div className="flex gap-3 px-6 pb-15 items-start">
@@ -178,7 +170,7 @@ export default function DashboardPage() {
               <PopoverTrigger asChild>
                 <button className={cn(
                   "h-8 flex items-center gap-2 rounded-md border px-3 text-[13px] font-medium transition-opacity hover:opacity-80",
-                  "bg-white border-line-subtle text-content-primary shadow-xs"
+                  "bg-white border-subtle text-content-primary shadow-xs"
                 )}>
                   <CalendarDays className="h-3.5 w-3.5 text-content-assistive shrink-0" />
                   {dateRange?.from ? (
@@ -222,19 +214,19 @@ export default function DashboardPage() {
           </div>
 
           {/* ── KPI — StatsSection 동일 패턴 ────────────────────────────── */}
-          <div className="bg-canvas-primary rounded-lg py-5 border border-line-subtle">
+          <div className="bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle">
             <div className="flex items-stretch">
               {kpiMetrics.map((kpi, i) => (
                 <div key={kpi.label} className="flex-1 px-6 relative">
                   {i > 0 && (
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />
                   )}
-                  <p className="text-[12px] font-medium text-content-assistive mb-2.5 tracking-tight leading-none whitespace-nowrap">
+                  <p className="text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap">
                     {kpi.label}
                   </p>
                   <div className="flex items-baseline gap-0.5">
-                    <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{kpi.value}</span>
-                    <span className="text-[24px] font-semibold tracking-tight leading-none tabular-nums text-content-primary">{kpi.unit}</span>
+                    <span className="text-h3-bold tabular-nums text-content-primary">{kpi.value}</span>
+                    <span className="text-h3-bold tabular-nums text-content-primary">{kpi.unit}</span>
                   </div>
                   <div className={cn(
                     "mt-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[11px] font-semibold",
@@ -252,7 +244,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-5 gap-4 items-start">
 
             {/* 통화율 주간 추이 AreaChart — 3/5 */}
-            <div className="col-span-3 bg-card rounded-lg border border-line-subtle overflow-hidden">
+            <div className="col-span-3 bg-card rounded-lg border border-subtle overflow-hidden">
               <CardHeader
                 title="통화율 주간 추이"
                 subtitle="1월 1일 ~ 2월 19일 · 8주"
@@ -304,7 +296,7 @@ export default function DashboardPage() {
             </div>
 
             {/* 리드 타임 분포 horizontal BarChart — 2/5 */}
-            <div className="col-span-2 bg-card rounded-lg border border-line-subtle overflow-hidden">
+            <div className="col-span-2 bg-card rounded-lg border border-subtle overflow-hidden">
               <CardHeader
                 title="리드 타임 분포"
                 subtitle={`총 ${leadTimeTotal}건 · 평균 반응 23시간`}
@@ -340,7 +332,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ── 미대응 현황 full-width ─────────────────────────────────────── */}
-          <div className="bg-card rounded-lg border border-line-subtle overflow-hidden">
+          <div className="bg-card rounded-lg border border-subtle overflow-hidden">
             <CardHeader
               title="미대응 현황"
               subtitle={`총 ${noResponseTotal}건 · 10일 초과 7건 긴급`}
@@ -374,7 +366,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <Footer />
     </div>
   )
 }
