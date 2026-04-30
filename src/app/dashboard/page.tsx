@@ -7,7 +7,7 @@
  */
 
 import { useState } from "react"
-import { CalendarDays, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import { CalendarDays } from "lucide-react"
 import { format, startOfMonth, endOfMonth, subMonths } from "date-fns"
 import { ko } from "date-fns/locale/ko"
 import { type DateRange } from "react-day-picker"
@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils"
 import { BusinessTree } from "@/components/business-tree"
 import { PageHeader } from "@/components/page-header"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { KpiGroup, type KpiData } from "@/components/ui/kpi-card"
 import {
   ChartContainer,
   ChartTooltip,
@@ -59,12 +60,12 @@ const noResponseConfig = {
 
 // ─── 목업 데이터 ───────────────────────────────────────────────────────────────
 
-const kpiMetrics = [
-  { label: "총 배정 수",     value: "2,000", unit: "건", delta: "+120건", up: true,  good: true  },
-  { label: "통화 시도율",    value: "20.0",  unit: "%",  delta: "+2.3%",  up: true,  good: true  },
-  { label: "통화 성공율",    value: "19.1",  unit: "%",  delta: "-1.1%",  up: false, good: false },
-  { label: "유효 통화율",    value: "18.3",  unit: "%",  delta: "+0.8%",  up: true,  good: true  },
-  { label: "평균 통화 시간", value: "30:00", unit: "분", delta: "-2:30",  up: false, good: true  },
+const kpiMetrics: KpiData[] = [
+  { label: "총 배정 수",     value: "2,000", unit: "건", delta: { text: "+120건", up: true,  positive: true  } },
+  { label: "통화 시도율",    value: "20.0",  unit: "%",  delta: { text: "+2.3%",  up: true,  positive: true  } },
+  { label: "통화 성공율",    value: "19.1",  unit: "%",  delta: { text: "-1.1%",  up: false, positive: false } },
+  { label: "유효 통화율",    value: "18.3",  unit: "%",  delta: { text: "+0.8%",  up: true,  positive: true  } },
+  { label: "평균 통화 시간", value: "30:00", unit: "분", delta: { text: "-2:30",  up: false, positive: true  } },
 ]
 
 const callRateTrend = [
@@ -213,32 +214,8 @@ export default function DashboardPage() {
             </Tabs>
           </div>
 
-          {/* ── KPI — StatsSection 동일 패턴 ────────────────────────────── */}
-          <div className="bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle">
-            <div className="flex items-stretch">
-              {kpiMetrics.map((kpi, i) => (
-                <div key={kpi.label} className="flex-1 px-6 relative">
-                  {i > 0 && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />
-                  )}
-                  <p className="text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap">
-                    {kpi.label}
-                  </p>
-                  <div className="flex items-baseline gap-0.5">
-                    <span className="text-h3-bold tabular-nums text-content-primary">{kpi.value}</span>
-                    <span className="text-h3-bold tabular-nums text-content-primary">{kpi.unit}</span>
-                  </div>
-                  <div className={cn(
-                    "mt-1.5 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[11px] font-semibold",
-                    kpi.good ? "bg-green-tint text-green-tint" : "bg-red-tint text-red-tint"
-                  )}>
-                    {kpi.up ? <ArrowUpRight className="h-3 w-3 shrink-0" /> : <ArrowDownRight className="h-3 w-3 shrink-0" />}
-                    {kpi.delta}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* ── KPI — StatsSection과 동일 (KpiGroup 컴포넌트) ────────────────── */}
+          <KpiGroup items={kpiMetrics} />
 
           {/* ── 차트 2열 그리드 ─────────────────────────────────────────────── */}
           <div className="grid grid-cols-5 gap-4 items-start">
