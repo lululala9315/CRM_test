@@ -274,7 +274,7 @@ const SHADCN_REMOVED = [
 //   Components:  단일 컴포넌트 데모 (버튼/배지/필터/카드/페이지네이션)
 //   Patterns:    조합 패턴 (테이블/레이아웃)
 //   Code:        구현 참조 (차트/shadcn 현황)
-type TabId = "foundations" | "components" | "patterns" | "code"
+type TabId = "foundations" | "guide" | "components" | "patterns" | "code"
 type TabSubSection = { id: string; label: string }
 type TabSection = { id: string; label: string; sub?: TabSubSection[] }
 type Tab = { id: TabId; label: string; desc: string; sections: TabSection[] }
@@ -303,6 +303,17 @@ const TABS: Tab[] = [
       { id: "border",  label: "보더" },
       { id: "shadow",  label: "그림자" },
       { id: "spacing", label: "스페이싱" },
+    ],
+  },
+  {
+    id: "guide",
+    label: "가이드",
+    desc: "토큰 사용 규칙 + 매핑",
+    sections: [
+      { id: "decision-tree", label: "토큰 선택 가이드" },
+      { id: "naming",        label: "네이밍 규칙" },
+      { id: "tailwind-map",  label: "Tailwind 매핑표" },
+      { id: "brand",         label: "브랜드 커스터마이징" },
     ],
   },
   {
@@ -1106,6 +1117,368 @@ export default function DesignSystemPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </Section>
+
+          {/* G1. 토큰 선택 가이드 (Decision Tree) */}
+          <Section
+            tab="guide"
+            id="decision-tree"
+            title="토큰 선택 가이드"
+            desc="어떤 색·간격·라운드를 쓸지 헷갈릴 때. 위에서부터 질문에 답하면 정답이 나오도록 설계."
+          >
+            <div>
+              <SubLabel note="컴포넌트에서 색을 결정할 때 따라가는 흐름">색상 — 무엇을 표현하나?</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary p-s24">
+                <div className="flex flex-col gap-s8 text-[13px]">
+                  <div className="flex items-start gap-s12">
+                    <span className="text-content-disabled font-mono shrink-0 w-4">1.</span>
+                    <p className="text-content-primary">
+                      <strong className="text-primary">브랜드 액션</strong>인가? (저장/확인/메인 CTA) →{" "}
+                      <code className="bg-primary-subtle text-primary px-1.5 py-0.5 rounded text-[12px]">bg-primary</code> /{" "}
+                      <code className="bg-primary-subtle text-primary px-1.5 py-0.5 rounded text-[12px]">text-primary</code>
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-s12">
+                    <span className="text-content-disabled font-mono shrink-0 w-4">2.</span>
+                    <p className="text-content-primary">
+                      <strong>상태</strong> 표현인가? → 성공{" "}
+                      <code className="bg-green-tint text-green-tint px-1.5 py-0.5 rounded text-[12px]">tint-success</code>{" "}
+                      · 경고 <code className="bg-amber-tint text-amber-tint px-1.5 py-0.5 rounded text-[12px]">tint-warning</code>{" "}
+                      · 오류 <code className="bg-red-tint text-red-tint px-1.5 py-0.5 rounded text-[12px]">tint-danger</code>{" "}
+                      · 정보 <code className="bg-blue-tint text-blue-tint px-1.5 py-0.5 rounded text-[12px]">tint-blue</code>{" "}
+                      · 중립 <code className="bg-canvas-quaternary text-content-quaternary px-1.5 py-0.5 rounded text-[12px]">tint-muted</code>
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-s12">
+                    <span className="text-content-disabled font-mono shrink-0 w-4">3.</span>
+                    <p className="text-content-primary">
+                      <strong>면적이 큰 배경</strong>인가? (페이지·카드·모달) →{" "}
+                      <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[12px]">bg-canvas-*</code>{" "}
+                      (primary=흰 / tertiary=페이지 / quaternary=섹션)
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-s12">
+                    <span className="text-content-disabled font-mono shrink-0 w-4">4.</span>
+                    <p className="text-content-primary">
+                      <strong>작은 컴포넌트 배경</strong>인가? (배지·필 / 컨트롤 hover) →{" "}
+                      <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[12px]">bg-fill-*</code>{" "}
+                      (subtle=hover / strong=강조)
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-s12">
+                    <span className="text-content-disabled font-mono shrink-0 w-4">5.</span>
+                    <p className="text-content-primary">
+                      <strong>텍스트</strong>인가? →{" "}
+                      <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[12px]">text-content-*</code>{" "}
+                      (primary 진함 → assistive 옅음 → disabled 회색). 진함과 옅음 사이가 모호하면 한 단계 진한 쪽 선택.
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-s12">
+                    <span className="text-content-disabled font-mono shrink-0 w-4">6.</span>
+                    <p className="text-content-primary">
+                      <strong>오버레이/구분선</strong>인가? → 행 hover{" "}
+                      <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[12px]">bg-alpha-black-02</code>{" "}
+                      / 셀 보더{" "}
+                      <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[12px]">border-divider-subtle</code>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel note="px 단위로 선택하지 말고 의미로 선택">간격 / 라운드 / 굵기</SubLabel>
+              <div className="grid grid-cols-3 gap-s16">
+                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                  <p className="text-[12px] font-semibold text-content-primary mb-s8">간격 (gap / padding)</p>
+                  <ul className="text-[12px] text-content-tertiary space-y-1.5 leading-relaxed">
+                    <li>아이콘↔텍스트 → <code className="text-primary">gap-s4</code> (4px)</li>
+                    <li>인라인 → <code className="text-primary">gap-s8</code> (8px)</li>
+                    <li>카드↔카드 → <code className="text-primary">gap-s16</code> (16px)</li>
+                    <li>섹션 간 → <code className="text-primary">gap-s32</code> (32px)</li>
+                  </ul>
+                </div>
+                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                  <p className="text-[12px] font-semibold text-content-primary mb-s8">라운드</p>
+                  <ul className="text-[12px] text-content-tertiary space-y-1.5 leading-relaxed">
+                    <li>카드·컨테이너 → <code className="text-primary">rounded-lg</code> (8px)</li>
+                    <li>필터·버튼(sm/xs) → <code className="text-primary">rounded-md</code> (6px)</li>
+                    <li>체크박스 → <code className="text-primary">rounded-sm</code> (2px)</li>
+                    <li>pill·avatar → <code className="text-primary">rounded-full</code></li>
+                  </ul>
+                </div>
+                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                  <p className="text-[12px] font-semibold text-content-primary mb-s8">굵기 (font-weight)</p>
+                  <ul className="text-[12px] text-content-tertiary space-y-1.5 leading-relaxed">
+                    <li>본문 → <code className="text-primary">font-normal</code> (400)</li>
+                    <li>레이블 → <code className="text-primary">font-medium</code> (500)</li>
+                    <li>제목·강조 → <code className="text-primary">font-semibold</code> (600)</li>
+                    <li><code className="text-red-600">font-bold</code> 사용 금지</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* G2. 네이밍 규칙 */}
+          <Section
+            tab="guide"
+            id="naming"
+            title="네이밍 규칙"
+            desc="토큰 이름은 의미로 읽힌다. Prefix가 카테고리, Suffix가 위계."
+          >
+            <div>
+              <SubLabel>Prefix — 무엇을 다루는 토큰인가</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <table className="w-full text-[12px]">
+                  <thead>
+                    <tr className="border-b border-divider-normal bg-fill-subtle">
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-44">Prefix</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-48">예시</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary">의미</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { prefix: "bg-canvas-*",     ex: "bg-canvas-primary",   meaning: "면적 큰 배경 (페이지·카드·모달)" },
+                      { prefix: "bg-fill-*",       ex: "bg-fill-subtle",      meaning: "작은 컴포넌트 배경 (배지·hover)" },
+                      { prefix: "bg-primary-*",    ex: "bg-primary-subtle",   meaning: "브랜드 강조 배경" },
+                      { prefix: "bg-{color}-tint", ex: "bg-green-tint",       meaning: "상태 색 tint 배경" },
+                      { prefix: "bg-alpha-*",      ex: "bg-alpha-black-02",   meaning: "투명 오버레이 (반투명 hover/딤)" },
+                      { prefix: "text-content-*",  ex: "text-content-primary", meaning: "일반 텍스트 색 (위계별)" },
+                      { prefix: "text-inverse-*",  ex: "text-inverse-primary", meaning: "반전 텍스트 (브랜드 위 흰글자)" },
+                      { prefix: "text-{color}-tint", ex: "text-green-tint",   meaning: "상태 색 tint 텍스트 (배지 안)" },
+                      { prefix: "border-*",        ex: "border-subtle",       meaning: "보더 색·굵기" },
+                      { prefix: "border-divider-*", ex: "border-divider-subtle", meaning: "셀·구분선 (alpha 기반)" },
+                    ].map((r, i) => (
+                      <tr key={i} className="border-t border-divider-subtle">
+                        <td className="py-2 px-3"><code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{r.prefix}</code></td>
+                        <td className="py-2 px-3"><code className="text-[11px] font-mono text-content-tertiary">{r.ex}</code></td>
+                        <td className="py-2 px-3 text-content-secondary">{r.meaning}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel>Suffix — 위계와 상태</SubLabel>
+              <div className="grid grid-cols-2 gap-s16">
+                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                  <p className="text-[12px] font-semibold text-content-primary mb-s8">위계 (진함 → 옅음)</p>
+                  <code className="text-[12px] text-content-tertiary block leading-relaxed font-mono">
+                    primary → secondary → tertiary → quaternary → assistive → disabled
+                  </code>
+                  <p className="text-[11px] text-content-assistive mt-s8">진할수록 강조, 옅을수록 보조</p>
+                </div>
+                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                  <p className="text-[12px] font-semibold text-content-primary mb-s8">상태</p>
+                  <code className="text-[12px] text-content-tertiary block leading-relaxed font-mono">
+                    -hover · -pressed · -subtle · -strong · -inverse
+                  </code>
+                  <p className="text-[11px] text-content-assistive mt-s8">interaction과 강조도 표현</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel note="이런 패턴은 사용 금지 — 빌드 통과해도 디자인 시스템 위반">❌ 금지 패턴</SubLabel>
+              <div className="rounded-lg border border-red-200 bg-red-50/50 p-s16">
+                <ul className="text-[12px] text-content-secondary space-y-2 leading-relaxed">
+                  <li>
+                    <code className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px]">bg-blue-500</code>{" "}
+                    같은 <strong>raw atomic 토큰 직접 사용</strong> — 반드시 semantic을 거쳐서 (예: <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[11px]">bg-primary</code>)
+                  </li>
+                  <li>
+                    <code className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px]">dark:bg-canvas-primary</code>{" "}
+                    — <strong>다크모드 미지원</strong>. 모든 dark: prefix 금지
+                  </li>
+                  <li>
+                    <code className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px]">rounded-xl</code>{" "}
+                    이상 — <strong>Vega 스타일 상한선</strong>. 카드는 rounded-lg(8px)까지
+                  </li>
+                  <li>
+                    <code className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px]">font-bold</code>{" "}
+                    — atomic <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[11px]">font-weight-bold</code>로만 허용. 일반은 font-semibold
+                  </li>
+                  <li>
+                    <code className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px]">bg-primary/10</code>{" "}
+                    같은 <strong>alpha modifier</strong> — semantic 토큰엔 금지. <code className="bg-fill-subtle text-content-secondary px-1.5 py-0.5 rounded text-[11px]">bg-primary-subtle</code> 같은 named 토큰 사용
+                  </li>
+                  <li>
+                    <code className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px]">gap-0.5</code>,{" "}
+                    <code className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[11px]">gap-1.5</code> 같은{" "}
+                    <strong>half-step 간격</strong> — 4px 그리드 벗어남. s-token 사용
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </Section>
+
+          {/* G3. Tailwind 매핑표 */}
+          <Section
+            tab="guide"
+            id="tailwind-map"
+            title="Tailwind 매핑표"
+            desc="Figma 토큰 ↔ shadcn 표준 ↔ 우리 Tailwind 클래스. 한눈에 보고 골라 쓰는 치트시트."
+          >
+            <div>
+              <SubLabel>Background</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <table className="w-full text-[12px]">
+                  <thead>
+                    <tr className="border-b border-divider-normal bg-fill-subtle">
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-52">Tailwind 클래스</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-44">CSS 변수</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-32">Figma 토큰</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary">언제 쓰나</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { cls: "bg-canvas-primary",    cssVar: "--bg-primary",    figma: "bg_primary",    when: "카드·모달 흰 배경" },
+                      { cls: "bg-canvas-secondary",  cssVar: "--bg-secondary",  figma: "bg_secondary",  when: "오프화이트 영역 (드물게)" },
+                      { cls: "bg-canvas-tertiary",   cssVar: "--bg-tertiary",   figma: "bg_tertiary",   when: "페이지 기본 배경 (모든 페이지)" },
+                      { cls: "bg-canvas-quaternary", cssVar: "--bg-subtle",     figma: "bg_subtle",     when: "섹션 구분·테이블 짝수행" },
+                      { cls: "bg-primary",           cssVar: "--primary",       figma: "(shadcn 표준)",  when: "메인 액션 버튼 (브랜드 블루)" },
+                      { cls: "bg-primary-subtle",    cssVar: "--primary-subtle", figma: "(파생)",        when: "사이드바·트리 선택 배경" },
+                      { cls: "bg-fill-subtle",       cssVar: "--fill-subtle",   figma: "(파생)",        when: "테이블 헤더·작은 컴포넌트 hover" },
+                    ].map((r, i) => (
+                      <tr key={i} className="border-t border-divider-subtle">
+                        <td className="py-2 px-3"><code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{r.cls}</code></td>
+                        <td className="py-2 px-3"><code className="text-[10px] font-mono text-content-disabled">{r.cssVar}</code></td>
+                        <td className="py-2 px-3 text-content-tertiary">{r.figma}</td>
+                        <td className="py-2 px-3 text-content-secondary">{r.when}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel>Text · Border</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <table className="w-full text-[12px]">
+                  <thead>
+                    <tr className="border-b border-divider-normal bg-fill-subtle">
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-52">Tailwind 클래스</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-44">CSS 변수</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-32">Figma 토큰</th>
+                      <th className="text-left py-2 px-3 font-semibold text-content-tertiary">언제 쓰나</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { cls: "text-content-primary",    cssVar: "--text-primary",    figma: "text_primary",    when: "제목·강조 (#191F28)" },
+                      { cls: "text-content-secondary",  cssVar: "--text-secondary",  figma: "text_secondary",  when: "본문 (cool-neutral-900)" },
+                      { cls: "text-content-tertiary",   cssVar: "--text-tertiary",   figma: "text_tertiary",   when: "서브 텍스트 (cool-neutral-700)" },
+                      { cls: "text-content-assistive",  cssVar: "--text-assistive",  figma: "text_assistive",  when: "placeholder·힌트 (#8B95A1)" },
+                      { cls: "text-primary",            cssVar: "--primary",         figma: "(shadcn 표준)",    when: "링크·브랜드 텍스트" },
+                      { cls: "text-inverse-primary",    cssVar: "--common-100",      figma: "text_inverse_primary", when: "브랜드 버튼 위 흰 글자" },
+                      { cls: "border-subtle",           cssVar: "--border-subtle",   figma: "border_subtle",   when: "카드 보더 (cool-neutral-200)" },
+                      { cls: "border-border",           cssVar: "--border",          figma: "border_primary",  when: "shadcn 표준 보더" },
+                      { cls: "border-divider-subtle",   cssVar: "--divider-subtle",  figma: "(파생)",           when: "테이블 셀 행 라인 (alpha-blue 4%)" },
+                    ].map((r, i) => (
+                      <tr key={i} className="border-t border-divider-subtle">
+                        <td className="py-2 px-3"><code className="text-[11px] bg-primary-subtle text-primary px-1.5 py-0.5 rounded">{r.cls}</code></td>
+                        <td className="py-2 px-3"><code className="text-[10px] font-mono text-content-disabled">{r.cssVar}</code></td>
+                        <td className="py-2 px-3 text-content-tertiary">{r.figma}</td>
+                        <td className="py-2 px-3 text-content-secondary">{r.when}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Section>
+
+          {/* G4. 브랜드 커스터마이징 */}
+          <Section
+            tab="guide"
+            id="brand"
+            title="브랜드 커스터마이징"
+            desc="B2B 다중 테넌트 — --primary 한 줄만 바꾸면 모든 컴포넌트 자동 추종. 한 build로 여러 브랜드 지원."
+          >
+            <div>
+              <SubLabel>1단계 — globals.css에 브랜드별 오버라이드 추가</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary p-s16 overflow-x-auto">
+                <pre className="text-[12px] text-content-secondary font-mono leading-relaxed">{`/* :root 블록 끝부분에 추가 */
+[data-brand="green"] {
+  --primary: var(--green-500);     /* #03b26c */
+}
+[data-brand="orange"] {
+  --primary: oklch(0.65 0.20 45);  /* 임의 hex/oklch도 가능 */
+}`}</pre>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel>2단계 — html 또는 페이지 wrapper에 data-brand 적용</SubLabel>
+              <div className="grid grid-cols-2 gap-s16">
+                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16 overflow-x-auto">
+                  <p className="text-[11px] font-semibold text-content-tertiary mb-s8">정적 (테넌트 단위)</p>
+                  <pre className="text-[12px] text-content-secondary font-mono leading-relaxed">{`// app/layout.tsx
+<html lang="ko" data-brand={tenant.brand}>
+  {/* "default" | "green" | "orange" */}
+</html>`}</pre>
+                </div>
+                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16 overflow-x-auto">
+                  <p className="text-[11px] font-semibold text-content-tertiary mb-s8">동적 (런타임 변경)</p>
+                  <pre className="text-[12px] text-content-secondary font-mono leading-relaxed">{`useEffect(() => {
+  document.documentElement
+    .dataset.brand = currentTenant.brand
+}, [currentTenant])`}</pre>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel>자동 추종 컴포넌트 — 코드 수정 불필요</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                <p className="text-[12px] text-content-tertiary mb-s12">
+                  <code className="bg-primary-subtle text-primary px-1.5 py-0.5 rounded text-[11px]">--primary</code> 변경 시 다음이 모두 자동 추종 (CSS 변수 추상화):
+                </p>
+                <div className="grid grid-cols-3 gap-x-s16 gap-y-s8">
+                  {[
+                    "Button (variant=primary)",
+                    "Badge (variant=default)",
+                    "사이드바 selected/ring",
+                    "링크 (text-primary)",
+                    "체크박스/라디오 ON",
+                    "focus ring",
+                    "필터 검색 버튼",
+                    "캘린더 선택 날짜",
+                    "테이블 selected 행",
+                  ].map(c => (
+                    <div key={c} className="flex items-center gap-s8 text-[12px] text-content-secondary">
+                      <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                      {c}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel note="reference에서 정적 색이라 브랜드와 무관">예외 — 브랜드와 무관한 토큰</SubLabel>
+              <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                <ul className="text-[12px] text-content-secondary space-y-2 leading-relaxed">
+                  <li>
+                    <code className="bg-blue-tint text-blue-tint px-1.5 py-0.5 rounded text-[11px]">bg-blue-tint</code>,{" "}
+                    <code className="bg-blue-tint text-blue-tint px-1.5 py-0.5 rounded text-[11px]">text-blue-tint</code>{" "}
+                    — info 배지용 파랑 (브랜드가 그린이어도 info=파랑)
+                  </li>
+                  <li>
+                    <code className="bg-green-tint text-green-tint px-1.5 py-0.5 rounded text-[11px]">bg-success</code>,{" "}
+                    <code className="bg-amber-tint text-amber-tint px-1.5 py-0.5 rounded text-[11px]">bg-warning</code>,{" "}
+                    <code className="bg-red-tint text-red-tint px-1.5 py-0.5 rounded text-[11px]">bg-destructive</code>{" "}
+                    — 시맨틱 상태색
+                  </li>
+                </ul>
               </div>
             </div>
           </Section>

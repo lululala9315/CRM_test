@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> [!IMPORTANT]
+> ## 개발자는 Layer 3(Tailwind 클래스)만 본다
+>
+> 토큰 시스템은 3-레이어 구조이지만 **일상 개발에서는 Layer 3 유틸리티 클래스만** 쓰면 된다.
+> Layer 1(`--blue-500` 같은 raw atomic) / Layer 2(`--primary` 같은 CSS 변수)는 디자인 시스템 메인테이너만 신경.
+>
+> | 레이어 | 예시 | 누가 쓰나 |
+> |---|---|---|
+> | Layer 1 (atomic) | `--blue-500`, `--cool-neutral-150` | ❌ 직접 사용 금지. 디자인시스템 정의 시에만 |
+> | Layer 2 (semantic) | `--primary`, `--bg-primary` | ❌ 코드에서 직접 X. globals.css의 매핑용 |
+> | **Layer 3 (Tailwind 유틸)** | **`bg-primary`, `bg-canvas-primary`, `text-content-tertiary`** | ✅ **개발자는 여기만** |
+>
+> 따라서 실제 사용 어휘는 **shadcn 표준 클래스 ~30개 + Figma 매핑 utility ~71개 ≈ 100개 미만**. 부담 없음.
+
 > [!NOTE]
 > ## 🎨 디자인 시스템 — Semantic Sync (Figma 1:1 + shadcn 표준 호환)
 >
