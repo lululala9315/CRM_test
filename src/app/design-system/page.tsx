@@ -1853,9 +1853,9 @@ export default function DesignSystemPage() {
             <div>
               <SubLabel>개별 컨트롤 패턴</SubLabel>
               <div className="grid grid-cols-3 gap-4">
-                <ControlSample label="Select — size='sm' border-subtle bg-fill-filter">
+                <ControlSample label="Select — h-9 border-subtle bg-fill-filter">
                   <Select defaultValue="all">
-                    <SelectTrigger size="sm" className="border-subtle bg-fill-filter gap-1.5 text-content-primary">
+                    <SelectTrigger className="border-subtle bg-fill-filter gap-1.5 text-content-primary">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-md border-subtle text-body4-normal">
@@ -1864,22 +1864,22 @@ export default function DesignSystemPage() {
                     </SelectContent>
                   </Select>
                 </ControlSample>
-                <ControlSample label="Input — variant='filter' size='sm'">
+                <ControlSample label="Input — variant='filter'">
                   <div className="relative flex items-center">
-                    <Search className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-content-disabled" />
-                    <Input variant="filter" size="sm" className="pl-8 placeholder:text-content-assistive" placeholder="고객명 검색" />
+                    <Search className="pointer-events-none absolute left-3 h-4 w-4 text-content-disabled" />
+                    <Input variant="filter" className="pl-9 placeholder:text-content-assistive" placeholder="고객명 검색" />
                   </div>
                 </ControlSample>
                 <ControlSample label="필터 초기화 (변경 시 노출)">
-                  <button className="h-8 px-1 text-[12px] font-medium text-primary underline underline-offset-2 decoration-accent hover:opacity-70 active:scale-[0.97] transition-[transform,opacity] duration-100">
+                  <button className="h-8 px-1 text-[12px] font-medium text-primary underline underline-offset-2 decoration-primary hover:opacity-70 active:scale-[0.97] transition-[transform,opacity] duration-100">
                     필터 초기화
                   </button>
                 </ControlSample>
               </div>
               <p className="text-[11px] text-content-assistive mt-2">
                 컨트롤 공통:{" "}
-                <code className="text-[11px] bg-primary-subtle text-primary px-1 py-0.5 rounded">bg-fill-filter border-subtle shadow-none rounded-md h-8</code>
-                {" "}· 초기화는 아이콘 버튼 금지
+                <code className="text-[11px] bg-primary-subtle text-primary px-1 py-0.5 rounded">bg-fill-filter border-subtle shadow-none rounded-md h-9</code>
+                {" "}· 초기화는 아이콘 버튼 금지 (텍스트 언더라인 버튼)
               </p>
             </div>
 
@@ -1966,7 +1966,7 @@ export default function DesignSystemPage() {
                 </TableHeader>
                 <TableBody>
                   {[1, 2, 3].map(i => (
-                    <TableRow key={i} className="cursor-pointer border-divider-subtle hover:bg-fill-subtle transition-colors duration-120">
+                    <TableRow key={i} className="cursor-pointer border-divider-subtle">
                       <TableCell className="text-center num-cell">{i}</TableCell>
                       <TableCell className="text-left text-content-primary">이민혁</TableCell>
                       <TableCell className="text-left num-cell">010-1111-1111</TableCell>
@@ -1997,8 +1997,9 @@ export default function DesignSystemPage() {
                     { attr: "No. 컬럼",       val: "text-center", note: "헤더+셀 동일" },
                     { attr: "나머지 컬럼",     val: "text-left", note: "기본" },
                     { attr: "숫자/날짜/전화",  val: "num-cell", note: "tabular-nums + tracking" },
-                    { attr: "행 hover",        val: "hover:bg-fill-subtle", note: "" },
-                    { attr: "선택 행",         val: "data-[state=selected]:bg-blue-tint", note: "" },
+                    { attr: "행 hover",        val: "hover:bg-alpha-black-02", note: "alpha 2% — 매우 미세, 텍스트 안 진해짐" },
+                    { attr: "선택 행",         val: "data-[state=selected]:bg-blue-tint", note: "blue-50" },
+                    { attr: "선택 행 hover",   val: "data-[state=selected]:hover:bg-primary-subtle-hover", note: "blue-75 — 선택+hover 시 한 단계 진하게" },
                   ].map(r => (
                     <tr key={r.attr} className="border-t border-divider-subtle">
                       <td className="py-2.5 px-3 font-medium text-content-primary">{r.attr}</td>
@@ -2016,21 +2017,19 @@ export default function DesignSystemPage() {
             <div>
               <SubLabel>태그 배지 — 상태·분류 (tint 스타일)</SubLabel>
               <div className="flex flex-wrap gap-2 mb-3">
-                <Badge variant="tint-success">계약 완료</Badge>
-                <Badge variant="tint-warning">상담 거절</Badge>
-                <Badge variant="tint-danger">실패</Badge>
+                <Badge variant="tint-success">진행중</Badge>
+                <Badge variant="tint-warning">대기</Badge>
+                <Badge variant="tint-danger">상담 거절</Badge>
                 <Badge variant="tint-blue">진행 예정</Badge>
-                <Badge variant="tint-neutral">종료</Badge>
-                <Badge variant="tint-muted">보류</Badge>
+                <Badge variant="tint-muted">계약 완료 / 종료</Badge>
               </div>
               <div className="flex flex-col gap-1">
                 {[
-                  { v: "tint-success", desc: "green-50 bg / green-450 text — 성공·완료" },
-                  { v: "tint-warning", desc: "amber-50 bg / amber-700 text — 경고·거절" },
-                  { v: "tint-danger",  desc: "red-50 bg / red-600 text — 실패·긴급" },
-                  { v: "tint-blue",    desc: "blue-50 bg / blue-700 text — 진행·신규" },
-                  { v: "tint-neutral", desc: "bg-subtle / text-content-assistive — 종료·보류" },
-                  { v: "tint-muted",   desc: "bg-canvas-quaternary / text-content-quaternary" },
+                  { v: "tint-success", desc: "green-50 bg / green-450 text — 활성 진행 (db-status: 진행중)" },
+                  { v: "tint-warning", desc: "amber-50 bg / amber-700 text — 주의·대기 (현재 사용처 없음)" },
+                  { v: "tint-danger",  desc: "red-50 bg / red-600 text — 명확한 부정 (completed: 상담 거절)" },
+                  { v: "tint-blue",    desc: "blue-50 bg / blue-700 text — 정보·신규 (db-status: 진행 예정)" },
+                  { v: "tint-muted",   desc: "bg-canvas-quaternary / text-content-quaternary — 비활성·종결 (completed: 계약 완료, db-status: 종료)" },
                 ].map(b => (
                   <div key={b.v} className="flex items-center gap-2">
                     <code className="text-[10px] text-primary w-24 shrink-0">{b.v}</code>

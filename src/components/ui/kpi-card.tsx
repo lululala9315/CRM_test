@@ -26,9 +26,13 @@ export function KpiCard({
   unit,
   delta,
   className,
-}: KpiCardProps) {
+  showDivider = false,
+}: KpiCardProps & { showDivider?: boolean }) {
   return (
-    <div className={cn("flex-1 px-6", className)}>
+    <div className={cn("flex-1 px-6 relative", className)}>
+      {showDivider && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-divider-normal" />
+      )}
       <p className="text-[12px] font-medium text-content-assistive mb-1.5 tracking-tight leading-none whitespace-nowrap">
         {label}
       </p>
@@ -58,7 +62,8 @@ export function KpiCard({
 }
 
 /**
- * KPI 카드 그룹 — 여러 KPI를 한 카드 안에 가로 배치 (구분선 없음)
+ * KPI 카드 그룹 — 여러 KPI를 한 카드 안에 가로 배치 + 사이 수직 구분선
+ * 첫 카드는 구분선 없음, 2번째부터 좌측 구분선 (absolute h-12 w-px bg-divider-normal)
  */
 export function KpiGroup({ items, className }: { items: KpiData[]; className?: string }) {
   return (
@@ -69,8 +74,8 @@ export function KpiGroup({ items, className }: { items: KpiData[]; className?: s
       )}
     >
       <div className="flex items-stretch">
-        {items.map((kpi) => (
-          <KpiCard key={kpi.label} {...kpi} />
+        {items.map((kpi, i) => (
+          <KpiCard key={kpi.label} {...kpi} showDivider={i > 0} />
         ))}
       </div>
     </div>
