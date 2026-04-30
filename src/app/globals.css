@@ -721,6 +721,11 @@
 @utility bg-alpha-black-05 { background-color: var(--alpha-black-05); }
 @utility bg-alpha-black-10 { background-color: var(--alpha-black-10); }
 @utility bg-alpha-black-18 { background-color: var(--alpha-black-18); }
+@utility bg-alpha-black-30 { background-color: var(--alpha-black-30); }
+@utility bg-alpha-black-46 { background-color: var(--alpha-black-46); }
+@utility bg-alpha-black-58 { background-color: var(--alpha-black-58); }
+@utility bg-alpha-white-60 { background-color: var(--alpha-white-60); }
+@utility bg-alpha-white-80 { background-color: var(--alpha-white-80); }
 
 /* ─────────────────────────────────────────────────────────────────────
    /design-system 페이지 탭 컨테이너

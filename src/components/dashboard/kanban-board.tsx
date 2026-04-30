@@ -193,13 +193,13 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
 
       </div>
 
-      {/* 취소 고객 오버레이 */}
+      {/* 취소 고객 오버레이 — 검정 알파 딤(연하게) + 흰 텍스트(타이틀 강조 + 서브 연하게) */}
       {customer.isCancelled && (
-        <div className="absolute inset-0 bg-fill-normal backdrop-blur-[1px] flex flex-col items-center justify-center gap-0.5 px-3.5">
-          <p className="text-body5-bold text-background leading-snug text-center">
+        <div className="absolute inset-0 bg-alpha-black-46 flex flex-col items-center justify-center gap-1 px-3.5">
+          <p className="text-h5-bold text-inverse-primary leading-snug text-center">
             상담 취소 요청
           </p>
-          <p className="text-[11px] text-selected-strong leading-snug text-center">
+          <p className="text-body5-medium text-selected-muted leading-snug text-center">
             {customer.deletedAt} 삭제 예정
           </p>
         </div>

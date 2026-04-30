@@ -2,7 +2,7 @@
 
 /**
  * 역할: 공통 검색 필터 바 — 담당설계사 + 고객명 + 추가 셀렉트(선택) + 초기화
- * 주요 기능: h-8 통일, 필터 변경 시에만 초기화 버튼 노출, extraFilters로 추가 필터 주입 가능
+ * 주요 기능: h-9 통일, 필터 변경 시에만 초기화 버튼 노출, extraFilters로 추가 필터 주입 가능
  */
 
 import { useState } from "react"
@@ -97,7 +97,7 @@ export function SearchFilter({ showPlanner = true, extraSelects, extraElements, 
       {hasFilter && (
         <button
           onClick={handleReset}
-          className="h-8 px-1 text-[12px] font-medium text-primary underline underline-offset-2 decoration-accent hover:opacity-70 active:scale-[0.97] transition-[transform,opacity] duration-100"
+          className="h-8 px-1 text-[12px] font-medium text-primary underline underline-offset-2 decoration-primary hover:opacity-70 active:scale-[0.97] transition-[transform,opacity] duration-100"
         >
           필터 초기화
         </button>

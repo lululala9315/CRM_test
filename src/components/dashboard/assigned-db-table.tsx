@@ -134,11 +134,11 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
         </div>
       </div>
 
-      {/* 테이블 카드 */}
-      <div className="bg-canvas-primary rounded-lg border border-subtle">
-
+      {/* 테이블 카드 — 가로 스크롤만, sticky 헤더 없음 */}
+      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+        <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="sticky top-[44px] z-30 bg-canvas-primary">
+            <TableHeader className="bg-canvas-primary">
               <TableRow className="border-b border-divider-normal hover:bg-transparent">
                 <TableHead className="text-left h-10 w-10 !pl-3 !pr-1">
                   <Checkbox
@@ -153,15 +153,15 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
                 <TableHead className="!text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">이름</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-16">성별</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">생년월일</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-36">연락처</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-32">생년월일</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-32">연락처</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">지역</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">배정시간</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">최초통화</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-40">최근통화</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20">통화시도</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20">통화성공</TableHead>
-                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20">유효통화</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-28">배정시간</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-28">최초통화</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-28">최근통화</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-16">통화시도</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-16">통화성공</TableHead>
+                <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-16">유효통화</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">담당 설계사</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 w-20 !pr-5">배정이력</TableHead>
               </TableRow>
@@ -214,7 +214,7 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
               )}
             </TableBody>
           </Table>
-
+        </div>
       </div>
 
       {/* 페이지네이션 */}

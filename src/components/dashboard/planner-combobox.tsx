@@ -56,7 +56,7 @@ export function PlannerCombobox({ value: controlledValue, onValueChange }: Plann
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="flex h-8 items-center justify-between gap-1.5 rounded-md border border-subtle bg-fill-filter px-2.5 text-[13px] text-content-primary shadow-none transition-[color,background-color,border-color] min-w-[170px] hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow"
+          className="flex h-9 items-center justify-between gap-1.5 rounded-md border border-subtle bg-fill-filter px-2.5 text-[13px] text-content-primary shadow-none transition-[color,background-color,border-color] min-w-[170px] hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow"
         >
           <span className="flex items-center gap-1 min-w-0 flex-1">
             <span className="text-content-assistive shrink-0">담당설계사</span>

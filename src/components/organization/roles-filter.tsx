@@ -86,7 +86,7 @@ export function RolesFilter() {
       {hasFilter && (
         <button
           onClick={handleReset}
-          className="h-8 px-1 text-[12px] font-medium text-primary underline underline-offset-2 decoration-accent hover:opacity-70 active:scale-[0.97] transition-[transform,opacity] duration-100"
+          className="h-8 px-1 text-[12px] font-medium text-primary underline underline-offset-2 decoration-primary hover:opacity-70 active:scale-[0.97] transition-[transform,opacity] duration-100"
         >
           필터 초기화
         </button>
