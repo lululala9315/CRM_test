@@ -21,7 +21,7 @@ function SectionHeader({ title }: { title: string }) {
 // --- 공통: 테이블 래퍼 ---
 function InfoTable({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+    <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
       {children}
     </div>
   )

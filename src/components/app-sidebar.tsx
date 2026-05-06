@@ -159,7 +159,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     className={cn(
                                       "h-9 pl-9 gap-2.5",
                                       isActive
-                                        ? "bg-primary-subtle text-primary hover:bg-primary-subtle-hover"
+                                        ? "bg-primary-subtle text-primary hover:bg-primary-subtle"
                                         : "hover:bg-sidebar-accent"
                                     )}
                                   >

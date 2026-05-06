@@ -28,7 +28,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 > | `text-content-primary` | 진한 글자 (#191F28) | Figma `text_primary` |
 > | `text-content-assistive` | 힌트·플레이스홀더 (#8B95A1) | Figma `text_assistive` |
 > | `border-subtle` | 카드 보더 (cool-neutral-200) | Figma `border_subtle` |
-> | `bg-canvas-tertiary` | 페이지 배경 (cool-neutral-100) | Figma `bg_tertiary` |
+> | `bg-canvas-secondary` | 페이지 배경 (cool-neutral-50, #FAFAFA) | Figma `bg_secondary` |
 > | `text-inverse-primary` | 흰 글자 (브랜드 위) | Figma `text_inverse_primary` |
 >
 > **B2B 다중 브랜드**: `--primary` CSS 변수 한 줄만 바꾸면 모든 컴포넌트 자동 추종.
@@ -111,7 +111,8 @@ Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 | `bg-primary` | brand blue | shadcn primary 액션 (Button primary 등) |
 | `bg-canvas-primary` | 흰 (#FFFFFF) | Figma `bg_primary`, 카드/모달 배경 |
 | `bg-canvas-secondary` | cool-neutral-50 | Figma `bg_secondary` |
-| `bg-canvas-tertiary` | cool-neutral-100 | Figma `bg_tertiary`, 페이지 배경 |
+| `bg-canvas-secondary` | cool-neutral-50 | Figma `bg_secondary`, **페이지 기본 배경** |
+| `bg-canvas-tertiary` | cool-neutral-100 | Figma `bg_tertiary`, hover 효과·강조 영역에만 사용 |
 | `bg-canvas-quaternary` | cool-neutral-150 | Figma `bg_quaternary`, 섹션·홀수행 |
 | `bg-muted` | cool-neutral-150 | shadcn 표준 hover/드롭다운 |
 | `bg-primary-subtle` | blue-50 | 테이블 선택 행 · 사이드바 active 배경 |
@@ -170,7 +171,7 @@ Layer 3 (Bridge):    @theme inline로 Tailwind 클래스 노출
 ❌ text-quaternary   // → text-content-quaternary
 ❌ bg-secondary      // → bg-canvas-secondary
 ❌ bg-quaternary     // → bg-canvas-quaternary
-❌ bg-tertiary       // → bg-canvas-tertiary (페이지 배경)
+❌ bg-tertiary       // → bg-canvas-tertiary (hover/강조용. 페이지 배경은 bg-canvas-secondary)
 ```
 
 ## B2B 다중 브랜드 — 브랜드별 컬러 커스터마이징
@@ -439,7 +440,7 @@ shadcn `Button` size variant를 그대로 사용. **`h-*`, `px-*` 수동 오버�
 
 ## 필터 컴포넌트 패턴
 
-필터 컨트롤은 **`bg-fill-filter` (= 흰색)** + **`border-subtle`** 통일. `bg-muted/60` 사용 금지 — 페이지 배경(`bg-canvas-tertiary`)과 대비가 거의 없어 필 영역이 안 보임.
+필터 컨트롤은 **`bg-fill-filter` (= 흰색)** + **`border-subtle`** 통일. `bg-muted/60` 사용 금지 — 페이지 배경(`bg-canvas-secondary`)과 대비가 거의 없어 필 영역이 안 보임.
 
 순서: Select → Input → 검색 → 필터 초기화
 
@@ -512,7 +513,7 @@ layout.tsx
 ```tsx
 import { PageHeader } from "@/components/page-header"
 
-<div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
+<div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-secondary scrollbar-hide flex flex-col min-h-full">
   <PageHeader title="페이지명" subtitle="부제목" />
   {/* 콘텐츠 */}
   ...
@@ -526,7 +527,7 @@ import { PageHeader } from "@/components/page-header"
 - `bordered` (boolean, optional) — 하단 border-b 추가 (상세 페이지 등)
 - `actions` (ReactNode, optional) — 우측 액션 버튼 영역
 
-> ⚠️ **모든 페이지 배경 통일**: `bg-canvas-tertiary` (#f6f7f9). 홈 대시보드도 동일.
+> ⚠️ **모든 페이지 배경 통일**: `bg-canvas-secondary` (#FAFAFA). 홈 대시보드도 동일.
 
 **패턴 1 — BusinessTree + 필터 별도 + 테이블** (`/completed`, `/db/assigned`, `/db/unassigned`):
 ```tsx
@@ -682,7 +683,7 @@ import { Footer } from "@/components/footer"
 
 # 수정 시 주의사항
 
-**필터 컨트롤 fill** — 페이지 배경(`bg-canvas-tertiary`)과 대비를 위해 흰색 사용:
+**필터 컨트롤 fill** — 페이지 배경(`bg-canvas-secondary`)과 대비를 위해 흰색 사용:
 - Input variant="filter" (`bg-fill-filter border-subtle`)
 - Select / multi-select 버튼: `bg-fill-filter border-subtle`
 

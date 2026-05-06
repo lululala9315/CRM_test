@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils"
 import { BusinessTree } from "@/components/business-tree"
 import { PageHeader } from "@/components/page-header"
+import { Footer } from "@/components/footer"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { KpiGroup, type KpiData } from "@/components/ui/kpi-card"
 import {
@@ -154,7 +155,7 @@ export default function DashboardPage() {
   const noResponseTotal = noResponseData.reduce((s, d) => s + d.value, 0)
 
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-secondary scrollbar-hide flex flex-col min-h-full">
 
       <PageHeader title="홈 대시보드" subtitle="조직별 배정·통화 성과를 기간 기준으로 확인합니다" />
 
@@ -221,7 +222,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-5 gap-4 items-start">
 
             {/* 통화율 주간 추이 AreaChart — 3/5 */}
-            <div className="col-span-3 bg-card rounded-lg border border-subtle overflow-hidden">
+            <div className="col-span-3 bg-card rounded-lg border-border05 border-subtle overflow-hidden">
               <CardHeader
                 title="통화율 주간 추이"
                 subtitle="1월 1일 ~ 2월 19일 · 8주"
@@ -273,7 +274,7 @@ export default function DashboardPage() {
             </div>
 
             {/* 리드 타임 분포 horizontal BarChart — 2/5 */}
-            <div className="col-span-2 bg-card rounded-lg border border-subtle overflow-hidden">
+            <div className="col-span-2 bg-card rounded-lg border-border05 border-subtle overflow-hidden">
               <CardHeader
                 title="리드 타임 분포"
                 subtitle={`총 ${leadTimeTotal}건 · 평균 반응 23시간`}
@@ -309,7 +310,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ── 미대응 현황 full-width ─────────────────────────────────────── */}
-          <div className="bg-card rounded-lg border border-subtle overflow-hidden">
+          <div className="bg-card rounded-lg border-border05 border-subtle overflow-hidden">
             <CardHeader
               title="미대응 현황"
               subtitle={`총 ${noResponseTotal}건 · 10일 초과 7건 긴급`}
@@ -343,6 +344,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      <Footer />
     </div>
   )
 }

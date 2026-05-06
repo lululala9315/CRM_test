@@ -6,6 +6,8 @@ import { extendTailwindMerge } from "tailwind-merge"
 const twMerge = extendTailwindMerge<"typography">({
   extend: {
     classGroups: {
+      // 커스텀 border-width 유틸을 표준 border-w 그룹에 등록 → cn에서 충돌 시 후순위 우선
+      "border-w": ["border-border05"],
       typography: [
         {
           text: [

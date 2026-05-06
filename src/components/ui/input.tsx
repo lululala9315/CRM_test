@@ -15,7 +15,7 @@ const inputVariants = cva(
       },
       variant: {
         default: "",
-        filter: "bg-fill-filter border-subtle",
+        filter: "bg-fill-filter border-subtle border-border05",
       },
     },
     defaultVariants: { size: "default", variant: "default" },

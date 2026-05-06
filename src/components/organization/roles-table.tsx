@@ -76,7 +76,7 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
     <div className="flex flex-col gap-0.5">
 
       {/* 툴바 */}
-      <div className="sticky top-3 z-20 bg-canvas-tertiary flex items-center justify-between py-1">
+      <div className="sticky top-3 z-20 bg-canvas-secondary flex items-center justify-between py-1">
         <span className="text-body5-medium text-content-assistive tabular-nums">
           총 {MOCK_ROWS.length}개
         </span>
@@ -92,11 +92,11 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
         </Select>
       </div>
 
-      {/* 테이블 카드 */}
-      <div className="bg-canvas-primary rounded-lg border border-subtle">
-
+      {/* 테이블 카드 — 가로 스크롤만, sticky 헤더 없음 */}
+      <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
+        <div className="max-h-[calc(100vh-260px)] overflow-auto">
           <Table>
-            <TableHeader className="sticky top-[44px] z-30 bg-canvas-primary">
+            <TableHeader className="sticky top-0 z-10 bg-canvas-primary">
               <TableRow className="border-b border-divider-normal hover:bg-transparent">
                 <TableHead className="!text-center font-semibold text-content-assistive text-[12px] h-10 w-12 !pl-1">No.</TableHead>
                 <TableHead className="text-left font-semibold text-content-assistive text-[12px] h-10 min-w-24">직책/직급</TableHead>
@@ -131,7 +131,7 @@ export function RolesTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
               )}
             </TableBody>
           </Table>
-
+        </div>
       </div>
 
       {/* 페이지네이션 */}

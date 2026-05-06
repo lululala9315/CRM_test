@@ -6,15 +6,14 @@
 import { PendingFilter } from "@/components/dashboard/pending-filter"
 import { PendingTable } from "@/components/dashboard/pending-table"
 import { BusinessTree } from "@/components/business-tree"
-import { TitleObserver } from "@/components/title-observer"
 import { PageHeader } from "@/components/page-header"
+import { Footer } from "@/components/footer"
 
 export default function PendingPage() {
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-secondary scrollbar-hide flex flex-col min-h-full">
 
       <PageHeader title="계약 예정 고객" subtitle="계약 진행을 약속한 고객을 관리할 수 있습니다" />
-      <TitleObserver />
 
       {/* 콘텐츠 — 조직도 + 카드들 */}
       <div className="flex gap-3 px-6 pb-15 items-start">
@@ -25,6 +24,7 @@ export default function PendingPage() {
         </div>
       </div>
 
+      <Footer />
     </div>
   )
 }

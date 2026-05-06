@@ -9,7 +9,7 @@ import { KanbanBoard } from "@/components/dashboard/kanban-board"
 
 export function ConsultingSection() {
   return (
-    <div className="flex-1 bg-canvas-primary rounded-lg border border-subtle overflow-hidden flex flex-col">
+    <div className="flex-1 bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden flex flex-col">
 
       {/* 칸반 보드 타이틀 */}
       <div className="px-6 pt-5 pb-0">

@@ -160,7 +160,7 @@ function TeamItem({
         className={cn(
           "w-full flex items-center pl-9 pr-2.5 py-1.5 rounded-md text-[12px] transition-[background-color,color] duration-150",
           isActive
-            ? "bg-canvas-quaternary text-content-primary font-semibold hover:bg-canvas-quaternary"
+            ? "bg-primary-subtle text-primary font-semibold hover:bg-primary-subtle"
             : "font-medium text-content-quaternary hover:bg-canvas-tertiary hover:text-content-secondary"
         )}
       >
@@ -418,7 +418,7 @@ export function BusinessTree({ visible = true }: BusinessTreeProps) {
 
   return (
     <>
-      <div className="w-[180px] shrink-0 bg-canvas-primary rounded-lg border border-subtle flex flex-col self-start sticky top-3">
+      <div className="w-[164px] shrink-0 bg-canvas-primary rounded-lg border-border05 border-subtle flex flex-col self-start sticky top-3">
         {/* 헤더 — 타이틀 + 펼쳐보기 버튼 */}
         <div className="px-4 pt-4 pb-2 flex items-center justify-between">
           <span className="text-[12px] font-semibold text-content-assistive tracking-tight">

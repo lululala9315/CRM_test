@@ -51,7 +51,7 @@ export function ReassignTypeEdit() {
     <div className="flex flex-col gap-3">
 
       {/* 기본 타입 카드 (읽기 전용) */}
-      <div className="bg-canvas-primary rounded-lg border border-subtle">
+      <div className="bg-canvas-primary rounded-lg border-border05 border-subtle">
         <div className="flex items-center px-6 py-4">
           <span className="text-[13px] font-semibold text-content-tertiary w-[160px] shrink-0">타입 이름</span>
           <span className="text-[13px] text-content-disabled">기본</span>
@@ -59,7 +59,7 @@ export function ReassignTypeEdit() {
       </div>
 
       {/* 편집 가능한 타입 카드 */}
-      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+      <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
 
         {/* 컬럼 헤더 */}
         <div className="flex items-center gap-4 px-6 py-3">
@@ -82,7 +82,7 @@ export function ReassignTypeEdit() {
                   value={type.name}
                   onChange={e => updateType(type.id, "name", e.target.value)}
                   placeholder="타입 이름"
-                  className="border-subtle bg-canvas-tertiary text-[13px]"
+                  className="border-subtle bg-canvas-secondary text-[13px]"
                 />
               </div>
 
@@ -92,7 +92,7 @@ export function ReassignTypeEdit() {
                   value={type.description}
                   onChange={e => updateType(type.id, "description", e.target.value)}
                   placeholder="설명을 입력하세요"
-                  className="border-subtle bg-canvas-tertiary text-[13px]"
+                  className="border-subtle bg-canvas-secondary text-[13px]"
                 />
               </div>
 

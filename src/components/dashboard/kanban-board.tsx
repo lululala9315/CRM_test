@@ -28,11 +28,11 @@ import { cn } from "@/lib/utils"
 // 기능 배지 → 디자인 시스템 토큰 매핑 (accent-bg-* / accent-fg-*)
 const TAG_COLOR: Record<string, string> = {
   "종합진단":    "bg-red-tint text-red-tint border-transparent",
-  "AI 상담내역": "bg-canvas-tertiary text-content-assistive border-transparent",
+  "AI 상담내역": "bg-canvas-secondary text-content-assistive border-transparent",
   "보험료점검":  "bg-green-tint text-green-tint border-transparent",
   "보장확대":    "bg-blue-tint text-blue-tint border-transparent",
 }
-const TAG_COLOR_DEFAULT = "bg-canvas-tertiary text-content-assistive border-transparent"
+const TAG_COLOR_DEFAULT = "bg-canvas-secondary text-content-assistive border-transparent"
 
 // 컬럼 스타일 — 타이틀 라벨 색상
 const COLUMN_STYLE: Record<string, { label: string }> = {
@@ -143,7 +143,7 @@ const CustomerCard = React.memo(({ customer, isDragging }: { customer: Customer;
 
   return (
     <div className={cn(
-      "relative bg-canvas-primary rounded-md border border-subtle overflow-hidden",
+      "relative bg-canvas-primary rounded-md border-border05 border-subtle overflow-hidden",
       "cursor-grab active:cursor-grabbing select-none",
       "hover:border-border hover:shadow-sm transition-[color,border-color,box-shadow] duration-150",
       isDragging && "opacity-40 shadow-md"

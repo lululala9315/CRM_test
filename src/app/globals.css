@@ -502,7 +502,7 @@
   --chart-5: var(--violet-650);
 
   /* Sidebar */
-  --sidebar:                    var(--bg-tertiary);
+  --sidebar:                    var(--bg-secondary);
   --sidebar-foreground:         var(--cool-neutral-800);  /* 한 단계 어둡게 (700 → 800) */
   --sidebar-primary:            var(--accent);
   --sidebar-primary-foreground: var(--bg-primary);
@@ -547,6 +547,12 @@
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
   letter-spacing: -0.05em;
+}
+
+/* 0.5px 보더 — Tailwind v4 namespace 충돌(--color-border) 회피용 명시 정의 */
+@utility border-border05 {
+  border-width: 0.5px;
+  border-style: solid;
 }
 
 /* ─────────────────────────────────────────────────────────────────────

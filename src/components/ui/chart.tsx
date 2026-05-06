@@ -194,7 +194,7 @@ function ChartTooltipContent({
     <div
       className={cn(
         // border-subtle: components/ui/ 파일이지만 Step 3 DS 정비 범위 포함 (select.tsx B6 선례 준용)
-        "grid min-w-32 items-start gap-1.5 rounded-lg border border-subtle bg-background px-2.5 py-1.5 text-xs shadow-xl",
+        "grid min-w-32 items-start gap-1.5 rounded-lg border-border05 border-subtle bg-background px-2.5 py-1.5 text-xs shadow-xl",
         className
       )}
     >

@@ -69,7 +69,7 @@ export function KpiGroup({ items, className }: { items: KpiData[]; className?: s
   return (
     <div
       className={cn(
-        "bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle",
+        "bg-canvas-primary rounded-lg pt-4 pb-3 border-border05 border-subtle",
         className
       )}
     >

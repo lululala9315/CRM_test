@@ -18,7 +18,7 @@ export function PageHeader({ title, subtitle, bordered = false, actions }: PageH
   return (
     <>
       {/* 스크롤 가림막 — sticky 영역 위(top-0~top-3) 12px 빈 영역에 행이 비치는 것 차단 */}
-      <div className="sticky top-0 z-40 h-3 bg-canvas-tertiary -mb-3 shrink-0" />
+      <div className="sticky top-0 z-40 h-3 bg-canvas-secondary -mb-3 shrink-0" />
       <div className={cn(
         "px-6 pt-10 pb-6",
         actions && "flex items-start justify-between gap-4",

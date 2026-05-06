@@ -7,12 +7,12 @@ import { RolesFilter } from "@/components/organization/roles-filter"
 import { RolesTable } from "@/components/organization/roles-table"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { TitleObserver } from "@/components/title-observer"
 import { PageHeader } from "@/components/page-header"
+import { Footer } from "@/components/footer"
 
 export default function RolesPage() {
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-secondary scrollbar-hide flex flex-col min-h-full">
 
       <PageHeader
         title="직책·권한 설정"
@@ -24,7 +24,6 @@ export default function RolesPage() {
           </Button>
         }
       />
-      <TitleObserver />
 
       {/* 필터 */}
       <div className="px-6 mb-4">
@@ -36,6 +35,7 @@ export default function RolesPage() {
         <RolesTable />
       </div>
 
+      <Footer />
     </div>
   )
 }

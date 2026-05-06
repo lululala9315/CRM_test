@@ -49,7 +49,7 @@ const SEMANTIC_COLORS: SemanticGroup[] = [
     entries: [
       { token: "bg-canvas-primary",    cssVar: "bg-primary",    hex: "#ffffff", desc: "카드·모달 배경",        subtle: true },
       { token: "bg-canvas-secondary",  cssVar: "bg-secondary",  hex: "#f9fafb", desc: "hover 미세 배경",        subtle: true },
-      { token: "bg-canvas-tertiary",   cssVar: "bg-tertiary",   hex: "#f2f4f6", desc: "페이지 기본 배경",       subtle: true },
+      { token: "bg-canvas-secondary",   cssVar: "bg-tertiary",   hex: "#f2f4f6", desc: "페이지 기본 배경",       subtle: true },
       { token: "bg-canvas-quaternary", cssVar: "bg-subtle",     hex: "#eceef1", desc: "구분·홀수행·섹션 구분",  subtle: true },
     ],
   },
@@ -452,7 +452,7 @@ function SemanticRow({ token, cssVar, hex, desc, kind = "bg", subtle }: ColorEnt
 // ── Semantic Section (그룹 래퍼) ──────────────────────────────────────────
 function SemanticSection({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+    <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
       {/* 그룹 레이블 — 좌측 4px 컬러 바 + 텍스트 */}
       <div className="flex items-center gap-3 px-4 py-2.5 border-b border-subtle bg-canvas-quaternary">
         <p className="text-[12px] font-semibold text-content-secondary tracking-tight">{label}</p>
@@ -597,7 +597,7 @@ function MigrationTable({ rows }: {
   rows: { from: string; to: string; reason: string }[]
 }) {
   return (
-    <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+    <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
       <table className="w-full text-[12px]">
         <thead>
           <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -666,7 +666,7 @@ export default function DesignSystemPage() {
   const currentTab = TABS.find(t => t.id === activeTab)!
 
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-secondary scrollbar-hide">
       {/* 타이틀 */}
       <div className="px-6 pt-10 pb-4">
         <h1 className="text-[28px] font-semibold tracking-tight leading-tight text-content-primary [text-wrap:balance]">
@@ -676,7 +676,7 @@ export default function DesignSystemPage() {
       </div>
 
       {/* 탭 네비게이션 — sticky */}
-      <div className="sticky top-0 z-20 bg-canvas-tertiary/95 backdrop-blur-sm border-b border-subtle">
+      <div className="sticky top-0 z-20 bg-canvas-secondary/95 backdrop-blur-sm border-b border-subtle">
         <div className="px-6 flex items-end gap-1">
           {TABS.map(t => (
             <button
@@ -764,7 +764,7 @@ export default function DesignSystemPage() {
             <div id="colors-semantic" className="scroll-mt-24">
               <SubLabel note="클릭하면 Tailwind 클래스명 복사">시맨틱 토큰</SubLabel>
               {/* 컬럼 헤더 — 새 SemanticRow 구조 (3 영역) */}
-              <div className="flex items-center gap-4 px-4 py-3 mb-2 rounded-lg border border-subtle bg-canvas-quaternary">
+              <div className="flex items-center gap-4 px-4 py-3 mb-2 rounded-lg border-border05 border-subtle bg-canvas-quaternary">
                 <div className="h-12 w-16 rounded-md bg-primary shrink-0" />
                 <div className="flex flex-col flex-1 gap-1 min-w-0">
                   <code className="text-body4-bold text-content-primary leading-none">bg-primary</code>
@@ -801,7 +801,7 @@ export default function DesignSystemPage() {
               {/* Font Size */}
               <div>
                 <SubLabel note="Tailwind: font-size-10 ~ font-size-36">font-size</SubLabel>
-                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                   {/* 컬럼 헤더 */}
                   <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
                     <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-24 shrink-0">미리보기</span>
@@ -842,7 +842,7 @@ export default function DesignSystemPage() {
               {/* Font Weight */}
               <div>
                 <SubLabel note="Tailwind: font-weight-normal / font-weight-medium / font-weight-semibold">font-weight</SubLabel>
-                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                   {/* 컬럼 헤더 */}
                   <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
                     <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-48 shrink-0">미리보기</span>
@@ -874,7 +874,7 @@ export default function DesignSystemPage() {
               {/* Letter Spacing */}
               <div>
                 <SubLabel note="Tailwind: font_letter_spacing-0 / font_letter_spacing-050 / font_letter_spacing-100">font_letter_spacing</SubLabel>
-                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                   {/* 컬럼 헤더 */}
                   <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
                     <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-48 shrink-0">미리보기</span>
@@ -906,7 +906,7 @@ export default function DesignSystemPage() {
               {/* Line Height */}
               <div>
                 <SubLabel note="Tailwind: line-height-120 ~ line-height-160">line-height</SubLabel>
-                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                   {/* 컬럼 헤더 */}
                   <div className="flex items-center gap-4 px-4 py-2 border-b border-subtle bg-canvas-quaternary">
                     <span className="text-[11px] font-semibold text-content-tertiary tracking-tight w-48 shrink-0">미리보기</span>
@@ -942,7 +942,7 @@ export default function DesignSystemPage() {
 
             <div id="typography-composite" className="scroll-mt-24">
               <SubLabel note="font-size / line-height / font-weight / letter-spacing 하나로 묶인 Semantic 클래스 — text-h* / text-body* / text-caption">Semantic 타이포 토큰</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <TypoRow token="text-h3-bold"    size="24px" weight="600" lh="36px" sample="재배정 타입 설정 — 상담 관리" />
                 <TypoRow token="text-h4"         size="22px" weight="600" lh="32px" sample="배정 완료 DB" />
                 <TypoRow token="text-h5-bold"    size="20px" weight="600" lh="30px" sample="설계사 검색" />
@@ -984,7 +984,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>사용 계층 규칙</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1096,7 +1096,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel note="Tailwind 네이티브 4px 그리드 — prefix(p / m / gap / px / pt 등)는 상황에 따라 자유 조합">사용 패턴</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1130,7 +1130,7 @@ export default function DesignSystemPage() {
           >
             <div>
               <SubLabel note="컴포넌트에서 색을 결정할 때 따라가는 흐름">색상 — 무엇을 표현하나?</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary p-s24">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s24">
                 <div className="flex flex-col gap-s8 text-[13px]">
                   <div className="flex items-start gap-s12">
                     <span className="text-content-disabled font-mono shrink-0 w-4">1.</span>
@@ -1191,7 +1191,7 @@ export default function DesignSystemPage() {
             <div>
               <SubLabel note="px 단위로 선택하지 말고 의미로 선택">간격 / 라운드 / 굵기</SubLabel>
               <div className="grid grid-cols-3 gap-s16">
-                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
                   <p className="text-[12px] font-semibold text-content-primary mb-s8">간격 (gap / padding)</p>
                   <ul className="text-[12px] text-content-tertiary space-y-1.5 leading-relaxed">
                     <li>아이콘↔텍스트 → <code className="text-primary">gap-s4</code> (4px)</li>
@@ -1200,7 +1200,7 @@ export default function DesignSystemPage() {
                     <li>섹션 간 → <code className="text-primary">gap-s32</code> (32px)</li>
                   </ul>
                 </div>
-                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
                   <p className="text-[12px] font-semibold text-content-primary mb-s8">라운드</p>
                   <ul className="text-[12px] text-content-tertiary space-y-1.5 leading-relaxed">
                     <li>카드·컨테이너 → <code className="text-primary">rounded-lg</code> (8px)</li>
@@ -1209,7 +1209,7 @@ export default function DesignSystemPage() {
                     <li>pill·avatar → <code className="text-primary">rounded-full</code></li>
                   </ul>
                 </div>
-                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
                   <p className="text-[12px] font-semibold text-content-primary mb-s8">굵기 (font-weight)</p>
                   <ul className="text-[12px] text-content-tertiary space-y-1.5 leading-relaxed">
                     <li>본문 → <code className="text-primary">font-normal</code> (400)</li>
@@ -1231,7 +1231,7 @@ export default function DesignSystemPage() {
           >
             <div>
               <SubLabel>Prefix — 무엇을 다루는 토큰인가</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1267,14 +1267,14 @@ export default function DesignSystemPage() {
             <div>
               <SubLabel>Suffix — 위계와 상태</SubLabel>
               <div className="grid grid-cols-2 gap-s16">
-                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
                   <p className="text-[12px] font-semibold text-content-primary mb-s8">위계 (진함 → 옅음)</p>
                   <code className="text-[12px] text-content-tertiary block leading-relaxed font-mono">
                     primary → secondary → tertiary → quaternary → assistive → disabled
                   </code>
                   <p className="text-[11px] text-content-assistive mt-s8">진할수록 강조, 옅을수록 보조</p>
                 </div>
-                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
                   <p className="text-[12px] font-semibold text-content-primary mb-s8">상태</p>
                   <code className="text-[12px] text-content-tertiary block leading-relaxed font-mono">
                     -hover · -pressed · -subtle · -strong · -inverse
@@ -1327,7 +1327,7 @@ export default function DesignSystemPage() {
           >
             <div>
               <SubLabel>Background</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1341,7 +1341,7 @@ export default function DesignSystemPage() {
                     {[
                       { cls: "bg-canvas-primary",    cssVar: "--bg-primary",    figma: "bg_primary",    when: "카드·모달 흰 배경" },
                       { cls: "bg-canvas-secondary",  cssVar: "--bg-secondary",  figma: "bg_secondary",  when: "오프화이트 영역 (드물게)" },
-                      { cls: "bg-canvas-tertiary",   cssVar: "--bg-tertiary",   figma: "bg_tertiary",   when: "페이지 기본 배경 (모든 페이지)" },
+                      { cls: "bg-canvas-secondary",   cssVar: "--bg-tertiary",   figma: "bg_tertiary",   when: "페이지 기본 배경 (모든 페이지)" },
                       { cls: "bg-canvas-quaternary", cssVar: "--bg-subtle",     figma: "bg_subtle",     when: "섹션 구분·테이블 짝수행" },
                       { cls: "bg-primary",           cssVar: "--primary",       figma: "(shadcn 표준)",  when: "메인 액션 버튼 (브랜드 블루)" },
                       { cls: "bg-primary-subtle",    cssVar: "--primary-subtle", figma: "(파생)",        when: "사이드바·트리 선택 배경" },
@@ -1361,7 +1361,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>Text · Border</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1405,7 +1405,7 @@ export default function DesignSystemPage() {
           >
             <div>
               <SubLabel>1단계 — globals.css에 브랜드별 오버라이드 추가</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary p-s16 overflow-x-auto">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16 overflow-x-auto">
                 <pre className="text-[12px] text-content-secondary font-mono leading-relaxed">{`/* :root 블록 끝부분에 추가 */
 [data-brand="green"] {
   --primary: var(--green-500);     /* #03b26c */
@@ -1419,14 +1419,14 @@ export default function DesignSystemPage() {
             <div>
               <SubLabel>2단계 — html 또는 페이지 wrapper에 data-brand 적용</SubLabel>
               <div className="grid grid-cols-2 gap-s16">
-                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16 overflow-x-auto">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16 overflow-x-auto">
                   <p className="text-[11px] font-semibold text-content-tertiary mb-s8">정적 (테넌트 단위)</p>
                   <pre className="text-[12px] text-content-secondary font-mono leading-relaxed">{`// app/layout.tsx
 <html lang="ko" data-brand={tenant.brand}>
   {/* "default" | "green" | "orange" */}
 </html>`}</pre>
                 </div>
-                <div className="rounded-lg border border-subtle bg-canvas-primary p-s16 overflow-x-auto">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16 overflow-x-auto">
                   <p className="text-[11px] font-semibold text-content-tertiary mb-s8">동적 (런타임 변경)</p>
                   <pre className="text-[12px] text-content-secondary font-mono leading-relaxed">{`useEffect(() => {
   document.documentElement
@@ -1438,7 +1438,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>자동 추종 컴포넌트 — 코드 수정 불필요</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
                 <p className="text-[12px] text-content-tertiary mb-s12">
                   <code className="bg-primary-subtle text-primary px-1.5 py-0.5 rounded text-[11px]">--primary</code> 변경 시 다음이 모두 자동 추종 (CSS 변수 추상화):
                 </p>
@@ -1465,7 +1465,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel note="reference에서 정적 색이라 브랜드와 무관">예외 — 브랜드와 무관한 토큰</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary p-s16">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
                 <ul className="text-[12px] text-content-secondary space-y-2 leading-relaxed">
                   <li>
                     <code className="bg-blue-tint text-blue-tint px-1.5 py-0.5 rounded text-[11px]">bg-blue-tint</code>,{" "}
@@ -1497,7 +1497,7 @@ export default function DesignSystemPage() {
               <div className="flex gap-4 items-start">
                 {/* 목업 — collapsible 구조 */}
                 <div
-                  className="rounded-lg border border-subtle bg-canvas-tertiary overflow-hidden shrink-0"
+                  className="rounded-lg border-border05 border-subtle bg-canvas-secondary overflow-hidden shrink-0"
                   style={{ width: 160 }}
                 >
                   {/* 로고 영역 */}
@@ -1560,7 +1560,7 @@ export default function DesignSystemPage() {
                 </div>
                 {/* 토큰 설명 */}
                 <div className="flex-1 min-w-0">
-                  <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                  <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                     <table className="w-full text-[12px]">
                       <thead>
                         <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1574,7 +1574,7 @@ export default function DesignSystemPage() {
                           { state: "비활성 서브메뉴",          cls: "text-content-quaternary hover:bg-alpha-black-05" },
                           { state: "그룹 트리거 (활성 자식)",  cls: "text-content-quaternary — 아이콘만 활성 표시" },
                           { state: "hover 오버레이",           cls: "bg-alpha-black-05 (5% 불투명 다크 오버레이)" },
-                          { state: "컨테이너",                 cls: "w-[160px] bg-canvas-tertiary border-r border-subtle" },
+                          { state: "컨테이너",                 cls: "w-[160px] bg-canvas-secondary border-r border-subtle" },
                         ].map(r => (
                           <tr key={r.state} className="border-t border-divider-subtle">
                             <td className="py-2.5 px-3 text-content-primary font-medium whitespace-nowrap">{r.state}</td>
@@ -1592,12 +1592,12 @@ export default function DesignSystemPage() {
 
             {/* 헤더 */}
             <div>
-              <SubLabel note="header.tsx — h-12 / bg-canvas-tertiary / border-b border-divider-normal">헤더</SubLabel>
+              <SubLabel note="header.tsx — h-12 / bg-canvas-secondary / border-b border-divider-normal">헤더</SubLabel>
               <ShadcnRef components={["sidebar", "button", "avatar"]} sourceFile="src/components/header.tsx" />
               <div className="flex flex-col gap-4">
-                {/* 목업 — 실제 header.tsx와 동기화 (h-12, bg-canvas-tertiary, border-divider-normal) */}
-                <div className="rounded-lg border border-subtle overflow-hidden">
-                  <div className="h-12 flex items-center justify-between border-b border-divider-normal bg-canvas-tertiary">
+                {/* 목업 — 실제 header.tsx와 동기화 (h-12, bg-canvas-secondary, border-divider-normal) */}
+                <div className="rounded-lg border-border05 border-subtle overflow-hidden">
+                  <div className="h-12 flex items-center justify-between border-b border-divider-normal bg-canvas-secondary">
                     {/* 좌: 토글 + 보닥 플래너 + 구분선 + KB라이프 로고 */}
                     <div className="flex items-center">
                       {/* 사이드바 아이콘 컬럼 너비(4rem) 안에 토글 */}
@@ -1624,12 +1624,12 @@ export default function DesignSystemPage() {
                     </div>
                   </div>
                   {/* 내용 플레이스홀더 */}
-                  <div className="h-16 flex items-center justify-center bg-canvas-tertiary">
+                  <div className="h-16 flex items-center justify-center bg-canvas-secondary">
                     <p className="text-body5-normal text-content-assistive">페이지 콘텐츠</p>
                   </div>
                 </div>
                 {/* 토큰 */}
-                <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                   <table className="w-full text-[12px]">
                     <thead>
                       <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -1640,7 +1640,7 @@ export default function DesignSystemPage() {
                     <tbody>
                       {[
                         { attr: "높이",        val: "h-12 (48px)" },
-                        { attr: "배경",        val: "bg-canvas-tertiary" },
+                        { attr: "배경",        val: "bg-canvas-secondary" },
                         { attr: "하단 선",     val: "border-b border-divider-normal" },
                         { attr: "좌측 영역",   val: "토글(w-16) + 보닥 플래너 + 구분선 + KB라이프 SVG" },
                         { attr: "우측 영역",   val: "세션 + 연장 Button + 구분선 + Avatar(h-7)" },
@@ -1665,7 +1665,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>기본 카드</SubLabel>
-              <div className="bg-canvas-primary rounded-lg border border-subtle">
+              <div className="bg-canvas-primary rounded-lg border-border05 border-subtle">
                 <div className="px-6 pt-5 pb-3">
                   <p className="text-body3-bold text-content-primary">카드 타이틀</p>
                   <p className="text-body5-normal text-content-assistive mt-0.5">bg-canvas-primary · rounded-lg · border-subtle</p>
@@ -1683,7 +1683,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>KPI 타일 카드</SubLabel>
-              <div className="bg-canvas-primary rounded-lg pt-4 pb-3 border border-subtle">
+              <div className="bg-canvas-primary rounded-lg pt-4 pb-3 border-border05 border-subtle">
                 <div className="flex items-stretch">
                   {[
                     { label: "전체", value: "100", unit: "명" },
@@ -1714,7 +1714,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>변형 × 크기 매트릭스</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-[12px]">
                     <thead>
@@ -1751,7 +1751,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>아이콘 + 텍스트 조합</SubLabel>
-              <div className="flex flex-wrap gap-3 items-end p-4 bg-canvas-primary rounded-lg border border-subtle">
+              <div className="flex flex-wrap gap-3 items-end p-4 bg-canvas-primary rounded-lg border-border05 border-subtle">
                 {BUTTON_VARIANTS.map(v => (
                   <Button key={v.label} variant={v.variant}>
                     <Search />
@@ -1783,7 +1783,7 @@ export default function DesignSystemPage() {
 
             <div>
               <SubLabel>shadcn 마이그레이션</SubLabel>
-              <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-[11px]">
                     <thead>
@@ -1890,7 +1890,7 @@ export default function DesignSystemPage() {
                   <p className="text-[11px] font-semibold text-content-primary mb-2">Input</p>
                   <MigrationTable rows={[
                     { from: "border-input (1px, border-border)",       to: 'variant="filter" → border-subtle',     reason: "필터용 연한 보더" },
-                    { from: "bg-transparent",                      to: 'variant="filter" → bg-fill-filter',   reason: "페이지 bg-canvas-tertiary 위 대비" },
+                    { from: "bg-transparent",                      to: 'variant="filter" → bg-fill-filter',   reason: "페이지 bg-canvas-secondary 위 대비" },
                     { from: "text-content-assistive (placeholder)", to: "placeholder:text-content-assistive",          reason: "assistive = 우리 시스템 placeholder 토큰" },
                   ]} />
                 </div>
@@ -1940,7 +1940,7 @@ export default function DesignSystemPage() {
                     ),
                   },
                 ].map(p => (
-                  <div key={p.title} className="rounded-lg border border-subtle bg-canvas-primary p-3">
+                  <div key={p.title} className="rounded-lg border-border05 border-subtle bg-canvas-primary p-3">
                     <p className="text-[11px] font-semibold text-content-primary mb-2">{p.title}</p>
                     {p.sketch}
                     <p className="text-[10px] text-content-assistive mt-2">{p.pages}</p>
@@ -1952,7 +1952,7 @@ export default function DesignSystemPage() {
 
           {/* 09. 테이블 */}
           <Section tab="patterns" id="tables" title="테이블">
-            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+            <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="border-b border-divider-normal hover:bg-transparent">
@@ -1980,7 +1980,7 @@ export default function DesignSystemPage() {
                 </TableBody>
               </Table>
             </div>
-            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+            <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
               <table className="w-full text-[12px]">
                 <thead>
                   <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -2067,10 +2067,10 @@ export default function DesignSystemPage() {
 
           {/* 11. 페이지네이션 */}
           <Section tab="components" id="pagination" title="페이지네이션">
-            <div className="rounded-lg border border-subtle bg-canvas-primary">
+            <div className="rounded-lg border-border05 border-subtle bg-canvas-primary">
               <PaginationDemo />
             </div>
-            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+            <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
               <table className="w-full text-[12px]">
                 <thead>
                   <tr className="border-b border-divider-normal bg-fill-subtle">
@@ -2095,7 +2095,7 @@ export default function DesignSystemPage() {
 
           {/* 12. 차트 */}
           <Section tab="code" id="charts" title="차트 팔레트">
-            <div className="rounded-lg border border-subtle bg-canvas-primary overflow-hidden">
+            <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
               <div className="flex gap-4 items-end px-6 py-5">
                 {CHART_COLORS.map((c, i) => (
                   <div key={c.name} className="flex flex-col items-center gap-2 flex-1">
@@ -2133,7 +2133,7 @@ export default function DesignSystemPage() {
   </div>
 </div>`,
                 sketch: (
-                  <div className="bg-canvas-tertiary rounded-md border border-subtle p-2 flex gap-2 h-28">
+                  <div className="bg-canvas-secondary rounded-md border border-subtle p-2 flex gap-2 h-28">
                     <div className="w-16 bg-fill-subtle rounded border border-subtle flex items-center justify-center shrink-0">
                       <p className="text-[9px] text-content-assistive font-medium">Tree</p>
                     </div>
@@ -2158,7 +2158,7 @@ export default function DesignSystemPage() {
   </div>
 </div>`,
                 sketch: (
-                  <div className="bg-canvas-tertiary rounded-md border border-subtle p-2 flex gap-2 h-28">
+                  <div className="bg-canvas-secondary rounded-md border border-subtle p-2 flex gap-2 h-28">
                     <div className="w-16 bg-fill-subtle rounded border border-subtle flex items-center justify-center shrink-0">
                       <p className="text-[9px] text-content-assistive font-medium">Tree</p>
                     </div>
@@ -2180,7 +2180,7 @@ export default function DesignSystemPage() {
   <XxxTable />
 </div>`,
                 sketch: (
-                  <div className="bg-canvas-tertiary rounded-md border border-subtle p-2 h-20">
+                  <div className="bg-canvas-secondary rounded-md border border-subtle p-2 h-20">
                     <div className="h-full bg-canvas-primary rounded border border-subtle flex items-center px-2">
                       <p className="text-[9px] text-content-assistive">테이블 또는 설정 카드 (전체 너비)</p>
                     </div>
@@ -2192,7 +2192,7 @@ export default function DesignSystemPage() {
                 <SubLabel note={p.pages}>{p.title}</SubLabel>
                 <div className="grid grid-cols-2 gap-3">
                   {p.sketch}
-                  <div className="rounded-lg border border-subtle bg-canvas-primary p-3 overflow-x-auto">
+                  <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-3 overflow-x-auto">
                     <pre className="text-[10px] text-content-tertiary font-mono leading-relaxed">{p.code}</pre>
                   </div>
                 </div>
@@ -2241,7 +2241,7 @@ export default function DesignSystemPage() {
               </div>
             </div>
 
-            <div className="rounded-lg border border-subtle bg-fill-subtle p-4">
+            <div className="rounded-lg border-border05 border-subtle bg-fill-subtle p-4">
               <p className="text-[12px] font-semibold text-content-primary mb-1">새 컴포넌트 추가 후 필수 작업</p>
               <code className="text-[12px] text-content-secondary font-mono">npx shadcn@latest add [component]</code>
               <div className="mt-3 flex flex-col gap-1">

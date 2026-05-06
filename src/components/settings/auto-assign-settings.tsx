@@ -30,7 +30,7 @@ export function AutoAssignSettings() {
 
   return (
     <div className="flex flex-col gap-s16">
-      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+      <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
 
         {/* 카드 헤더 — 안내 + info 노트 */}
         <div className="px-s24 pt-s20 pb-s20 border-b border-divider-subtle">

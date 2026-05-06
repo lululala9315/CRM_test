@@ -299,7 +299,7 @@ export function OrgStructureTree() {
         <div
           role="tree"
           aria-label="조직 구조"
-          className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden"
+          className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden"
         >
           <OrgTreeRows
             node={ORG_TREE}
@@ -320,7 +320,7 @@ export function OrgStructureTree() {
 
         {selectedNode ? (
           <>
-            <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+            <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
               {INFO_ROWS.map(({ label, value }, i) => (
                 <div
                   key={label}
@@ -352,7 +352,7 @@ export function OrgStructureTree() {
             </div>
           </>
         ) : (
-          <div className="bg-canvas-primary rounded-lg border border-subtle h-40 flex items-center justify-center">
+          <div className="bg-canvas-primary rounded-lg border-border05 border-subtle h-40 flex items-center justify-center">
             <p className="text-body4-normal text-content-disabled">조직을 선택해 주세요</p>
           </div>
         )}

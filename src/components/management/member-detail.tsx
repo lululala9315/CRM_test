@@ -163,7 +163,7 @@ export function MemberDetail({ variant }: { variant: "admin" | "planner" }) {
       {/* 기본 정보 */}
       <section>
         <SectionTitle>기본 정보</SectionTitle>
-        <div className="border border-subtle rounded-lg overflow-hidden">
+        <div className="border-border05 border-subtle rounded-lg overflow-hidden">
           <DetailRow label="아이디">
             <span className="text-body4-normal text-content-secondary">{data.userId}</span>
           </DetailRow>
@@ -184,7 +184,7 @@ export function MemberDetail({ variant }: { variant: "admin" | "planner" }) {
       {/* 직책 및 소속 */}
       <section>
         <SectionTitle>직책 및 소속</SectionTitle>
-        <div className="border border-subtle rounded-lg overflow-hidden">
+        <div className="border-border05 border-subtle rounded-lg overflow-hidden">
           <DetailRow label="직책">
             <span className="text-body4-normal text-content-secondary">{data.position}</span>
           </DetailRow>
@@ -209,7 +209,7 @@ export function MemberDetail({ variant }: { variant: "admin" | "planner" }) {
       {/* 상태 정보 */}
       <section>
         <SectionTitle>상태 정보</SectionTitle>
-        <div className="border border-subtle rounded-lg overflow-hidden">
+        <div className="border-border05 border-subtle rounded-lg overflow-hidden">
           <DetailRow label="승인상태">
             <ApprovalStatusCell
               status={data.approvalStatus}

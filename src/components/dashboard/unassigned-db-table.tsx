@@ -55,7 +55,7 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
     <div className="flex flex-col gap-0.5">
 
       {/* 툴바 */}
-      <div className="sticky top-3 z-20 bg-canvas-tertiary flex h-10 items-center justify-between">
+      <div className="sticky top-3 z-20 bg-canvas-secondary flex h-10 items-center justify-between">
         <span className="text-body4-medium text-content-tertiary tabular-nums">
           {selectedIds.length > 0 ? (
             <>
@@ -88,11 +88,11 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
         </div>
       </div>
 
-      {/* 테이블 카드 */}
-      <div className="bg-canvas-primary rounded-lg border border-subtle">
-
+      {/* 테이블 카드 — 가로 스크롤만, sticky 헤더 없음 */}
+      <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
+        <div className="max-h-[calc(100vh-260px)] overflow-auto">
           <Table>
-            <TableHeader className="sticky top-[44px] z-30 bg-canvas-primary">
+            <TableHeader className="sticky top-0 z-10 bg-canvas-primary">
               <TableRow className="border-b border-divider-normal hover:bg-transparent">
                 <TableHead className="text-left h-10 w-10 !pl-3 !pr-1">
                   <Checkbox
@@ -156,7 +156,7 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
               )}
             </TableBody>
           </Table>
-
+        </div>
       </div>
 
       {/* 페이지네이션 */}

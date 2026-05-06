@@ -4,21 +4,21 @@
  */
 
 import { OrgStructureTree } from "@/components/organization/structure-tree"
-import { TitleObserver } from "@/components/title-observer"
 import { PageHeader } from "@/components/page-header"
+import { Footer } from "@/components/footer"
 
 export default function OrgStructurePage() {
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-secondary scrollbar-hide flex flex-col min-h-full">
 
       <PageHeader title="조직 구조 설정" subtitle="조직의 구성원 소속과 관리 범위의 기준으로 사용합니다." />
-      <TitleObserver />
 
       {/* 콘텐츠 */}
       <div className="flex-1 px-6 pb-15 pt-2">
         <OrgStructureTree />
       </div>
 
+      <Footer />
     </div>
   )
 }

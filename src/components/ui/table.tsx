@@ -68,7 +68,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
       // border-separate에서 tr border 동작 안 함 → 셀(TableCell)에 border-b 적용
       // hover는 매우 미세하게 (alpha 2%) — 진해지지 않으면서 인터랙션 신호
       className={cn(
-        "transition-[background-color] duration-100 hover:bg-alpha-black-02 has-aria-expanded:bg-alpha-black-05 data-[state=selected]:bg-blue-tint data-[state=selected]:hover:bg-primary-subtle-hover",
+        "transition-[background-color] duration-100 hover:bg-alpha-black-02 has-aria-expanded:bg-alpha-black-05 data-[state=selected]:bg-primary-subtle data-[state=selected]:hover:bg-primary-subtle",
         className
       )}
       {...props}

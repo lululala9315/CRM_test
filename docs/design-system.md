@@ -44,13 +44,14 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 |---|---|---|---|---|
 | `bg_primary` | `bg-canvas-primary` | `var(--bg-primary)` | `#FFFFFF` | 카드·모달·흰 패널 배경 |
 | `bg_secondary` | `bg-canvas-secondary` | `var(--bg-secondary)` | `cool-neutral-50` ≈ `#FAFAFA` | 살짝 오프화이트 영역 |
-| `bg_tertiary` | `bg-canvas-tertiary` | `var(--bg-tertiary)` | `cool-neutral-100` ≈ `#F5F5F8` | 페이지 기본 배경 |
+| `bg_secondary` (페이지) | `bg-canvas-secondary` | `var(--bg-secondary)` | `cool-neutral-50` ≈ `#FAFAFA` | **페이지 기본 배경** |
+| `bg_tertiary` | `bg-canvas-tertiary` | `var(--bg-tertiary)` | `cool-neutral-100` ≈ `#F5F5F8` | hover 효과·강조 영역 |
 | `bg_subtle` | `bg-canvas-quaternary` | `var(--bg-subtle)` | `cool-neutral-150` ≈ `#F0F0F3` | 섹션 배경, 테이블 짝수행 |
 | (shadcn) | `bg-primary` | `var(--primary)` | `#3182F6` | **브랜드 블루** — 메인 액션 버튼 배경 |
 | (shadcn) | `bg-accent` | `var(--accent)` | `cool-neutral-150` | 서브틀 hover bg (shadcn 표준) |
-| (shadcn) | `bg-background` | `var(--background)` | `= bg-canvas-tertiary` | 페이지 배경 (shadcn 표준) |
+| (shadcn) | `bg-background` | `var(--background)` | `= bg-canvas-secondary` | 페이지 배경 (shadcn 표준) |
 
-> **실무 선택 기준**: 흰 카드 → `bg-canvas-primary`, 페이지 배경 → `bg-canvas-tertiary` 또는 `bg-background`
+> **실무 선택 기준**: 흰 카드 → `bg-canvas-primary`, 페이지 배경 → `bg-canvas-secondary` 또는 `bg-background`
 
 ### 2-B. 텍스트색 (Content)
 
@@ -157,9 +158,9 @@ Tailwind v4의 `@theme inline --color-X`는 `bg-X / text-X / border-X` 세 속�
 <div className="bg-canvas-primary rounded-lg border border-subtle">
 ```
 
-### "페이지 배경이 필요하다"
+### "페이지 배경이 필요하다"  → `bg-canvas-secondary`
 ```tsx
-<div className="bg-canvas-tertiary">  {/* = bg-background */}
+<div className="bg-canvas-secondary">  {/* = bg-background */}
 ```
 
 ### "제목 텍스트"

@@ -69,7 +69,6 @@ export function SearchFilter({ showPlanner = true, extraSelects, extraElements, 
         <Search className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-content-disabled" />
         <Input
           variant="filter"
-          size="sm"
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
           className="w-[160px] pl-8 placeholder:text-content-assistive"
@@ -124,7 +123,7 @@ function ExtraSelect({
 }) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger size="sm" className="min-w-[130px] border-subtle bg-fill-filter text-content-primary">
+      <SelectTrigger className="min-w-[130px] border-subtle border-border05 bg-fill-filter text-content-primary">
         <span className="flex items-center gap-1 min-w-0 flex-1">
           <span className="text-content-assistive shrink-0">{label}</span>
           <span className="text-content-disabled shrink-0">·</span>

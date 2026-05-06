@@ -5,8 +5,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
-import { BreadcrumbProvider } from "@/components/breadcrumb-context";
 import { StickyBreadcrumb } from "@/components/sticky-breadcrumb";
 import { cn } from "@/lib/utils";
 
@@ -37,38 +35,23 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=database,flowchart,group,home,id_card,palette,target"
         />
       </head>
-      <body className="h-screen flex flex-col overflow-hidden bg-canvas-tertiary text-content-primary font-sans">
+      <body className="h-screen flex flex-col overflow-hidden bg-canvas-secondary text-content-primary font-sans">
         <TooltipProvider delayDuration={0}>
-          {/*
-            SidebarProvider 기본값: flex(row), min-h-svh
-            style로 직접 override → flex-col + minHeight 제거
-            이렇게 해야 Header가 전체 너비를 차지하고
-            사이드바가 헤더 아래에 위치함
-          */}
-          <BreadcrumbProvider>
-        <SidebarProvider
+          <SidebarProvider
             style={{ flexDirection: "column", minHeight: 0, flex: 1 } as React.CSSProperties}
           >
-            {/* 헤더 — 전체 너비 */}
             <Header />
 
-            {/* 사이드바 + 콘텐츠 — 헤더 아래 */}
             <div className="flex flex-1 min-h-0 overflow-hidden">
               <AppSidebar />
-              {/*
-                StickyBreadcrumb을 main 안에 배치 — 사이드바가 fixed z-10이라
-                header 아래 full-width로 두면 sidebar에 가림
-              */}
-              <main className="flex-1 min-w-0 min-h-0 overflow-hidden bg-canvas-tertiary flex flex-col">
+              <main className="flex-1 min-w-0 min-h-0 overflow-hidden bg-canvas-secondary flex flex-col">
                 <StickyBreadcrumb />
-                <div className="flex-1 min-h-0 overflow-y-auto bg-canvas-tertiary">
+                <div className="flex-1 min-h-0 overflow-y-auto bg-canvas-secondary">
                   {children}
-                  <Footer />
                 </div>
               </main>
             </div>
           </SidebarProvider>
-        </BreadcrumbProvider>
         </TooltipProvider>
       </body>
     </html>

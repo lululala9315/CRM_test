@@ -7,15 +7,14 @@ import { KanbanFilter } from "@/components/dashboard/kanban-filter"
 import { KanbanBoard } from "@/components/dashboard/kanban-board"
 import { StatsSection } from "@/components/dashboard/stats-section"
 import { BusinessTree } from "@/components/business-tree"
-import { TitleObserver } from "@/components/title-observer"
 import { PageHeader } from "@/components/page-header"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-tertiary scrollbar-hide flex flex-col min-h-full">
+    <div className="h-full overflow-y-auto overflow-x-hidden bg-canvas-secondary scrollbar-hide flex flex-col min-h-full">
 
       <PageHeader title="상담 진행 고객" subtitle="배정된 고객의 상담 상태를 관리합니다" />
-      <TitleObserver />
 
       {/* 콘텐츠 — 조직도 + 카드들 */}
       <div className="flex gap-3 px-6 pb-15 items-start">
@@ -28,6 +27,7 @@ export default function Home() {
         </div>
       </div>
 
+      <Footer />
     </div>
   )
 }

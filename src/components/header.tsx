@@ -27,7 +27,7 @@ function SidebarToggle() {
 
 export function Header() {
   return (
-    <header className="flex h-12 shrink-0 items-center justify-between border-b border-divider-normal bg-canvas-tertiary">
+    <header className="flex h-12 shrink-0 items-center justify-between border-b border-divider-normal bg-canvas-secondary">
 
       {/* 좌측: 토글 + 로고 + 구분선 + KB라이프 로고 */}
       <div className="flex items-center">

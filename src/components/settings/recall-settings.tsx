@@ -20,7 +20,7 @@ export function RecallSettings() {
 
   return (
     <div className="flex flex-col gap-s16">
-      <div className="bg-canvas-primary rounded-lg border border-subtle overflow-hidden">
+      <div className="bg-canvas-primary rounded-lg border-border05 border-subtle overflow-hidden">
 
         {/* 카드 헤더 — 안내 + info 노트 */}
         <div className="px-s24 pt-s20 pb-s20 border-b border-divider-subtle">
@@ -57,7 +57,7 @@ export function RecallSettings() {
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
                 min={1}
-                className="w-[72px] border-subtle bg-canvas-tertiary text-center text-[13px]"
+                className="w-[72px] border-subtle bg-canvas-secondary text-center text-[13px]"
               />
               <span className="text-body4-normal text-content-assistive">
                 시간 이내 상담 미 시도 시, 미배정으로 자동 회수됩니다.
