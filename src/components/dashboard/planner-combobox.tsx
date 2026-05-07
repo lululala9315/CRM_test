@@ -56,6 +56,7 @@ export function PlannerCombobox({ value: controlledValue, onValueChange }: Plann
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          aria-label={`담당설계사 선택, 현재 선택: ${selectedLabel}`}
           className="flex h-9 items-center justify-between gap-1.5 rounded-md border-border05 border-subtle bg-fill-filter px-2.5 text-sm text-content-primary shadow-none transition-[color,background-color,border-color] min-w-[170px] hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow"
         >
           <span className="flex items-center gap-1 min-w-0 flex-1">
@@ -74,6 +75,7 @@ export function PlannerCombobox({ value: controlledValue, onValueChange }: Plann
         <Command>
           <CommandInput
             placeholder="설계사 검색..."
+            aria-label="설계사 검색"
             className="h-8 text-[13px]"
           />
           <CommandList className="max-h-[240px]">

@@ -274,7 +274,7 @@ const SHADCN_REMOVED = [
 //   Components:  단일 컴포넌트 데모 (버튼/배지/필터/카드/페이지네이션)
 //   Patterns:    조합 패턴 (테이블/레이아웃)
 //   Code:        구현 참조 (차트/shadcn 현황)
-type TabId = "foundations" | "guide" | "components" | "patterns" | "code"
+type TabId = "foundations" | "guide" | "components" | "patterns" | "a11y" | "code"
 type TabSubSection = { id: string; label: string }
 type TabSection = { id: string; label: string; sub?: TabSubSection[] }
 type Tab = { id: TabId; label: string; desc: string; sections: TabSection[] }
@@ -336,6 +336,17 @@ const TABS: Tab[] = [
     sections: [
       { id: "tables", label: "테이블" },
       { id: "layout", label: "레이아웃" },
+    ],
+  },
+  {
+    id: "a11y",
+    label: "접근성",
+    desc: "Accessibility — 현재 상태 + 적용 가이드",
+    sections: [
+      { id: "a11y-status",   label: "현재 상태" },
+      { id: "a11y-contrast", label: "색 대비" },
+      { id: "a11y-patterns", label: "적용 패턴" },
+      { id: "a11y-backlog",  label: "백로그" },
     ],
   },
   {
@@ -2198,6 +2209,341 @@ export default function DesignSystemPage() {
                 </div>
               </div>
             ))}
+          </Section>
+
+          {/* A11Y-1. 현재 상태 */}
+          <Section
+            tab="a11y"
+            id="a11y-status"
+            title="현재 상태"
+            desc="이 시스템에 어떤 접근성 보호가 들어있고, 무엇이 빠져있는지 솔직하게."
+          >
+            <div className="grid grid-cols-3 gap-s16">
+              {/* 자동 적용 */}
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s20">
+                <div className="flex items-center gap-s8 mb-s12">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-tint text-[12px] font-semibold text-green-tint">✓</span>
+                  <p className="text-body4-bold text-content-primary">자동 적용</p>
+                </div>
+                <p className="text-[11px] text-content-assistive mb-s8">shadcn / Radix 기본 — 의도하지 않아도 따라옴</p>
+                <ul className="text-[12px] text-content-secondary space-y-1.5 leading-relaxed">
+                  <li>• <code className="text-primary">focus-visible</code> ring (Button·Input·Select·Checkbox 등 26개)</li>
+                  <li>• Modal·Dropdown <strong>focus trap</strong></li>
+                  <li>• Pagination·Breadcrumb·Sidebar 내부 ARIA</li>
+                  <li>• Calendar·Combobox 키보드 네비</li>
+                  <li>• Tab·Enter·Esc 표준 키보드 동작</li>
+                </ul>
+              </div>
+
+              {/* baseline 적용 */}
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s20">
+                <div className="flex items-center gap-s8 mb-s12">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-tint text-[12px] font-semibold text-green-tint">✓</span>
+                  <p className="text-body4-bold text-content-primary">Baseline 적용</p>
+                </div>
+                <p className="text-[11px] text-content-assistive mb-s8">2026-05 — 커스텀 컴포넌트에 수동 추가</p>
+                <ul className="text-[12px] text-content-secondary space-y-1.5 leading-relaxed">
+                  <li>• 아이콘 버튼 <code className="text-primary">aria-label</code> (5곳)</li>
+                  <li>• 폼 컨트롤 <code className="text-primary">aria-label</code> (11곳: Search, Select, Combobox 등)</li>
+                  <li>• <code className="text-primary">title</code> 툴팁 + <code className="text-primary">aria-label</code> 병행</li>
+                </ul>
+              </div>
+
+              {/* 미적용 */}
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s20">
+                <div className="flex items-center gap-s8 mb-s12">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-tint text-[12px] font-semibold text-amber-tint">!</span>
+                  <p className="text-body4-bold text-content-primary">미적용 (백로그)</p>
+                </div>
+                <p className="text-[11px] text-content-assistive mb-s8">의도적으로 보류 — 별도 검토 필요</p>
+                <ul className="text-[12px] text-content-secondary space-y-1.5 leading-relaxed">
+                  <li>• 커스텀 button·a 태그 <code className="text-primary">focus-visible</code> 표준화</li>
+                  <li>• Tree <code className="text-primary">role/aria-expanded</code> (BusinessTree·StructureTree·칸반)</li>
+                  <li>• 색 대비 미달 토큰 사용처 교체</li>
+                  <li>• 키보드 단축키 / Tab 순서 표준</li>
+                  <li>• <code className="text-primary">prefers-reduced-motion</code> 대응</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-info bg-blue-tint-soft p-s16">
+              <p className="text-[12px] text-content-secondary leading-relaxed">
+                <strong className="text-content-primary">현재 등급:</strong> shadcn 기본만 의존하던 단계 → <strong>Baseline 단계</strong>로 진입.
+                {" "}스크린 리더 사용자에게 모든 인터랙티브 요소가 {`"이름"`}을 가짐. 키보드 전용 사용자에겐 일부 커스텀 트리·드래그 인터랙션이 여전히 미지원.
+              </p>
+            </div>
+          </Section>
+
+          {/* A11Y-2. 색 대비 매트릭스 */}
+          <Section
+            tab="a11y"
+            id="a11y-contrast"
+            title="색 대비 매트릭스"
+            desc="WCAG 2.1 contrast ratio. 본문(<18px)은 AA 4.5:1 / AAA 7:1. 큰 글자(≥18px bold 또는 ≥24px)는 AA 3:1. 셀 클릭하면 비율 복사."
+          >
+            <div>
+              <SubLabel note="text 토큰 × bg 토큰 — 실제 사용 가능한 조합 검증">전체 매트릭스</SubLabel>
+              {(() => {
+                const TEXTS = [
+                  { name: "text-content-primary",    hex: "#191F28" },
+                  { name: "text-content-secondary",  hex: "#333D4B" },
+                  { name: "text-content-tertiary",   hex: "#4E5968" },
+                  { name: "text-content-quaternary", hex: "#6B7684" },
+                  { name: "text-content-assistive",  hex: "#8B95A1" },
+                  { name: "text-content-disabled",   hex: "#B0B8C1" },
+                  { name: "text-primary",            hex: "#3182F6" },
+                  { name: "text-inverse-primary",    hex: "#FFFFFF" },
+                ]
+                const BGS = [
+                  { name: "bg-canvas-primary",    hex: "#FFFFFF" },
+                  { name: "bg-canvas-secondary",  hex: "#FAFAFA" },
+                  { name: "bg-canvas-tertiary",   hex: "#F2F4F6" },
+                  { name: "bg-canvas-quaternary", hex: "#ECEEF1" },
+                  { name: "bg-primary",           hex: "#3182F6" },
+                  { name: "bg-primary-subtle",    hex: "#E8F3FF" },
+                ]
+                // 사전 계산된 비율 (Python으로 계산)
+                const MATRIX: Record<string, Record<string, number>> = {
+                  "text-content-primary":    { "bg-canvas-primary":16.56,"bg-canvas-secondary":15.87,"bg-canvas-tertiary":15.02,"bg-canvas-quaternary":14.25,"bg-primary":4.46,"bg-primary-subtle":14.74 },
+                  "text-content-secondary":  { "bg-canvas-primary":11.00,"bg-canvas-secondary":10.53,"bg-canvas-tertiary":9.97, "bg-canvas-quaternary":9.46, "bg-primary":2.96,"bg-primary-subtle":9.79 },
+                  "text-content-tertiary":   { "bg-canvas-primary":7.11, "bg-canvas-secondary":6.81, "bg-canvas-tertiary":6.45, "bg-canvas-quaternary":6.12, "bg-primary":1.91,"bg-primary-subtle":6.33 },
+                  "text-content-quaternary": { "bg-canvas-primary":4.62, "bg-canvas-secondary":4.42, "bg-canvas-tertiary":4.19, "bg-canvas-quaternary":3.97, "bg-primary":1.24,"bg-primary-subtle":4.11 },
+                  "text-content-assistive":  { "bg-canvas-primary":3.04, "bg-canvas-secondary":2.91, "bg-canvas-tertiary":2.76, "bg-canvas-quaternary":2.61, "bg-primary":1.22,"bg-primary-subtle":2.71 },
+                  "text-content-disabled":   { "bg-canvas-primary":2.01, "bg-canvas-secondary":1.92, "bg-canvas-tertiary":1.82, "bg-canvas-quaternary":1.73, "bg-primary":1.85,"bg-primary-subtle":1.79 },
+                  "text-primary":            { "bg-canvas-primary":3.71, "bg-canvas-secondary":3.56, "bg-canvas-tertiary":3.37, "bg-canvas-quaternary":3.20, "bg-primary":1.00,"bg-primary-subtle":3.31 },
+                  "text-inverse-primary":    { "bg-canvas-primary":1.00, "bg-canvas-secondary":1.04, "bg-canvas-tertiary":1.10, "bg-canvas-quaternary":1.16, "bg-primary":3.71,"bg-primary-subtle":1.12 },
+                }
+                const grade = (r: number) => r >= 7 ? "AAA" : r >= 4.5 ? "AA" : r >= 3 ? "AA-L" : "FAIL"
+                const gradeStyle = (g: string) => g === "AAA" ? "bg-green-tint text-green-tint" : g === "AA" ? "bg-green-tint text-green-tint" : g === "AA-L" ? "bg-amber-tint text-amber-tint" : "bg-red-tint text-red-tint"
+                return (
+                  <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-[11px]">
+                        <thead>
+                          <tr className="border-b border-divider-normal bg-fill-subtle">
+                            <th className="text-left py-2 px-3 font-semibold text-content-tertiary sticky left-0 bg-fill-subtle z-10">text \ bg</th>
+                            {BGS.map(b => (
+                              <th key={b.name} className="py-2 px-2 font-semibold text-content-tertiary text-left whitespace-nowrap">
+                                <div className="flex items-center gap-1.5">
+                                  <div className="h-3 w-3 rounded-sm border border-subtle shrink-0" style={{ backgroundColor: b.hex }} />
+                                  <code className="text-[10px] font-mono">{b.name}</code>
+                                </div>
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {TEXTS.map(t => (
+                            <tr key={t.name} className="border-t border-divider-subtle">
+                              <td className="py-2 px-3 sticky left-0 bg-canvas-primary z-10 whitespace-nowrap">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-semibold" style={{ color: t.hex }}>Aa</span>
+                                  <code className="text-[10px] font-mono text-content-secondary">{t.name}</code>
+                                </div>
+                              </td>
+                              {BGS.map(b => {
+                                const r = MATRIX[t.name]?.[b.name] ?? 1
+                                const g = grade(r)
+                                return (
+                                  <td key={b.name} className="py-2 px-2">
+                                    <div className="flex items-center gap-1.5">
+                                      <code className="text-[11px] font-mono text-content-primary tabular-nums w-9 shrink-0">{r.toFixed(2)}</code>
+                                      <span className={`text-[9px] font-semibold px-1 py-0.5 rounded shrink-0 ${gradeStyle(g)}`}>{g}</span>
+                                    </div>
+                                  </td>
+                                )
+                              })}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )
+              })()}
+              <div className="flex flex-wrap items-center gap-s16 mt-s12 px-s4">
+                <div className="flex items-center gap-s6">
+                  <span className="text-[10px] font-semibold px-1 py-0.5 rounded bg-green-tint text-green-tint">AAA</span>
+                  <span className="text-[11px] text-content-tertiary">≥ 7:1 — 모든 본문 통과</span>
+                </div>
+                <div className="flex items-center gap-s6">
+                  <span className="text-[10px] font-semibold px-1 py-0.5 rounded bg-green-tint text-green-tint">AA</span>
+                  <span className="text-[11px] text-content-tertiary">≥ 4.5:1 — 본문 통과</span>
+                </div>
+                <div className="flex items-center gap-s6">
+                  <span className="text-[10px] font-semibold px-1 py-0.5 rounded bg-amber-tint text-amber-tint">AA-L</span>
+                  <span className="text-[11px] text-content-tertiary">≥ 3:1 — 큰 글자(18px+) 또는 placeholder만</span>
+                </div>
+                <div className="flex items-center gap-s6">
+                  <span className="text-[10px] font-semibold px-1 py-0.5 rounded bg-red-tint text-red-tint">FAIL</span>
+                  <span className="text-[11px] text-content-tertiary">미달 — disabled 상태에만 허용</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <SubLabel>주요 발견 — 의식적으로 인지해야 할 조합</SubLabel>
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16 flex flex-col gap-s12">
+                <div className="flex items-start gap-s12">
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-tint text-amber-tint shrink-0 mt-0.5">AA-L</span>
+                  <p className="text-[12px] text-content-secondary leading-relaxed">
+                    <code className="text-primary">text-primary</code> on <code className="text-primary">bg-canvas-primary</code> = <strong className="tabular-nums">3.71:1</strong>
+                    {" "}— <strong>모든 링크 텍스트가 본문 AA 미달</strong>. 14px 본문 링크는 시각적으로 잘 안 보일 수 있음. 링크는 가급적 <code className="text-primary">underline</code> 병행 권장.
+                  </p>
+                </div>
+                <div className="flex items-start gap-s12">
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-tint text-amber-tint shrink-0 mt-0.5">AA-L</span>
+                  <p className="text-[12px] text-content-secondary leading-relaxed">
+                    <code className="text-primary">text-inverse-primary</code> on <code className="text-primary">bg-primary</code> = <strong className="tabular-nums">3.71:1</strong>
+                    {" "}— <strong>Primary 버튼의 흰 글자도 AA-Large만</strong>. 버튼 라벨이 14px+ 이고 font-medium 이상이라 실용상 OK지만 13px 이하 사용 금지.
+                  </p>
+                </div>
+                <div className="flex items-start gap-s12">
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-tint text-red-tint shrink-0 mt-0.5">FAIL</span>
+                  <p className="text-[12px] text-content-secondary leading-relaxed">
+                    <code className="text-primary">text-content-assistive</code> on <code className="text-primary">bg-canvas-secondary</code> (페이지 배경) = <strong className="tabular-nums">2.91:1</strong>
+                    {" "}— <strong>페이지 배경 위에선 placeholder조차 미달</strong>. 흰 카드 안 placeholder는 OK (3.04:1 AA-L), 페이지 배경 위 본문은 절대 금지.
+                  </p>
+                </div>
+                <div className="flex items-start gap-s12">
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-green-tint text-green-tint shrink-0 mt-0.5">AA</span>
+                  <p className="text-[12px] text-content-secondary leading-relaxed">
+                    <code className="text-primary">text-content-quaternary</code> on <code className="text-primary">bg-canvas-secondary</code> = <strong className="tabular-nums">4.42:1</strong>
+                    {" "}— <strong>본문 AA에 살짝 못 미침</strong>(4.5 기준 0.08 부족). 흰 카드 위(<strong>4.62:1</strong>)는 본문 OK. 페이지 배경 위에서는 <code className="text-primary">text-content-tertiary</code> 권장.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* A11Y-3. 적용 패턴 */}
+          <Section
+            tab="a11y"
+            id="a11y-patterns"
+            title="적용 패턴"
+            desc="새 컴포넌트·새 페이지 만들 때 따라야 할 규칙."
+          >
+            <div>
+              <SubLabel note={`아이콘만 있고 텍스트 없는 모든 button·a 태그 — 스크린 리더에 '이름'을 줘야 함`}>아이콘 버튼</SubLabel>
+              <div className="grid grid-cols-2 gap-s16">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
+                  <div className="flex items-center gap-s8 mb-s8">
+                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-tint text-red-tint">{`Don't`}</span>
+                    <span className="text-[11px] text-content-tertiary">{`스크린 리더가 "버튼"으로만 읽음`}</span>
+                  </div>
+                  <pre className="text-[11px] text-content-secondary font-mono leading-relaxed overflow-x-auto">{`<button onClick={openSidebar}>
+  <Menu className="h-4 w-4" />
+</button>`}</pre>
+                </div>
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
+                  <div className="flex items-center gap-s8 mb-s8">
+                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-green-tint text-green-tint">Do</span>
+                    <span className="text-[11px] text-content-tertiary">{`"사이드바 열기"로 안내`}</span>
+                  </div>
+                  <pre className="text-[11px] text-content-secondary font-mono leading-relaxed overflow-x-auto">{`<button onClick={openSidebar} aria-label="사이드바 열기">
+  <Menu className="h-4 w-4" />
+</button>`}</pre>
+                </div>
+              </div>
+              <p className="text-[11px] text-content-assistive mt-s8">
+                동적 상태(예: 펼침/접힘)는 라벨에 상태를 포함:
+                <code className="text-primary ml-1">{`aria-label={\`\${name} \${isOpen ? "접기" : "펼치기"}\`}`}</code>
+              </p>
+            </div>
+
+            <div>
+              <SubLabel note="placeholder는 시각적 힌트일 뿐 — 스크린 리더의 라벨로 인정 안 됨">폼 컨트롤</SubLabel>
+              <div className="grid grid-cols-2 gap-s16">
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
+                  <div className="flex items-center gap-s8 mb-s8">
+                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-tint text-red-tint">{`Don't`}</span>
+                    <span className="text-[11px] text-content-tertiary">placeholder만 — 라벨 미연결</span>
+                  </div>
+                  <pre className="text-[11px] text-content-secondary font-mono leading-relaxed overflow-x-auto">{`<Input
+  placeholder="고객명 검색"
+  value={q}
+  onChange={...}
+/>`}</pre>
+                </div>
+                <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
+                  <div className="flex items-center gap-s8 mb-s8">
+                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-green-tint text-green-tint">Do</span>
+                    <span className="text-[11px] text-content-tertiary">aria-label로 명시</span>
+                  </div>
+                  <pre className="text-[11px] text-content-secondary font-mono leading-relaxed overflow-x-auto">{`<Input
+  placeholder="고객명 검색"
+  aria-label="고객명 검색"
+  value={q}
+  onChange={...}
+/>`}</pre>
+                </div>
+              </div>
+              <p className="text-[11px] text-content-assistive mt-s8">
+                Select·Combobox 트리거(button) 위에 시각적 라벨이 있으면 (예: {`"지역 · 서울"`}), <code className="text-primary">{`aria-label="지역 선택"`}</code> 추가.
+                {" "}동적 값은 <code className="text-primary">{`aria-label={\`지역 선택, 현재 선택: \${value}\`}`}</code> 처럼 상태 포함.
+              </p>
+            </div>
+
+            <div>
+              <SubLabel note="스크린 리더가 무시 / 데코 아이콘에 적용">aria-hidden — 의미 없는 아이콘</SubLabel>
+              <div className="rounded-lg border-border05 border-subtle bg-canvas-primary p-s16">
+                <pre className="text-[11px] text-content-secondary font-mono leading-relaxed overflow-x-auto">{`{/* 텍스트 옆 보조 아이콘 — 라벨 중복 방지 */}
+<Button>
+  <Search aria-hidden="true" />
+  검색
+</Button>
+
+{/* 구분 점 같은 데코 — 의미 없음 */}
+<span aria-hidden="true">·</span>`}</pre>
+              </div>
+            </div>
+          </Section>
+
+          {/* A11Y-4. 백로그 */}
+          <Section
+            tab="a11y"
+            id="a11y-backlog"
+            title="백로그"
+            desc="현재 미적용 항목 — 추후 별도 작업으로 검토."
+          >
+            <div className="rounded-lg border-border05 border-subtle bg-canvas-primary overflow-hidden">
+              <table className="w-full text-[12px]">
+                <thead>
+                  <tr className="border-b border-divider-normal bg-fill-subtle">
+                    <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-44">항목</th>
+                    <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-28">예상 임팩트</th>
+                    <th className="text-left py-2 px-3 font-semibold text-content-tertiary w-28">시각 변화</th>
+                    <th className="text-left py-2 px-3 font-semibold text-content-tertiary">메모</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { item: "Focus ring 표준화",          impact: "키보드 사용자",  visual: "Tab 시 +",      memo: "커스텀 button·a 태그에 focus-visible:ring-3 ring-ring-glow 일괄. shadcn 컴포넌트는 이미 적용됨." },
+                    { item: "Tree role/aria-expanded",   impact: "스크린 리더",     visual: "없음",           memo: "BusinessTree·StructureTree·칸반에 role='tree'/role='treeitem'/aria-expanded. 키보드 화살표 핸들러 동시 작업 필요." },
+                    { item: "색 대비 미달 사용처 정리",   impact: "저시력 사용자",   visual: "글자 톤 변화",   memo: "text-content-assistive를 본문으로 쓰는 곳을 tertiary로 교체. 디자이너 검토 후 진행." },
+                    { item: "키보드 단축키",              impact: "파워 유저",        visual: "없음",           memo: "테이블 행 ↑↓ 이동, 칸반 카드 이동, 사이드바 토글 단축키 등." },
+                    { item: "prefers-reduced-motion",   impact: "전정 민감 사용자", visual: "모션 비활성",   memo: "transition·animation을 미디어 쿼리로 끄기. globals.css에 한 줄로 추가 가능." },
+                    { item: "스크린 리더 알림 (aria-live)", impact: "스크린 리더",  visual: "없음",           memo: "필터 적용 후 결과 건수, 저장 완료 토스트 등 변화 알림." },
+                  ].map(r => (
+                    <tr key={r.item} className="border-t border-divider-subtle">
+                      <td className="py-2.5 px-3 text-content-primary font-medium">{r.item}</td>
+                      <td className="py-2.5 px-3 text-content-secondary">{r.impact}</td>
+                      <td className="py-2.5 px-3 text-content-secondary">{r.visual}</td>
+                      <td className="py-2.5 px-3 text-content-tertiary text-[11px]">{r.memo}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="rounded-lg border border-info bg-blue-tint-soft p-s16">
+              <p className="text-[12px] font-semibold text-content-primary mb-s4">목표 등급</p>
+              <p className="text-[12px] text-content-secondary leading-relaxed">
+                B2B 업무 툴 — <strong>WCAG 2.1 AA 본문 기준</strong>이 현실적 목표.
+                {" "}현재 Baseline 단계 → 백로그 6개 중 <strong>Focus ring · Tree role · 색 대비 정리</strong> 3개 마무리 시 본문 AA 도달.
+                {" "}나머지 3개(키보드 단축키 · reduced-motion · aria-live)는 사용자 피드백 기반으로 우선순위 결정.
+              </p>
+            </div>
           </Section>
 
           {/* 14. shadcn 현황 */}

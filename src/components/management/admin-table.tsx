@@ -194,26 +194,21 @@ export function AdminTable({ disabledRowKeys = [] }: { disabledRowKeys?: number[
           )}
         </span>
         <div className="flex items-center gap-1">
-          {/* 선택 시: 정렬 숨기고 일괄 승인 버튼 노출 */}
-          {!hasSelection && (
-            <button
-              type="button"
-              onClick={() => { setSortOrder(prev => prev === "latest" ? "oldest" : "latest"); setCurrentPage(1) }}
-              className="h-7 pl-2 pr-1.5 inline-flex items-center gap-1 rounded-md text-[13px] font-medium text-content-tertiary hover:bg-fill-subtle hover:text-content-primary transition-colors"
-            >
-              {sortOrder === "latest" ? "최신순" : "오래된순"}
-              <ArrowUpDown className="size-3.5" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => { setSortOrder(prev => prev === "latest" ? "oldest" : "latest"); setCurrentPage(1) }}
+            className="h-7 pl-2 pr-1.5 inline-flex items-center gap-1 rounded-md text-[13px] font-medium text-content-tertiary hover:bg-fill-subtle hover:text-content-primary transition-colors"
+          >
+            {sortOrder === "latest" ? "최신순" : "오래된순"}
+            <ArrowUpDown className="size-3.5" />
+          </button>
           <PageSizeSelect
             value={pageSize}
             onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
           />
-          {hasSelection && (
-            <Button size="sm">
-              선택 일괄 승인
-            </Button>
-          )}
+          <Button size="sm" disabled={!hasSelection}>
+            선택 일괄 승인
+          </Button>
         </div>
       </div>
 

@@ -43,6 +43,7 @@ export function RegionMultiSelect() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          aria-label={`지역 선택, 현재 선택: ${displayText}`}
           className={cn(
             "flex h-9 items-center justify-between gap-1.5 rounded-md border-border05 border-subtle bg-fill-filter px-2.5 text-[13px] shadow-none transition-[color,background-color,border-color] min-w-[120px]",
             "hover:bg-blue-tint hover:border-info hover:text-primary focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring-glow",

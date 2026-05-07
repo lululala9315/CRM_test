@@ -738,8 +738,10 @@
    data-active-tab 값과 다른 탭의 섹션은 숨김
    ───────────────────────────────────────────────────────────────────── */
 .ds-tab-container[data-active-tab="foundations"] section[data-tab]:not([data-tab="foundations"]),
+.ds-tab-container[data-active-tab="guide"]       section[data-tab]:not([data-tab="guide"]),
 .ds-tab-container[data-active-tab="components"]  section[data-tab]:not([data-tab="components"]),
 .ds-tab-container[data-active-tab="patterns"]    section[data-tab]:not([data-tab="patterns"]),
+.ds-tab-container[data-active-tab="a11y"]        section[data-tab]:not([data-tab="a11y"]),
 .ds-tab-container[data-active-tab="code"]        section[data-tab]:not([data-tab="code"]) {
   display: none;
 }

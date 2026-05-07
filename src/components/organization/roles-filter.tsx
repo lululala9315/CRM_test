@@ -33,7 +33,7 @@ export function RolesFilter() {
 
       {/* 직책/직급명 */}
       <Select value={roleName} onValueChange={setRoleName}>
-        <SelectTrigger size="sm" className="min-w-[140px] border-subtle bg-fill-filter text-content-primary">
+        <SelectTrigger size="sm" aria-label="직책/직급 선택" className="min-w-[140px] border-subtle bg-fill-filter text-content-primary">
           <span className="flex items-center gap-1 min-w-0 flex-1">
             <span className="text-content-assistive shrink-0">직책/직급</span>
             <span className="text-content-disabled shrink-0">·</span>
@@ -52,7 +52,7 @@ export function RolesFilter() {
 
       {/* 업무 권한 */}
       <Select value={permission} onValueChange={setPermission}>
-        <SelectTrigger size="sm" className="min-w-[130px] border-subtle bg-fill-filter text-content-primary">
+        <SelectTrigger size="sm" aria-label="업무 권한 선택" className="min-w-[130px] border-subtle bg-fill-filter text-content-primary">
           <span className="flex items-center gap-1 min-w-0 flex-1">
             <span className="text-content-assistive shrink-0">업무권한</span>
             <span className="text-content-disabled shrink-0">·</span>
@@ -68,7 +68,7 @@ export function RolesFilter() {
 
       {/* 사용 여부 */}
       <Select value={usage} onValueChange={setUsage}>
-        <SelectTrigger size="sm" className="min-w-[120px] border-subtle bg-fill-filter text-content-primary">
+        <SelectTrigger size="sm" aria-label="사용 여부 선택" className="min-w-[120px] border-subtle bg-fill-filter text-content-primary">
           <span className="flex items-center gap-1 min-w-0 flex-1">
             <span className="text-content-assistive shrink-0">사용여부</span>
             <span className="text-content-disabled shrink-0">·</span>

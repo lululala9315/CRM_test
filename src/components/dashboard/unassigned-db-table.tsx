@@ -66,25 +66,21 @@ export function UnassignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: 
           )}
         </span>
         <div className="flex items-center gap-1">
-          {selectedIds.length === 0 && (
-            <button
-              type="button"
-              onClick={() => { setSortOrder(prev => prev === "latest" ? "oldest" : "latest"); setCurrentPage(1) }}
-              className="h-7 pl-2 pr-1.5 inline-flex items-center gap-1 rounded-md text-[13px] font-medium text-content-tertiary hover:bg-fill-subtle hover:text-content-primary transition-colors"
-            >
-              {sortOrder === "latest" ? "최신순" : "오래된순"}
-              <ArrowUpDown className="size-3.5" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => { setSortOrder(prev => prev === "latest" ? "oldest" : "latest"); setCurrentPage(1) }}
+            className="h-7 pl-2 pr-1.5 inline-flex items-center gap-1 rounded-md text-[13px] font-medium text-content-tertiary hover:bg-fill-subtle hover:text-content-primary transition-colors"
+          >
+            {sortOrder === "latest" ? "최신순" : "오래된순"}
+            <ArrowUpDown className="size-3.5" />
+          </button>
           <PageSizeSelect
             value={pageSize}
             onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
           />
-          {selectedIds.length > 0 && (
-            <Button size="sm">
-              선택 재배정
-            </Button>
-          )}
+          <Button size="sm" disabled={selectedIds.length === 0}>
+            선택 재배정
+          </Button>
         </div>
       </div>
 

@@ -73,6 +73,7 @@ export function SearchFilter({ showPlanner = true, extraSelects, extraElements, 
           onChange={e => setInputValue(e.target.value)}
           className="w-[160px] pl-8 placeholder:text-content-assistive"
           placeholder="고객명 검색"
+          aria-label="고객명 검색"
         />
       </div>
 

@@ -57,6 +57,7 @@ export function RecallSettings() {
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
                 min={1}
+                aria-label="자동 회수 시간 (단위: 시간)"
                 className="w-[72px] border-subtle bg-canvas-secondary text-center text-[13px]"
               />
               <span className="text-body4-normal text-content-assistive">

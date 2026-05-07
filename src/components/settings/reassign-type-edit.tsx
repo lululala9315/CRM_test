@@ -82,6 +82,7 @@ export function ReassignTypeEdit() {
                   value={type.name}
                   onChange={e => updateType(type.id, "name", e.target.value)}
                   placeholder="타입 이름"
+                  aria-label="재배정 타입 이름"
                   className="border-subtle bg-canvas-secondary text-[13px]"
                 />
               </div>
@@ -92,6 +93,7 @@ export function ReassignTypeEdit() {
                   value={type.description}
                   onChange={e => updateType(type.id, "description", e.target.value)}
                   placeholder="설명을 입력하세요"
+                  aria-label="재배정 타입 설명"
                   className="border-subtle bg-canvas-secondary text-[13px]"
                 />
               </div>
@@ -116,6 +118,7 @@ export function ReassignTypeEdit() {
               <button
                 onClick={() => deleteType(type.id)}
                 className="w-8 flex justify-center p-1.5 rounded-md text-content-disabled hover:text-destructive hover:bg-red-tint transition-colors shrink-0"
+                aria-label={`${type.name || "재배정 타입"} 삭제`}
               >
                 <Trash2 className="h-4 w-4" />
               </button>

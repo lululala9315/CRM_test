@@ -210,6 +210,7 @@ function OrgTreeRows({
         {/* 하위 추가 버튼 */}
         <button
           title="하위 조직 추가"
+          aria-label={`${node.name} 하위 조직 추가`}
           className={cn(
             "h-7 w-7 flex items-center justify-center rounded-md transition-[opacity,background-color] shrink-0",
             isSelected
@@ -224,6 +225,7 @@ function OrgTreeRows({
         {/* 펼침 / 접힘 */}
         {hasChildren ? (
           <button
+            aria-label={`${node.name} ${isExpanded ? "접기" : "펼치기"}`}
             className={cn(
               "h-7 w-7 flex items-center justify-center rounded-md transition-colors shrink-0",
               isSelected

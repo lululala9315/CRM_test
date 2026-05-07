@@ -126,11 +126,9 @@ export function AssignedDbTable({ disabledRowKeys = [] }: { disabledRowKeys?: nu
             value={pageSize}
             onValueChange={(v) => { setPageSize(v); setCurrentPage(1) }}
           />
-          {selectedIds.length > 0 && (
-            <Button size="sm">
-              선택 재배정
-            </Button>
-          )}
+          <Button size="sm" disabled={selectedIds.length === 0}>
+            선택 재배정
+          </Button>
         </div>
       </div>
 

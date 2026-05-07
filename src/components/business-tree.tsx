@@ -428,6 +428,7 @@ export function BusinessTree({ visible = true }: BusinessTreeProps) {
             onClick={() => setCascadeOpen(true)}
             className="flex items-center gap-1 text-[11px] font-medium text-content-disabled hover:text-primary transition-colors"
             title="조직도 펼쳐보기"
+            aria-label="조직도 펼쳐보기"
           >
             <Maximize2 className="h-3 w-3" />
           </button>
